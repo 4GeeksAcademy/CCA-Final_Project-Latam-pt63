@@ -6,10 +6,18 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.models import db, Users, Pets, Doctors
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+
+from flask_cors import CORS
+from flask_bcrypt import Bcrypt
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
 
 # from models import Person
 
@@ -18,6 +26,13 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+CORS(app)
+
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
+jwt = JWTManager(app)
+
+bcrypt = Bcrypt(app)
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -64,6 +79,40 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'You must include information in the body'}),400
+    if 'first_name' not in body:
+        return jsonify({'msg': 'You must include a first name'}),400
+    if 'last_name' not in body:
+        return jsonify({'msg':'You must include a last name'}),400
+    if 'email' not in body:
+        return jsonify({'msg':'You must include an email'}),400
+    if 'phonenumber' not in body:
+        return jsonify({'msg':'You must include a phonenumber'}),400
+    if 'address' not in body:
+        return jsonify({'msg':'You must include an address'}),400
+    if 'password' not in body:
+        return jsonify({'msg':'You must include a password'}),400
+    valid_email = Users.query.filter_by(email=body['email']).first()
+    if valid_email != None:
+        return jsonify({'msg':'Email already exists'}),400
+    new_user= Users()
+    new_user.first_name = body['first_name']
+    new_user.last_name = body['last_name']
+    new_user.email = body['email']
+    new_user.phonenumber = body['phonenumber']
+    new_user.address = body['address']
+    pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+    new_user.password = pw_hash
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'msg': 'New user added successfully'}), 201
+    
+
 
 
 # this only runs if `$ python src/main.py` is executed
