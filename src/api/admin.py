@@ -13,7 +13,7 @@ class UserModelView(ModelView):
 
 class PetsModelView(ModelView):
     column_auto_select_related=True
-    column_list = ['pet_id','owner_id','owner','name','birthdate','breed','allergies','neutered','info','image']
+    column_list = ['pet_id', 'owner_id', 'owner', 'name', 'pet_type', 'birthdate', 'breed', 'allergies', 'neutered', 'info', 'image']
 
 class DoctorsModelView(ModelView):
     column_auto_select_related=True
