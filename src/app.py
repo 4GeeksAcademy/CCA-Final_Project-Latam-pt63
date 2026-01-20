@@ -72,6 +72,8 @@ def sitemap():
     return send_from_directory(static_file_dir, 'index.html')
 
 # any other endpoint will try to serve it like a static file
+
+
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
@@ -80,27 +82,28 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
+
 @app.route('/signup', methods=['POST'])
 def signup():
     body = request.get_json(silent=True)
     if body is None:
-        return jsonify({'msg': 'You must include information in the body'}),400
+        return jsonify({'msg': 'You must include information in the body'}), 400
     if 'first_name' not in body:
-        return jsonify({'msg': 'You must include a first name'}),400
+        return jsonify({'msg': 'You must include a first name'}), 400
     if 'last_name' not in body:
-        return jsonify({'msg':'You must include a last name'}),400
+        return jsonify({'msg': 'You must include a last name'}), 400
     if 'email' not in body:
-        return jsonify({'msg':'You must include an email'}),400
+        return jsonify({'msg': 'You must include an email'}), 400
     if 'phonenumber' not in body:
-        return jsonify({'msg':'You must include a phonenumber'}),400
+        return jsonify({'msg': 'You must include a phonenumber'}), 400
     if 'address' not in body:
-        return jsonify({'msg':'You must include an address'}),400
+        return jsonify({'msg': 'You must include an address'}), 400
     if 'password' not in body:
-        return jsonify({'msg':'You must include a password'}),400
+        return jsonify({'msg': 'You must include a password'}), 400
     valid_email = Users.query.filter_by(email=body['email']).first()
     if valid_email != None:
-        return jsonify({'msg':'Email already exists'}),400
-    new_user= Users()
+        return jsonify({'msg': 'Email already exists'}), 400
+    new_user = Users()
     new_user.first_name = body['first_name']
     new_user.last_name = body['last_name']
     new_user.email = body['email']
@@ -111,8 +114,27 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'msg': 'New user added successfully'}), 201
-    
 
+@app.route('/login',methods=['POST'])
+def login():
+    body =  request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg':'You must include information in the body'}),400
+    if 'email' not in body:
+        return jsonify({'msg':'You must include an email'}),400
+    if 'password' not in body:
+        return jsonify({'msg':'You must include a password'}),400
+    user = Users.query.filter_by(email=body['email']).first()
+    if user is None:
+        user = Doctors.query.filter_by(email=body['email']).first()
+    if user is None:
+        return jsonify({'msg':'Incorrect email or password'}),400
+    is_correct_password = bcrypt.check_password_hash(user.password, body['password'])
+    if not is_correct_password:
+        return jsonify({'msg':'Incorrect email or password'}),400
+    token = create_access_token(identity=user.email)
+    return jsonify({'msg':'Login successful',
+                    'token': token}), 200
 
 
 # this only runs if `$ python src/main.py` is executed
