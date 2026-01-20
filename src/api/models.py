@@ -1,19 +1,96 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Boolean, Integer, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
 
-class User(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+
+class Users(db.Model):
+    __tablename__ = 'users'
+    user_id: Mapped[int] = mapped_column(primary_key=True)
+    first_name: Mapped[str] = mapped_column(String(25), nullable=False)
+    last_name: Mapped[str] = mapped_column(String(25), nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(120), unique=True, nullable=False)
+    phonenumber: Mapped[str] = mapped_column(String(20), nullable=False)
+    address: Mapped[str] = mapped_column(String(50))
     password: Mapped[str] = mapped_column(nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    pets: Mapped[list['Pets']] = relationship(back_populates='owner')
+
+    def __repr__(self):
+        return f'{self.first_name}'
 
 
     def serialize(self):
         return {
-            "id": self.id,
+            "user_id": self.user_id,
+            "first_name": self.first_name,
+            "last_name":self.last_name,
             "email": self.email,
+            "phonenumber": self.phonenumber,
+            "address":self.address,
+            "password":self.password,
+            "pets":self.pets
             # do not serialize the password, its a security breach
         }
+
+#//----- Creado  por Chris -----//
+class Pets(db.Model):
+    __tablename__ = "pets"
+
+    pet_id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True)
+
+    owner_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.user_id"), nullable=False)
+    owner: Mapped['Users'] = relationship(back_populates='pets')
+
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    birthdate: Mapped[str] = mapped_column(String(50), nullable=True)
+    breed: Mapped[str] = mapped_column(String(120), nullable=True)
+    allergies: Mapped[str] = mapped_column(
+        String(255), nullable=True)
+
+    neutered: Mapped[bool] = mapped_column(
+        Boolean(), nullable=False, default=False)
+
+    info: Mapped[str] = mapped_column(String(500), nullable=True)
+    image: Mapped[str] = mapped_column(String(500), nullable=True)
+
+    def __repr__(self):
+        return f'{self.name}'
+
+    def serialize(self):
+        return {
+            "pet_id": self.pet_id,
+            "owner_id": self.owner_id,
+            "owner":self.owner,
+            "name": self.name,
+            "birthdate": self.birthdate,
+            "breed": self.breed,
+            "allergies": self.allergies,
+            "neutered": self.neutered,
+            "info": self.info,
+            "image": self.image,
+        }
+
+#//----- Creado por Carlos -----//
+class Doctors(db.Model):
+        __tablename__ = 'doctors' 
+        doctor_id: Mapped[int] = mapped_column(primary_key= True)
+        first_name: Mapped[str] = mapped_column(String(120), nullable=False)
+        last_name: Mapped [str] = mapped_column(String(120), nullable=False) 
+        speciality: Mapped[str] = mapped_column(String(50), nullable=False)
+        email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+        phone_number: Mapped[str] = mapped_column(String(20), nullable=True)
+        password: Mapped [str] = mapped_column(String(80), nullable=False)
+
+        def serialize(self): 
+            return {
+                "id": self.doctor_id,
+                "first_name":self.first_name,
+                "last_name": self.last_name,
+                "speciality": self.speciality,
+                "email": self.email,
+                "phone_number": self.phone_number
+             }
