@@ -46,6 +46,7 @@ class Pets(db.Model):
     owner: Mapped['Users'] = relationship(back_populates='pets')
 
     name: Mapped[str] = mapped_column(String(120), nullable=False)
+    pet_type: Mapped[str] = mapped_column(String(30), nullable=False)
     birthdate: Mapped[str] = mapped_column(String(50), nullable=True)
     breed: Mapped[str] = mapped_column(String(120), nullable=True)
     allergies: Mapped[str] = mapped_column(
@@ -66,6 +67,7 @@ class Pets(db.Model):
             "owner_id": self.owner_id,
             "owner":self.owner,
             "name": self.name,
+            "pet_type": self.pet_type,
             "birthdate": self.birthdate,
             "breed": self.breed,
             "allergies": self.allergies,
