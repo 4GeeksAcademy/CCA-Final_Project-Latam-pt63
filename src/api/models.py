@@ -20,21 +20,22 @@ class Users(db.Model):
     def __repr__(self):
         return f'{self.first_name}'
 
-
     def serialize(self):
         return {
             "user_id": self.user_id,
             "first_name": self.first_name,
-            "last_name":self.last_name,
+            "last_name": self.last_name,
             "email": self.email,
             "phonenumber": self.phonenumber,
-            "address":self.address,
-            "password":self.password,
-            "pets":self.pets
+            "address": self.address,
+            "password": self.password,
+            "pets": self.pets
             # do not serialize the password, its a security breach
         }
 
-#//----- Creado  por Chris -----//
+# //----- Creado  por Chris -----//
+
+
 class Pets(db.Model):
     __tablename__ = "pets"
 
@@ -57,6 +58,7 @@ class Pets(db.Model):
 
     info: Mapped[str] = mapped_column(String(500), nullable=True)
     image: Mapped[str] = mapped_column(String(500), nullable=True)
+    vaccines:Mapped[list['Vaccines']] = relationship(back_populates='pet')
 
     def __repr__(self):
         return f'{self.name}'
@@ -65,7 +67,7 @@ class Pets(db.Model):
         return {
             "pet_id": self.pet_id,
             "owner_id": self.owner_id,
-            "owner":self.owner,
+            "owner": self.owner,
             "name": self.name,
             "pet_type": self.pet_type,
             "birthdate": self.birthdate,
@@ -76,23 +78,49 @@ class Pets(db.Model):
             "image": self.image,
         }
 
-#//----- Creado por Carlos -----//
-class Doctors(db.Model):
-        __tablename__ = 'doctors' 
-        doctor_id: Mapped[int] = mapped_column(primary_key= True)
-        first_name: Mapped[str] = mapped_column(String(120), nullable=False)
-        last_name: Mapped [str] = mapped_column(String(120), nullable=False) 
-        speciality: Mapped[str] = mapped_column(String(50), nullable=False)
-        email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-        phone_number: Mapped[str] = mapped_column(String(20), nullable=True)
-        password: Mapped [str] = mapped_column(String(80), nullable=False)
+# //----- Creado por Carlos -----//
 
-        def serialize(self): 
-            return {
-                "id": self.doctor_id,
-                "first_name":self.first_name,
-                "last_name": self.last_name,
-                "speciality": self.speciality,
-                "email": self.email,
-                "phone_number": self.phone_number
-             }
+
+class Doctors(db.Model):
+    __tablename__ = 'doctors'
+    doctor_id: Mapped[int] = mapped_column(primary_key=True)
+    first_name: Mapped[str] = mapped_column(String(120), nullable=False)
+    last_name: Mapped[str] = mapped_column(String(120), nullable=False)
+    speciality: Mapped[str] = mapped_column(String(50), nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(120), unique=True, nullable=False)
+    phone_number: Mapped[str] = mapped_column(String(20), nullable=True)
+    password: Mapped[str] = mapped_column(String(80), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.doctor_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "speciality": self.speciality,
+            "email": self.email,
+            "phone_number": self.phone_number
+        }
+
+
+class Vaccines(db.Model):
+    __tablename__ = 'vaccines'
+    vaccine_id: Mapped[int] = mapped_column(primary_key=True)
+    vaccine_name: Mapped[str] = mapped_column(String(20), nullable=False)
+    pet_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey('pets.pet_id'), nullable=False)
+    pet: Mapped['Pets']= relationship(back_populates='vaccines')
+    vaccination_date: Mapped[str] = mapped_column(String(20), nullable=False)
+    expiry_date: Mapped[str] = mapped_column(String(20), nullable=False)
+
+    def __repr__(self):
+        return f'{self.vaccine_name}'
+    
+    def serialize(self):
+        return {
+            "vaccine_id": self.vaccine_id,
+            "vaccine_name": self.vaccine_name,
+            "pet": self.pet,
+            "vaccination_date": self.vaccination_date,
+            "expiry_date": self.expiry_date
+        }
