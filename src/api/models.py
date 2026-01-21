@@ -67,7 +67,6 @@ class Pets(db.Model):
         return {
             "pet_id": self.pet_id,
             "owner_id": self.owner_id,
-            "owner": self.owner,
             "name": self.name,
             "pet_type": self.pet_type,
             "birthdate": self.birthdate,
@@ -76,6 +75,7 @@ class Pets(db.Model):
             "neutered": self.neutered,
             "info": self.info,
             "image": self.image,
+            "vaccines": self.vaccines
         }
 
 # //----- Creado por Carlos -----//
