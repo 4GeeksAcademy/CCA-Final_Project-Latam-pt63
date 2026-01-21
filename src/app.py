@@ -93,16 +93,33 @@ def get_pet(pet_id):
 
 
 @app.route("/pet", methods=["POST"])
+@jwt_required()
 def create_pet():
-    body = request.get_json(silent=True) or {}
-
-    owner_id = body.get("owner_id")
-    pet_type = (body.get("pet_type") or "")
-    name = (body.get("name") or "")
-    birthdate = (body.get("birthdate") or "")
-    breed = (body.get("breed") or "")
-    allergies = (body.get("allergies") or "")
-    neutered = body.get("neutered")
+    user = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        user_info = Users.query.filter_by(email=user).first()
+        print("user: ", user_info)
+        print("user_info.user_id: ", user_info.user_id)
+        if user_info is None:
+            return jsonify({'msg':'User doesnt exist'}),400
+        body = request.get_json(silent=True) or {}
+        owner_id = user_info.user_id
+        pet_type = (body.get("pet_type") or "")
+        name = (body.get("name") or "")
+        birthdate = (body.get("birthdate") or "")
+        breed = (body.get("breed") or "")
+        allergies = (body.get("allergies") or "")
+        neutered = body.get("neutered")
+    else:
+        body = request.get_json(silent=True) or {}
+        owner_id = (body.get("owner_id") or "")
+        pet_type = (body.get("pet_type") or "")
+        name = (body.get("name") or "")
+        birthdate = (body.get("birthdate") or "")
+        breed = (body.get("breed") or "")
+        allergies = (body.get("allergies") or "")
+        neutered = body.get("neutered")
 
     if owner_id is None:
         return jsonify({"msg": "owner_id is required"}), 400
@@ -120,7 +137,6 @@ def create_pet():
         return jsonify({"msg": "neutered is required"}), 400
     if not isinstance(neutered, bool):
         return jsonify({"msg": "neutered must be a boolean (true/false)"}), 400
-
     owner = Users.query.get(owner_id)
     if owner is None:
         return jsonify({"msg": "Owner not found"}), 404
@@ -242,15 +258,24 @@ def login():
         return jsonify({'msg':'You must include a password'}),400
     user = Users.query.filter_by(email=body['email']).first()
     if user is None:
-        user = Doctors.query.filter_by(email=body['email']).first()
-    if user is None:
-        return jsonify({'msg':'Incorrect email or password'}),400
-    is_correct_password = bcrypt.check_password_hash(user.password, body['password'])
-    if not is_correct_password:
-        return jsonify({'msg':'Incorrect email or password'}),400
-    token = create_access_token(identity=user.email)
-    return jsonify({'msg':'Login successful',
-                    'token': token}), 200
+        admin = Doctors.query.filter_by(email=body['email']).first()
+        if admin is None:
+            return jsonify({'msg':'Incorrect email or password'}),400
+        is_correct_password = bcrypt.check_password_hash(admin.password, body['password'])
+        if not is_correct_password:
+            return jsonify({'msg':'Incorrect email or password'}),400
+        token = create_access_token(identity=user.email)
+        return jsonify({'msg':'Login successful',
+                    'token': token,
+                    'role': 'admin'}), 200
+    else:
+        is_correct_password = bcrypt.check_password_hash(user.password, body['password'])
+        if not is_correct_password:
+            return jsonify({'msg':'Incorrect email or password'}),400
+        token = create_access_token(identity=user.email)
+        return jsonify({'msg':'Login successful',
+                    'token': token,
+                    'role': 'user'}), 200
 
 
 # this only runs if `$ python src/main.py` is executed
