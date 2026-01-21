@@ -83,7 +83,7 @@ class Doctors(db.Model):
         speciality: Mapped[str] = mapped_column(String(50), nullable=False)
         email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
         phone_number: Mapped[str] = mapped_column(String(20), nullable=True)
-        password: Mapped [str] = mapped_column(String(80), nullable=False)
+        password: Mapped [str] = mapped_column(String(250), nullable=False)
 
         def serialize(self): 
             return {
