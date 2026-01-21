@@ -2,7 +2,7 @@ import os
 import inspect
 from flask_admin import Admin
 from . import models
-from .models import db, Users, Pets, Doctors
+from .models import db, Users, Pets, Doctors, Vaccines
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.theme import Bootstrap4Theme
 
@@ -13,11 +13,15 @@ class UserModelView(ModelView):
 
 class PetsModelView(ModelView):
     column_auto_select_related=True
-    column_list = ['pet_id','owner_id','owner','name','birthdate','breed','allergies','neutered','info','image']
+    column_list = ['pet_id', 'owner_id', 'owner', 'name', 'pet_type', 'birthdate', 'breed', 'allergies', 'neutered', 'info', 'image','vaccines']
 
 class DoctorsModelView(ModelView):
     column_auto_select_related=True
     column_list = ['doctor_id','first_name','last_name','specialty','email','phonenumber','password']
+
+class VaccinesModelView(ModelView):
+    column_auto_select_related=True
+    column_list = ['vaccine_id','vaccine_name','pet','vaccination_date','expiry_date']
 
 
 def setup_admin(app):
@@ -27,6 +31,7 @@ def setup_admin(app):
     admin.add_view(UserModelView(Users, db.session))
     admin.add_view(PetsModelView(Pets, db.session))
     admin.add_view(DoctorsModelView(Doctors, db.session))
+    admin.add_view(VaccinesModelView(Vaccines, db.session))
 
     # # Dynamically add all models to the admin interface
     # for name, obj in inspect.getmembers(models):
