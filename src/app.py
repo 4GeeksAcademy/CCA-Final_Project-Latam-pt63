@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, Users, Pets, Doctors
+from api.models import db, Users, Pets, Doctors, Appointments
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -121,7 +121,7 @@ def create_pet():
         allergies = (body.get("allergies") or "")
         neutered = body.get("neutered")
 
-    if owner_id is "":
+    if owner_id == "":
         return jsonify({"msg": "owner_id is required"}), 400
     if pet_type == "":
         return jsonify({"msg": "pet_type is required"}), 400
@@ -327,7 +327,74 @@ def get_users():
     return jsonify({'users': users_serialized})
     
 
-
+@app.route('/appointments',methods=['POST'])
+@jwt_required()
+def create_appointment():
+    user = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        user_info = Users.query.filter_by(email=user).first()
+        if user_info is None:
+            return jsonify({'msg':'User not found'}), 404
+        body = request.get_json(silent=True)
+        if body is None:
+            return jsonify({'msg': 'You must include information in the body'}),400
+        if 'doctor_id' not in body:
+            return jsonify({'msg':'You must include a doctor_id'}),400
+        if 'pet_id' not in body:
+            return jsonify({'msg': 'You must include a pet_id'}),400
+        if 'date' not in body:
+            return jsonify({'msg':'You must include a date'}),400
+        if 'time' not in body:
+            return jsonify({'msg': 'You must include a time'}),400
+        if 'motive' not in body:
+            return jsonify({'msg':'You must include a motive'}),400
+        doctor_id = body['doctor_id']
+        valid_doctor_id = Doctors.query.get(doctor_id)
+        if valid_doctor_id is None:
+            return jsonify({'msg':'Doctor not found'}), 404
+        pet = Pets.query.get(body['pet_id'])
+        if pet.owner_id != user_info.user_id:
+            return jsonify({'msg':'You cant make an appointment for a pet you dont own'}),400
+        
+        new_appointment = Appointments()
+        new_appointment.doctor_id = body['doctor_id']
+        new_appointment.pet_id = body['pet_id']
+        new_appointment.date = body['date']
+        new_appointment.time = body['time']
+        new_appointment.motive = body['motive']
+        db.session.add(new_appointment)
+        db.session.commit()
+        return jsonify({'msg': 'Appointment created successfully'})
+    else:
+        body = request.get_json(silent=True)
+        if body is None:
+            return jsonify({'msg': 'You must include information in the body'}),400
+        if 'doctor_id' not in body:
+            return jsonify({'msg':'You must include a doctor_id'}),400
+        if 'pet_id' not in body:
+            return jsonify({'msg': 'You must include a pet_id'}),400
+        if 'date' not in body:
+            return jsonify({'msg':'You must include a date'}),400
+        if 'time' not in body:
+            return jsonify({'msg': 'You must include a time'}),400
+        if 'motive' not in body:
+            return jsonify({'msg':'You must include a motive'}),400
+        doctor_id = body['doctor_id']
+        valid_doctor_id = Doctors.query.get(doctor_id)
+        if valid_doctor_id is None:
+            return jsonify({'msg':'Doctor not found'}), 404
+        
+        new_appointment = Appointments()
+        new_appointment.doctor_id = body['doctor_id']
+        new_appointment.pet_id = body['pet_id']
+        new_appointment.date = body['date']
+        new_appointment.time = body['time']
+        new_appointment.motive = body['motive']
+        db.session.add(new_appointment)
+        db.session.commit()
+        return jsonify({'msg': 'Appointment created successfully'})
+        
 
 
 
