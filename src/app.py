@@ -121,7 +121,7 @@ def create_pet():
         allergies = (body.get("allergies") or "")
         neutered = body.get("neutered")
 
-    if owner_id is None:
+    if owner_id is "":
         return jsonify({"msg": "owner_id is required"}), 400
     if pet_type == "":
         return jsonify({"msg": "pet_type is required"}), 400
@@ -261,11 +261,12 @@ def login():
         admin = Doctors.query.filter_by(email=body['email']).first()
         if admin is None:
             return jsonify({'msg':'Incorrect email or password'}),400
-        is_correct_password = bcrypt.check_password_hash(admin.password, body['password'])
-        if not is_correct_password:
-            return jsonify({'msg':'Incorrect email or password'}),400
-        token = create_access_token(identity=user.email)
-        return jsonify({'msg':'Login successful',
+        else:
+            is_correct_password = bcrypt.check_password_hash(admin.password, body['password'])
+            if not is_correct_password:
+                return jsonify({'msg':'Incorrect email or password'}),400
+            token = create_access_token(identity=admin.email)
+            return jsonify({'msg':'Login successful',
                     'token': token,
                     'role': 'admin'}), 200
     else:
@@ -290,8 +291,8 @@ def create_doctor():
         return jsonify({'msg': 'Falta el correo (email)'}), 400
     if 'password' not in body:
         return jsonify({'msg': 'Falta la contraseña (password)'}), 400
-    if 'speciality' not in body:
-        return jsonify({'msg': 'Falta la especialidad (speciality)'}), 400
+    if 'specialty' not in body:
+        return jsonify({'msg': 'Falta la especialidad (specialty)'}), 400
     
     doctor_existente = Doctors.query.filter_by(email=body['email']).first()
     if doctor_existente:
@@ -301,15 +302,38 @@ def create_doctor():
     new_doctor.first_name = body['first_name']
     new_doctor.last_name = body['last_name']
     new_doctor.email = body['email']
-    new_doctor.speciality = body['speciality']
+    new_doctor.specialty = body['specialty']
     new_doctor.phone_number = body.get('phone_number')
 
-    pw_hash = generate_password_hash(body['password'])
+    pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
     new_doctor.password = pw_hash
 
     db.session.add(new_doctor)
     db.session.commit()
     return jsonify({'msg': 'Doctor creado exitosamente'}), 201
+
+
+@app.route('/users', methods=['GET'])
+@jwt_required()
+def get_users():
+    user= get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        return jsonify({'msg':'User not found'}),404
+    users = Users.query.all()
+    users_serialized = []
+    for user in users:
+        users_serialized.append(user.serialize())
+    return jsonify({'users': users_serialized})
+    
+
+
+
+
+
+
+
+
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
