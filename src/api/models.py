@@ -92,6 +92,9 @@ class Doctors(db.Model):
     phonenumber: Mapped[str] = mapped_column(String(20), nullable=True)
     password: Mapped[str] = mapped_column(String(250), nullable=False)
 
+    def __repr__(self):
+        return f'{self.first_name} {self.last_name}'
+
     def serialize(self):
         return {
             "id": self.doctor_id,
