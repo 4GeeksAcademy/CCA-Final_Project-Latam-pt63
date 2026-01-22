@@ -29,7 +29,7 @@ class Users(db.Model):
             "phonenumber": self.phonenumber,
             "address": self.address,
             "password": self.password,
-            "pets": self.pets
+            
             # do not serialize the password, its a security breach
         }
 
@@ -86,7 +86,7 @@ class Doctors(db.Model):
     doctor_id: Mapped[int] = mapped_column(primary_key=True)
     first_name: Mapped[str] = mapped_column(String(120), nullable=False)
     last_name: Mapped[str] = mapped_column(String(120), nullable=False)
-    speciality: Mapped[str] = mapped_column(String(50), nullable=False)
+    specialty: Mapped[str] = mapped_column(String(50), nullable=False)
     email: Mapped[str] = mapped_column(
         String(120), unique=True, nullable=False)
     phonenumber: Mapped[str] = mapped_column(String(20), nullable=True)
@@ -97,7 +97,7 @@ class Doctors(db.Model):
             "id": self.doctor_id,
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "speciality": self.speciality,
+            "specialty": self.specialty,
             "email": self.email,
             "phone_number": self.phonenumber
         }

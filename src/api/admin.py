@@ -22,7 +22,7 @@ class PetsModelView(ModelView):
 class DoctorsModelView(ModelView):
     column_auto_select_related = True
     column_list = ['doctor_id', 'first_name', 'last_name',
-                   'speciality', 'email', 'phonenumber', 'password']
+                   'specialty', 'email', 'phonenumber', 'password']
 
 
 class VaccinesModelView(ModelView):
