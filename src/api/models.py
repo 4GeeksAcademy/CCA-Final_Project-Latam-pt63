@@ -58,7 +58,7 @@ class Pets(db.Model):
 
     info: Mapped[str] = mapped_column(String(500), nullable=True)
     image: Mapped[str] = mapped_column(String(500), nullable=True)
-    vaccines:Mapped[list['Vaccines']] = relationship(back_populates='pet')
+    vaccines: Mapped[list['Vaccines']] = relationship(back_populates='pet')
 
     def __repr__(self):
         return f'{self.name}'
@@ -89,8 +89,8 @@ class Doctors(db.Model):
     speciality: Mapped[str] = mapped_column(String(50), nullable=False)
     email: Mapped[str] = mapped_column(
         String(120), unique=True, nullable=False)
-    phone_number: Mapped[str] = mapped_column(String(20), nullable=True)
-    password: Mapped[str] = mapped_column(String(80), nullable=False)
+    phonenumber: Mapped[str] = mapped_column(String(20), nullable=True)
+    password: Mapped[str] = mapped_column(String(250), nullable=False)
 
     def serialize(self):
         return {
@@ -99,7 +99,7 @@ class Doctors(db.Model):
             "last_name": self.last_name,
             "speciality": self.speciality,
             "email": self.email,
-            "phone_number": self.phone_number
+            "phone_number": self.phonenumber
         }
 
 
@@ -109,13 +109,13 @@ class Vaccines(db.Model):
     vaccine_name: Mapped[str] = mapped_column(String(20), nullable=False)
     pet_id: Mapped[int] = mapped_column(
         Integer, ForeignKey('pets.pet_id'), nullable=False)
-    pet: Mapped['Pets']= relationship(back_populates='vaccines')
+    pet: Mapped['Pets'] = relationship(back_populates='vaccines')
     vaccination_date: Mapped[str] = mapped_column(String(20), nullable=False)
     expiry_date: Mapped[str] = mapped_column(String(20), nullable=False)
 
     def __repr__(self):
         return f'{self.vaccine_name}'
-    
+
     def serialize(self):
         return {
             "vaccine_id": self.vaccine_id,
@@ -123,4 +123,38 @@ class Vaccines(db.Model):
             "pet": self.pet,
             "vaccination_date": self.vaccination_date,
             "expiry_date": self.expiry_date
+        }
+
+
+class Appointments(db.Model):
+    __tablename__ = 'appointments'
+    appointment_id: Mapped[int] = mapped_column(primary_key=True)
+    doctor_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey('doctors.doctor_id'), nullable=False)
+    pet_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey('pets.pet_id'), nullable=False)
+    date: Mapped[str] = mapped_column(String(50), nullable=False)
+    time: Mapped[str] = mapped_column(String(50), nullable=False)
+    motive: Mapped[str] = mapped_column(String(250), nullable=False)
+    anamnesis: Mapped[str] = mapped_column(String(500), nullable=True)
+    procedures: Mapped[str] = mapped_column(String(500), nullable=True)
+    medication: Mapped[str] = mapped_column(String(500), nullable=True)
+    observations: Mapped[str] = mapped_column(String(500), nullable=True)
+    doctor: Mapped['Doctors'] = relationship()
+    pet: Mapped['Pets'] = relationship()
+
+    def serialize(self):
+        return {
+            "appointment_id": self.appointment_id,
+            "doctor_id": self.doctor_id,
+            "pet_id": self.pet_id,
+            "date": self.date,
+            "time": self.time,
+            "motive": self.motive,
+            "anamnesis": self.anamnesis,
+            "procedures": self.procedures,
+            "medication": self.medication,
+            "observations": self.observations,
+            "doctor_name": f"{self.doctor.first_name} {self.doctor.last_name}" if self.doctor else None,
+            "pet_name": self.pet.name if self.pet else None
         }
