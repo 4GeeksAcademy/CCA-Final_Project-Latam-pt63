@@ -123,7 +123,7 @@ class Vaccines(db.Model):
         return {
             "vaccine_id": self.vaccine_id,
             "vaccine_name": self.vaccine_name,
-            "pet": self.pet,
+            "pet": self.pet_id,
             "vaccination_date": self.vaccination_date,
             "expiry_date": self.expiry_date
         }

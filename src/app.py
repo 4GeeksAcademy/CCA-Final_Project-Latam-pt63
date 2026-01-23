@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, Users, Pets, Doctors, Appointments
+from api.models import db, Users, Pets, Doctors, Appointments, Vaccines
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -83,7 +83,6 @@ def serve_any_other_file(path):
     return response
 
 
-
 @app.route("/pet/<int:pet_id>", methods=["GET"])
 def get_pet(pet_id):
     pet = Pets.query.get(pet_id)
@@ -102,7 +101,7 @@ def create_pet():
         print("user: ", user_info)
         print("user_info.user_id: ", user_info.user_id)
         if user_info is None:
-            return jsonify({'msg':'User doesnt exist'}),400
+            return jsonify({'msg': 'User doesnt exist'}), 400
         body = request.get_json(silent=True) or {}
         owner_id = user_info.user_id
         pet_type = (body.get("pet_type") or "")
@@ -156,7 +155,6 @@ def create_pet():
     db.session.commit()
 
     return jsonify({"msg": "Pet created successfully", "pet": new_pet.serialize()}), 201
-
 
 
 @app.route("/pet/<int:pet_id>", methods=["PUT"])
@@ -214,7 +212,7 @@ def update_pet(pet_id):
     db.session.commit()
     return jsonify({"msg": "Pet updated successfully", "pet": pet.serialize()}), 200
 
- 
+
 @app.route('/signup', methods=['POST'])
 def signup():
     body = request.get_json(silent=True)
@@ -247,57 +245,61 @@ def signup():
     db.session.commit()
     return jsonify({'msg': 'New user added successfully'}), 201
 
-@app.route('/login',methods=['POST'])
+
+@app.route('/login', methods=['POST'])
 def login():
-    body =  request.get_json(silent=True)
+    body = request.get_json(silent=True)
     if body is None:
-        return jsonify({'msg':'You must include information in the body'}),400
+        return jsonify({'msg': 'You must include information in the body'}), 400
     if 'email' not in body:
-        return jsonify({'msg':'You must include an email'}),400
+        return jsonify({'msg': 'You must include an email'}), 400
     if 'password' not in body:
-        return jsonify({'msg':'You must include a password'}),400
+        return jsonify({'msg': 'You must include a password'}), 400
     user = Users.query.filter_by(email=body['email']).first()
     if user is None:
         admin = Doctors.query.filter_by(email=body['email']).first()
         if admin is None:
-            return jsonify({'msg':'Incorrect email or password'}),400
+            return jsonify({'msg': 'Incorrect email or password'}), 400
         else:
-            is_correct_password = bcrypt.check_password_hash(admin.password, body['password'])
+            is_correct_password = bcrypt.check_password_hash(
+                admin.password, body['password'])
             if not is_correct_password:
-                return jsonify({'msg':'Incorrect email or password'}),400
+                return jsonify({'msg': 'Incorrect email or password'}), 400
             token = create_access_token(identity=admin.email)
-            return jsonify({'msg':'Login successful',
+            return jsonify({'msg': 'Login successful',
                     'token': token,
                     'role': 'admin'}), 200
     else:
-        is_correct_password = bcrypt.check_password_hash(user.password, body['password'])
+        is_correct_password = bcrypt.check_password_hash(
+            user.password, body['password'])
         if not is_correct_password:
-            return jsonify({'msg':'Incorrect email or password'}),400
+            return jsonify({'msg': 'Incorrect email or password'}), 400
         token = create_access_token(identity=user.email)
-        return jsonify({'msg':'Login successful',
+        return jsonify({'msg': 'Login successful',
                     'token': token,
                     'role': 'user'}), 200
+
 
 @app.route('/doctors', methods=['POST'])
 def create_doctor():
     body = request.get_json(silent=True)
     if body is None:
-        return jsonify({'msg': 'Debes enviar información en el body'}), 400
+        return jsonify({'msg': 'You must send information in the body'}), 400
     if 'first_name' not in body:
-        return jsonify({'msg': 'Falta el nombre (first_name)'}), 400
+        return jsonify({'msg': 'Missing (first_name)'}), 400
     if 'last_name' not in body:
-        return jsonify({'msg': 'Falta el apellido (last_name)'}), 400
+        return jsonify({'msg': 'Missing (last_name'}), 400
     if 'email' not in body:
-        return jsonify({'msg': 'Falta el correo (email)'}), 400
+        return jsonify({'msg': 'missing (email)'}), 400
     if 'password' not in body:
-        return jsonify({'msg': 'Falta la contraseña (password)'}), 400
+        return jsonify({'msg': 'missing (password)'}), 400
     if 'specialty' not in body:
-        return jsonify({'msg': 'Falta la especialidad (specialty)'}), 400
-    
+        return jsonify({'msg': 'missing (specialty)'}), 400
+
     doctor_existente = Doctors.query.filter_by(email=body['email']).first()
     if doctor_existente:
-        return jsonify({'msg': 'El correo ya está registrado'}), 400    
-    
+        return jsonify({'msg': 'email already registered'}), 400
+
     new_doctor = Doctors()
     new_doctor.first_name = body['first_name']
     new_doctor.last_name = body['last_name']
@@ -310,24 +312,24 @@ def create_doctor():
 
     db.session.add(new_doctor)
     db.session.commit()
-    return jsonify({'msg': 'Doctor creado exitosamente'}), 201
+    return jsonify({'msg': 'Doctor created successfully'}), 201
 
 
 @app.route('/users', methods=['GET'])
 @jwt_required()
 def get_users():
-    user= get_jwt_identity()
+    user = get_jwt_identity()
     admin = Doctors.query.filter_by(email=user).first()
     if admin is None:
-        return jsonify({'msg':'User not found'}),404
+        return jsonify({'msg': 'User not found'}), 404
     users = Users.query.all()
     users_serialized = []
     for user in users:
         users_serialized.append(user.serialize())
     return jsonify({'users': users_serialized})
-    
 
-@app.route('/appointments',methods=['POST'])
+
+@app.route('/appointments', methods=['POST'])
 @jwt_required()
 def create_appointment():
     user = get_jwt_identity()
@@ -335,28 +337,28 @@ def create_appointment():
     if admin is None:
         user_info = Users.query.filter_by(email=user).first()
         if user_info is None:
-            return jsonify({'msg':'User not found'}), 404
+            return jsonify({'msg': 'User not found'}), 404
         body = request.get_json(silent=True)
         if body is None:
-            return jsonify({'msg': 'You must include information in the body'}),400
+            return jsonify({'msg': 'You must include information in the body'}), 400
         if 'doctor_id' not in body:
-            return jsonify({'msg':'You must include a doctor_id'}),400
+            return jsonify({'msg': 'You must include a doctor_id'}), 400
         if 'pet_id' not in body:
-            return jsonify({'msg': 'You must include a pet_id'}),400
+            return jsonify({'msg': 'You must include a pet_id'}), 400
         if 'date' not in body:
-            return jsonify({'msg':'You must include a date'}),400
+            return jsonify({'msg': 'You must include a date'}), 400
         if 'time' not in body:
-            return jsonify({'msg': 'You must include a time'}),400
+            return jsonify({'msg': 'You must include a time'}), 400
         if 'motive' not in body:
-            return jsonify({'msg':'You must include a motive'}),400
+            return jsonify({'msg': 'You must include a motive'}), 400
         doctor_id = body['doctor_id']
         valid_doctor_id = Doctors.query.get(doctor_id)
         if valid_doctor_id is None:
-            return jsonify({'msg':'Doctor not found'}), 404
+            return jsonify({'msg': 'Doctor not found'}), 404
         pet = Pets.query.get(body['pet_id'])
         if pet.owner_id != user_info.user_id:
-            return jsonify({'msg':'You cant make an appointment for a pet you dont own'}),400
-        
+            return jsonify({'msg': 'You cant make an appointment for a pet you dont own'}), 400
+
         new_appointment = Appointments()
         new_appointment.doctor_id = body['doctor_id']
         new_appointment.pet_id = body['pet_id']
@@ -369,22 +371,22 @@ def create_appointment():
     else:
         body = request.get_json(silent=True)
         if body is None:
-            return jsonify({'msg': 'You must include information in the body'}),400
+            return jsonify({'msg': 'You must include information in the body'}), 400
         if 'doctor_id' not in body:
-            return jsonify({'msg':'You must include a doctor_id'}),400
+            return jsonify({'msg': 'You must include a doctor_id'}), 400
         if 'pet_id' not in body:
-            return jsonify({'msg': 'You must include a pet_id'}),400
+            return jsonify({'msg': 'You must include a pet_id'}), 400
         if 'date' not in body:
-            return jsonify({'msg':'You must include a date'}),400
+            return jsonify({'msg': 'You must include a date'}), 400
         if 'time' not in body:
-            return jsonify({'msg': 'You must include a time'}),400
+            return jsonify({'msg': 'You must include a time'}), 400
         if 'motive' not in body:
-            return jsonify({'msg':'You must include a motive'}),400
+            return jsonify({'msg': 'You must include a motive'}), 400
         doctor_id = body['doctor_id']
         valid_doctor_id = Doctors.query.get(doctor_id)
         if valid_doctor_id is None:
-            return jsonify({'msg':'Doctor not found'}), 404
-        
+            return jsonify({'msg': 'Doctor not found'}), 404
+
         new_appointment = Appointments()
         new_appointment.doctor_id = body['doctor_id']
         new_appointment.pet_id = body['pet_id']
@@ -394,14 +396,26 @@ def create_appointment():
         db.session.add(new_appointment)
         db.session.commit()
         return jsonify({'msg': 'Appointment created successfully'})
-        
 
 
-
+@app.route('/vaccine', methods=['POST'])
+def create_vaccine():
+    body = request.get_json()
+    if 'vaccine_name' not in body or 'pet_id' not in body or 'vaccination_date' not in body or 'expiry_date' not in body:
+        return jsonify({"msg": "Missing fields: vaccine_name, pet_id, vaccination_date and expiry_date are required"}), 400
+    new_vaccine = Vaccines(
+        vaccine_name=body['vaccine_name'],
+        pet_id=body['pet_id'],
+        vaccination_date=body['vaccination_date'],
+        expiry_date=body['expiry_date']
+    )
+    db.session.add(new_vaccine)
+    db.session.commit()
+    return jsonify(new_vaccine.serialize()), 201
 
 
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
-    PORT = int(os.environ.get('PORT', 3001))
+    PORT=int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
