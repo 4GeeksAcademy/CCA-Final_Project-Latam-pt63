@@ -83,23 +83,43 @@ def serve_any_other_file(path):
     return response
 
 
+
+@app.route("/pet", methods=["GET"])
 @app.route("/pet/<int:pet_id>", methods=["GET"])
-def get_pet(pet_id):
+@jwt_required()
+def get_pet(pet_id=None):
+    user = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is not None:
+        if pet_id is None:
+            pets = Pets.query.all()
+            return jsonify({"pets": [p.serialize() for p in pets]}), 200
+        pet = Pets.query.get(pet_id)
+        if pet is None:
+            return jsonify({"msg": "Pet not found"}), 404
+        return jsonify(pet.serialize()), 200
+    user_info = Users.query.filter_by(email=user).first()
+    if user_info is None:
+        return jsonify({"msg": "User doesnt exist"}), 400
+    if pet_id is None:
+        pets = Pets.query.filter_by(owner_id=user_info.user_id).all()
+        return jsonify({"pets": [p.serialize() for p in pets]}), 200
     pet = Pets.query.get(pet_id)
     if pet is None:
         return jsonify({"msg": "Pet not found"}), 404
+    if pet.owner_id != user_info.user_id:
+        return jsonify({"msg": "You are not allowed to view this pet"}), 403
     return jsonify(pet.serialize()), 200
-
 
 @app.route("/pet", methods=["POST"])
 @jwt_required()
 def create_pet():
     user = get_jwt_identity()
     admin = Doctors.query.filter_by(email=user).first()
+
     if admin is None:
         user_info = Users.query.filter_by(email=user).first()
         print("user: ", user_info)
-        print("user_info.user_id: ", user_info.user_id)
         if user_info is None:
             return jsonify({'msg': 'User doesnt exist'}), 400
         body = request.get_json(silent=True) or {}
@@ -110,9 +130,15 @@ def create_pet():
         breed = (body.get("breed") or "")
         allergies = (body.get("allergies") or "")
         neutered = body.get("neutered")
+
     else:
         body = request.get_json(silent=True) or {}
         owner_id = (body.get("owner_id") or "")
+        if isinstance(owner_id, str):
+            if owner_id != "" and not owner_id.isdigit():
+                return jsonify({"msg": "owner_id must be an integer"}), 400
+            if owner_id != "":
+                owner_id = int(owner_id)
         pet_type = (body.get("pet_type") or "")
         name = (body.get("name") or "")
         birthdate = (body.get("birthdate") or "")
@@ -120,6 +146,7 @@ def create_pet():
         allergies = (body.get("allergies") or "")
         neutered = body.get("neutered")
 
+    if owner_id is None or owner_id == "":
     if owner_id == "":
         return jsonify({"msg": "owner_id is required"}), 400
     if pet_type == "":
@@ -139,7 +166,6 @@ def create_pet():
     owner = Users.query.get(owner_id)
     if owner is None:
         return jsonify({"msg": "Owner not found"}), 404
-
     new_pet = Pets()
     new_pet.owner_id = owner_id
     new_pet.pet_type = pet_type
@@ -158,21 +184,39 @@ def create_pet():
 
 
 @app.route("/pet/<int:pet_id>", methods=["PUT"])
+@jwt_required()
 def update_pet(pet_id):
+    user = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+
     pet = Pets.query.get(pet_id)
     if pet is None:
         return jsonify({"msg": "Pet not found"}), 404
 
     body = request.get_json(silent=True) or {}
 
-    if "owner_id" in body:
-        new_owner_id = body.get("owner_id")
-        if new_owner_id is None:
-            return jsonify({"msg": "owner_id is required"}), 400
-        owner = Users.query.get(new_owner_id)
-        if owner is None:
-            return jsonify({"msg": "Owner not found"}), 404
-        pet.owner_id = new_owner_id
+    if admin is None:
+        user_info = Users.query.filter_by(email=user).first()
+        if user_info is None:
+            return jsonify({"msg": "User doesnt exist"}), 400
+        if pet.owner_id != user_info.user_id:
+            return jsonify({"msg": "You are not allowed to update this pet"}), 403
+        new_owner_id = user_info.user_id
+    else:
+        new_owner_id = body.get("owner_id", pet.owner_id)
+
+    if new_owner_id is None or new_owner_id == "":
+        return jsonify({"msg": "owner_id is required"}), 400
+    if isinstance(new_owner_id, str):
+        if not new_owner_id.isdigit():
+            return jsonify({"msg": "owner_id must be an integer"}), 400
+        new_owner_id = int(new_owner_id)
+
+    owner = Users.query.get(new_owner_id)
+    if owner is None:
+        return jsonify({"msg": "Owner not found"}), 404
+
+    pet.owner_id = new_owner_id
 
     if "pet_type" in body:
         pet.pet_type = (body.get("pet_type") or "")
@@ -184,11 +228,15 @@ def update_pet(pet_id):
         pet.breed = (body.get("breed") or "")
     if "allergies" in body:
         pet.allergies = (body.get("allergies") or "")
+
     if "neutered" in body:
         neutered = body.get("neutered")
+        if neutered is None:
+            return jsonify({"msg": "neutered is required"}), 400
         if not isinstance(neutered, bool):
             return jsonify({"msg": "neutered must be a boolean (true/false)"}), 400
         pet.neutered = neutered
+
     if "info" in body:
         pet.info = body.get("info")
     if "image" in body:
@@ -327,6 +375,7 @@ def get_users():
     for user in users:
         users_serialized.append(user.serialize())
     return jsonify({'users': users_serialized})
+    
 
 
 @app.route('/appointments', methods=['POST'])
