@@ -92,6 +92,9 @@ class Doctors(db.Model):
     phonenumber: Mapped[str] = mapped_column(String(20), nullable=True)
     password: Mapped[str] = mapped_column(String(250), nullable=False)
 
+    def __repr__(self):
+        return f'{self.first_name} {self.last_name}'
+
     def serialize(self):
         return {
             "id": self.doctor_id,
@@ -120,7 +123,7 @@ class Vaccines(db.Model):
         return {
             "vaccine_id": self.vaccine_id,
             "vaccine_name": self.vaccine_name,
-            "pet": self.pet,
+            "pet": self.pet_id,
             "vaccination_date": self.vaccination_date,
             "expiry_date": self.expiry_date
         }
