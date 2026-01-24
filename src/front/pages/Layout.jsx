@@ -9,7 +9,7 @@ export const Layout = () => {
     return (
         <ScrollToTop>
                  <NavVet />
-            <Navbar />
+            {/* <Navbar /> */}
                 <Outlet />
             <Footer />
         </ScrollToTop>
