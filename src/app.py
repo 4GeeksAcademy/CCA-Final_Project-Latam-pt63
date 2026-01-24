@@ -146,7 +146,6 @@ def create_pet():
         allergies = (body.get("allergies") or "")
         neutered = body.get("neutered")
 
-    if owner_id is None or owner_id == "":
     if owner_id == "":
         return jsonify({"msg": "owner_id is required"}), 400
     if pet_type == "":
@@ -369,12 +368,57 @@ def get_users():
     user = get_jwt_identity()
     admin = Doctors.query.filter_by(email=user).first()
     if admin is None:
-        return jsonify({'msg': 'User not found'}), 404
-    users = Users.query.all()
-    users_serialized = []
-    for user in users:
-        users_serialized.append(user.serialize())
-    return jsonify({'users': users_serialized})
+        user_info = Users.query.filter_by(email=user).first()
+        if user_info is None:
+            return jsonify({'msg': 'User not found'}), 404
+        else:
+            return jsonify({'user': user_info.serialize()}), 200
+    else:
+        users = Users.query.all()
+        users_serialized = []
+        for user in users:
+            users_serialized.append(user.serialize())
+        return jsonify({'users': users_serialized}),200
+    
+@app.route('/users/<int:user_id>', methods=['PUT'])
+@jwt_required()
+def modify_user(user_id):
+    user = get_jwt_identity()
+    body = request.get_json()
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        user_info = Users.query.filter_by(email=user).first()
+        if user_info is None:
+            return jsonify({'msg':'User not found'}),400
+        if user_info.user_id != user_id:
+            return jsonify({'msg':'You cant modify a different user'}),400
+        else:
+            if 'email' in body:
+                user_info.email = body['email']
+            if 'phonenumber' in body:
+                user_info.phonenumber = body['phonenumber']
+            if 'address' in body:
+                user_info.address = body['address']
+            db.session.commit()
+            return jsonify({'msg':'User updates successfully',
+                            'user': user_info.serialize()}),200
+    else:
+        update_user = Users.query.get(user_id)
+        if update_user is None:
+            return jsonify({'msg':'User not found'}),404
+        if 'email' in body:
+            update_user.email = body['email']
+        if 'phonenumber' in body:
+            update_user.phonenumber = body['phonenumber']
+        if 'address' in body:
+            update_user.address = body['address']
+        db.session.commit()
+        return jsonify({'msg': 'User updated successfully',
+                        'user': update_user.serialize()}),200
+            
+    
+        
+
     
 
 
@@ -461,6 +505,8 @@ def create_vaccine():
     db.session.add(new_vaccine)
     db.session.commit()
     return jsonify(new_vaccine.serialize()), 201
+
+
 
 
 
