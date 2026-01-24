@@ -61,7 +61,7 @@ export const Login = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="youEmail@example.com"
+            placeholder="email@example.uy"
           />
         </div>
 
@@ -76,7 +76,7 @@ export const Login = () => {
           />
         </div>
 
-        <button className="btn btn-dark w-100" disabled={isLoading}>
+        <button className="btn rounded-0 w-100 text-light" style={{ background: "rgb(48, 130, 114)" }} disabled={isLoading}>
           {isLoading ? "Loading..." : "Sign in"}
         </button>
 

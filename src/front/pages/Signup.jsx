@@ -28,7 +28,7 @@ export const Signup = () => {
         e.preventDefault();
         setFeedback("");
 
-       
+
         if (
             form.first_name === "" ||
             form.last_name === "" ||
@@ -103,7 +103,7 @@ export const Signup = () => {
                         name="email"
                         value={form.email}
                         onChange={handleChange}
-                        placeholder="you@example.com"
+                        placeholder="email@example.uy"
                     />
                 </div>
 
@@ -140,11 +140,11 @@ export const Signup = () => {
                     />
                 </div>
 
-                <button className="btn btn-dark w-100" disabled={isLoading}>
+                <button className="btn rounded-0 w-100 text-light" disabled={isLoading} style={{ background: "rgb(48, 130, 114)" }}>
                     {isLoading ? "Loading..." : "Create account"}
                 </button>
 
-                <p className="mt-3 mb-0 text-center">
+                <p className="mt-3 mb-0 text-center "  >
                     Already have an account? <Link to="/login">Login</Link>
                 </p>
             </form>
