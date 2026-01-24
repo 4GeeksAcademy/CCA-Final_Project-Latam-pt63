@@ -432,7 +432,7 @@ def get_single_user(user_id):
             return jsonify({'msg':'You cant access this information'}),400
         return jsonify({'user':user_info.serialize()}),200
     else:
-        return jsonify({'user':requested_user.serialize()},200)
+        return jsonify({'user':requested_user.serialize()}),200
         
             
     
