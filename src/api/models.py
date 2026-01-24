@@ -1,5 +1,6 @@
+import datetime
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Integer, ForeignKey
+from sqlalchemy import String, Boolean, Integer, ForeignKey, Date, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
@@ -16,6 +17,8 @@ class Users(db.Model):
     address: Mapped[str] = mapped_column(String(50))
     password: Mapped[str] = mapped_column(nullable=False)
     pets: Mapped[list['Pets']] = relationship(back_populates='owner')
+    password_resets: Mapped[list['PasswordReset']] = relationship(
+        back_populates='user')
 
     def __repr__(self):
         return f'{self.first_name}'
@@ -29,7 +32,7 @@ class Users(db.Model):
             "phonenumber": self.phonenumber,
             "address": self.address,
             "password": self.password,
-            
+
             # do not serialize the password, its a security breach
         }
 
@@ -59,6 +62,8 @@ class Pets(db.Model):
     info: Mapped[str] = mapped_column(String(500), nullable=True)
     image: Mapped[str] = mapped_column(String(500), nullable=True)
     vaccines: Mapped[list['Vaccines']] = relationship(back_populates='pet')
+    appointments: Mapped[list['Appointments']
+                         ] = relationship(back_populates='pet')
 
     def __repr__(self):
         return f'{self.name}'
@@ -91,6 +96,8 @@ class Doctors(db.Model):
         String(120), unique=True, nullable=False)
     phonenumber: Mapped[str] = mapped_column(String(20), nullable=True)
     password: Mapped[str] = mapped_column(String(250), nullable=False)
+    appointments: Mapped[list['Appointments']
+                         ] = relationship(back_populates='doctor')
 
     def __repr__(self):
         return f'{self.first_name} {self.last_name}'
@@ -143,8 +150,8 @@ class Appointments(db.Model):
     procedures: Mapped[str] = mapped_column(String(500), nullable=True)
     medication: Mapped[str] = mapped_column(String(500), nullable=True)
     observations: Mapped[str] = mapped_column(String(500), nullable=True)
-    doctor: Mapped['Doctors'] = relationship()
-    pet: Mapped['Pets'] = relationship()
+    doctor: Mapped['Doctors'] = relationship(back_populates='appointments')
+    pet: Mapped['Pets'] = relationship(back_populates='appointments')
 
     def serialize(self):
         return {
@@ -160,4 +167,22 @@ class Appointments(db.Model):
             "observations": self.observations,
             "doctor_name": f"{self.doctor.first_name} {self.doctor.last_name}" if self.doctor else None,
             "pet_name": self.pet.name if self.pet else None
+        }
+
+
+class PasswordReset(db.Model):
+    __tablename__ = 'password_reset'
+    reset_id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey(Users.user_id), nullable=False)
+    user: Mapped['Users'] = relationship(back_populates='password_resets')
+    uuid: Mapped[str] = mapped_column(String(36), nullable=False)
+    time: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+
+    def serialize(self):
+        return {
+            'reset_id': self.reset_id,
+            'user_id': self.user_id,
+            'uuid': self.uuid,
+            'time': self.time
         }

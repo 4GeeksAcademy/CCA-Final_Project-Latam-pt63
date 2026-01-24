@@ -2,7 +2,7 @@ import os
 import inspect
 from flask_admin import Admin
 from . import models
-from .models import db, Users, Pets, Doctors, Vaccines, Appointments
+from .models import db, Users, Pets, Doctors, Vaccines, Appointments, PasswordReset
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.theme import Bootstrap4Theme
 
@@ -36,6 +36,12 @@ class AppointmentsModelView(ModelView):
     column_list = ['appointment_id', 'doctor', 'pet', 'date', 'time', 'motive']
 
 
+class PasswordResetModelView(ModelView):
+    column_auto_select_related = True
+    column_list = ['reset_id', 'user_id', 'uuid',
+                   'time']
+
+
 def setup_admin(app):
     app.secret_key = os.environ.get('FLASK_APP_KEY', 'sample key')
     admin = Admin(app, name='4Geeks Admin',
@@ -46,6 +52,7 @@ def setup_admin(app):
     admin.add_view(DoctorsModelView(Doctors, db.session))
     admin.add_view(VaccinesModelView(Vaccines, db.session))
     admin.add_view(AppointmentsModelView(Appointments, db.session))
+    admin.add_view(PasswordResetModelView(PasswordReset, db.session))
 
     # # Dynamically add all models to the admin interface
     # for name, obj in inspect.getmembers(models):
