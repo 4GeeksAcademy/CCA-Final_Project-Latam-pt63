@@ -415,6 +415,25 @@ def modify_user(user_id):
         db.session.commit()
         return jsonify({'msg': 'User updated successfully',
                         'user': update_user.serialize()}),200
+    
+@app.route('/users/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_single_user(user_id):
+    user = get_jwt_identity()
+    requested_user = Users.query.get(user_id)
+    if requested_user is None:
+        return jsonify({'msg':'User not found'}),404
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        user_info = Users.query.filter_by(email=user).first()
+        if user_info is None:
+            return jsonify({'msg':'User not found'}),404
+        if user_info.user_id != user_id:
+            return jsonify({'msg':'You cant access this information'}),400
+        return jsonify({'user':user_info.serialize()}),200
+    else:
+        return jsonify({'user':requested_user.serialize()},200)
+        
             
     
         
