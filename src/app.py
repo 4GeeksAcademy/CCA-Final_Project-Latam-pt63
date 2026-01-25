@@ -267,8 +267,8 @@ def login():
                 return jsonify({'msg': 'Incorrect email or password'}), 400
             token = create_access_token(identity=admin.email)
             return jsonify({'msg': 'Login successful',
-                    'token': token,
-                    'role': 'admin'}), 200
+                            'token': token,
+                            'role': 'admin'}), 200
     else:
         is_correct_password = bcrypt.check_password_hash(
             user.password, body['password'])
@@ -276,8 +276,8 @@ def login():
             return jsonify({'msg': 'Incorrect email or password'}), 400
         token = create_access_token(identity=user.email)
         return jsonify({'msg': 'Login successful',
-                    'token': token,
-                    'role': 'user'}), 200
+                        'token': token,
+                        'role': 'user'}), 200
 
 
 @app.route('/doctors', methods=['POST'])
@@ -414,8 +414,37 @@ def create_vaccine():
     return jsonify(new_vaccine.serialize()), 201
 
 
+@app.route('/appointment/<int:appointment_id>', methods=['PUT'])
+@jwt_required()
+def update_appointment(appointment_id):
+    user_email = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user_email).first()
+
+    if admin is None:
+        return jsonify({'msg': 'Access denied. Only admins can update appointments'}), 403
+
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'You must include information in the body'}), 400
+
+    appointment = Appointments.query.get(appointment_id)
+    if appointment is None:
+        return jsonify({'msg': 'Appointment not found'}), 404
+
+    if 'date' in body:
+        appointment.date = body['date']
+    if 'time' in body:
+        appointment.time = body['time']
+    if 'motive' in body:
+        appointment.motive = body['motive']
+    if 'status' in body:
+        appointment.status = body['status']
+
+    db.session.commit()
+    return jsonify({'msg': 'Appointment updated successfully'}), 200
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
-    PORT=int(os.environ.get('PORT', 3001))
+    PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
