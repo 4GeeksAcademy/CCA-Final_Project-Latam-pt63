@@ -182,7 +182,6 @@ class PasswordReset(db.Model):
     def serialize(self):
         return {
             'reset_id': self.reset_id,
-            'user_id': self.user_id,
             'uuid': self.uuid,
             'time': self.time
         }
