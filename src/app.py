@@ -433,6 +433,17 @@ def get_single_user(user_id):
         return jsonify({'user':user_info.serialize()}),200
     else:
         return jsonify({'user':requested_user.serialize()}),200
+    
+
+@app.route('/private',methods=['GET'])
+@jwt_required()
+def verify_admin():
+    user= get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        return jsonify({'msg':'You dont have access to this page'}),400
+    else:
+        return jsonify({'msg':'Access granted'}),200
         
             
     
