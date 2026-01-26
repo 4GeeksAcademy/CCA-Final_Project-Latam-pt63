@@ -18,7 +18,7 @@ export const NavVet = () => {
                     </Link>
 
                     <div className="d-flex align-items-center gap-4 ms-auto me-4">
-                        <Link className="nav-link text-dark p-0" to="/homepage">Home</Link>
+                        <Link className="nav-link text-dark p-0" to="/">Home</Link>
                         <Link className="nav-link text-dark p-0" to="/services">Services</Link>
                         <Link className="nav-link text-dark p-0" to="/about">About Us</Link>
                         <Link className="nav-link text-dark p-0" to="/book">Book Appointment</Link>

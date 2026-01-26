@@ -556,6 +556,31 @@ def update_appointment(appointment_id):
     return jsonify({'msg': 'Appointment updated successfully'}), 200
 
 
+@app.route('/history/<int:pet_id>', methods=['GET'])
+@jwt_required()
+def get_pet_history(pet_id):
+    user = get_jwt_identity()
+    pet = Pets.query.get(pet_id)
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        owner = Users.query.filter_by(email=user).first()
+        if owner is None:
+            return jsonify({'msg':'User not found'}),404
+        if pet.owner_id != owner.user_id:
+            return jsonify({'msg':'You cant acces info from a pet you dont own'}),400
+        else:
+            history = Appointments.query.filter_by(pet_id=pet_id).all()
+            history_serialized = []
+            for appointment in history:
+                history_serialized.append(appointment.serialize())
+            return jsonify({'history': history_serialized}),200
+    else:
+        history = Appointments.query.filter_by(pet_id=pet_id).all()
+        history_serialized = []
+        for appointment in history:
+            history_serialized.append(appointment.serialize())
+        return jsonify({'history': history_serialized}),200
+
 
 
 # this only runs if `$ python src/main.py` is executed
