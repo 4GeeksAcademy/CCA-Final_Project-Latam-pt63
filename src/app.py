@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, Users, Pets, Doctors, Appointments, Vaccines
+from api.models import db, Users, Pets, Doctors, Appointments, Vaccines, PasswordReset
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -18,6 +18,9 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+
+import uuid
+from datetime import datetime, timedelta, timezone
 
 # from models import Person
 
@@ -83,7 +86,6 @@ def serve_any_other_file(path):
     return response
 
 
-
 @app.route("/pet", methods=["GET"])
 @app.route("/pet/<int:pet_id>", methods=["GET"])
 @jwt_required()
@@ -110,6 +112,7 @@ def get_pet(pet_id=None):
     if pet.owner_id != user_info.user_id:
         return jsonify({"msg": "You are not allowed to view this pet"}), 403
     return jsonify(pet.serialize()), 200
+
 
 @app.route("/pet", methods=["POST"])
 @jwt_required()
@@ -378,8 +381,9 @@ def get_users():
         users_serialized = []
         for user in users:
             users_serialized.append(user.serialize())
-        return jsonify({'users': users_serialized}),200
-    
+        return jsonify({'users': users_serialized}), 200
+
+
 @app.route('/users/<int:user_id>', methods=['PUT'])
 @jwt_required()
 def modify_user(user_id):
@@ -389,9 +393,9 @@ def modify_user(user_id):
     if admin is None:
         user_info = Users.query.filter_by(email=user).first()
         if user_info is None:
-            return jsonify({'msg':'User not found'}),400
+            return jsonify({'msg': 'User not found'}), 400
         if user_info.user_id != user_id:
-            return jsonify({'msg':'You cant modify a different user'}),400
+            return jsonify({'msg': 'You cant modify a different user'}), 400
         else:
             if 'email' in body:
                 user_info.email = body['email']
@@ -400,12 +404,12 @@ def modify_user(user_id):
             if 'address' in body:
                 user_info.address = body['address']
             db.session.commit()
-            return jsonify({'msg':'User updates successfully',
-                            'user': user_info.serialize()}),200
+            return jsonify({'msg': 'User updates successfully',
+                            'user': user_info.serialize()}), 200
     else:
         update_user = Users.query.get(user_id)
         if update_user is None:
-            return jsonify({'msg':'User not found'}),404
+            return jsonify({'msg': 'User not found'}), 404
         if 'email' in body:
             update_user.email = body['email']
         if 'phonenumber' in body:
@@ -414,42 +418,37 @@ def modify_user(user_id):
             update_user.address = body['address']
         db.session.commit()
         return jsonify({'msg': 'User updated successfully',
-                        'user': update_user.serialize()}),200
-    
+                        'user': update_user.serialize()}), 200
+
+
 @app.route('/users/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_single_user(user_id):
     user = get_jwt_identity()
     requested_user = Users.query.get(user_id)
     if requested_user is None:
-        return jsonify({'msg':'User not found'}),404
+        return jsonify({'msg': 'User not found'}), 404
     admin = Doctors.query.filter_by(email=user).first()
     if admin is None:
         user_info = Users.query.filter_by(email=user).first()
         if user_info is None:
-            return jsonify({'msg':'User not found'}),404
+            return jsonify({'msg': 'User not found'}), 404
         if user_info.user_id != user_id:
-            return jsonify({'msg':'You cant access this information'}),400
-        return jsonify({'user':user_info.serialize()}),200
+            return jsonify({'msg': 'You cant access this information'}), 400
+        return jsonify({'user': user_info.serialize()}), 200
     else:
-        return jsonify({'user':requested_user.serialize()}),200
-    
+        return jsonify({'user': requested_user.serialize()}), 200
 
-@app.route('/private',methods=['GET'])
+
+@app.route('/private', methods=['GET'])
 @jwt_required()
 def verify_admin():
-    user= get_jwt_identity()
+    user = get_jwt_identity()
     admin = Doctors.query.filter_by(email=user).first()
     if admin is None:
-        return jsonify({'msg':'You dont have access to this page'}),400
+        return jsonify({'msg': 'You dont have access to this page'}), 400
     else:
-        return jsonify({'msg':'Access granted'}),200
-        
-            
-    
-        
-
-    
+        return jsonify({'msg': 'Access granted'}), 200
 
 
 @app.route('/appointments', methods=['POST'])
@@ -537,6 +536,7 @@ def create_vaccine():
     return jsonify(new_vaccine.serialize()), 201
 
 
+
 @app.route('/appointment/<int:appointment_id>', methods=['PUT'])
 @jwt_required()
 def update_appointment(appointment_id):
@@ -567,6 +567,22 @@ def update_appointment(appointment_id):
     return jsonify({'msg': 'Appointment updated successfully'}), 200
 
 
+@app.route('/appointment/<int:appointment_id>', methods=['DELETE'])
+@jwt_required()
+def delete_appointment(appointment_id):
+    user = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        return jsonify({'msg': 'User not found'}), 404
+    else:
+        appointment = Appointments.query.get(appointment_id)
+        if appointment is None:
+            return jsonify({'msg': 'Appointment not found'}), 404
+        db.session.delete(appointment)
+        db.session.commit()
+        return jsonify({'msg': 'Appointment deleted successfully'})
+
+
 @app.route('/history/<int:pet_id>', methods=['GET'])
 @jwt_required()
 def get_pet_history(pet_id):
@@ -576,22 +592,63 @@ def get_pet_history(pet_id):
     if admin is None:
         owner = Users.query.filter_by(email=user).first()
         if owner is None:
-            return jsonify({'msg':'User not found'}),404
+            return jsonify({'msg': 'User not found'}), 404
         if pet.owner_id != owner.user_id:
-            return jsonify({'msg':'You cant acces info from a pet you dont own'}),400
+            return jsonify({'msg': 'You cant acces info from a pet you dont own'}), 400
         else:
             history = Appointments.query.filter_by(pet_id=pet_id).all()
             history_serialized = []
             for appointment in history:
                 history_serialized.append(appointment.serialize())
-            return jsonify({'history': history_serialized}),200
+            return jsonify({'history': history_serialized}), 200
     else:
         history = Appointments.query.filter_by(pet_id=pet_id).all()
         history_serialized = []
         for appointment in history:
             history_serialized.append(appointment.serialize())
-        return jsonify({'history': history_serialized}),200
+        return jsonify({'history': history_serialized}), 200
+    
+@app.route('/send-recovery-link', methods=['POST'])
+def send_recovery_link():
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg':'You must include information in the body'}),400
+    if 'email' not in body:
+        return jsonify({'msg':'You must include an email'}),400
+    valid_user = Users.query.filter_by(email=body['email']).first()
+    if valid_user is None:
+        return jsonify({'msg':'User not found'}),404
+    new_uuid = uuid.uuid4()
+    current_time = datetime.now()
+    time_limit = current_time + timedelta(minutes=30)
 
+    new_password = PasswordReset()
+    new_password.user_id = valid_user.user_id
+    new_password.uuid = new_uuid
+    new_password.time = time_limit
+    db.session.add(new_password)
+    db.session.commit()
+    return jsonify({'msg':'New password request generated successfully',
+                    'link': f"https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/{new_uuid}"}),200
+
+@app.route('/reset-password/<user_uuid>', methods=['PUT'])
+def reset_password(user_uuid):
+    valid_request = PasswordReset.query.filter_by(uuid=user_uuid).first()
+    if valid_request is None:
+        return jsonify({'msg':'Request not found'}),404
+    if valid_request.time < datetime.now():
+        return jsonify({'msg':'Request expired'}),400
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg':'You must include information in the body'}),400
+    if 'password' not in body:
+        return jsonify({'msg':'You must include a password'}),400
+    user = Users.query.get(valid_request.user_id)
+    pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+    user.password = pw_hash
+    db.session.commit()
+    return jsonify({'msg':'Password changed successfully'}),200
+    
 
 
 # this only runs if `$ python src/main.py` is executed
