@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-
-
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [user, setUser] = useState(null);
+
     const [petName, setPetName] = useState(null);
+
+    const navigate = useNavigate();
 
     const Verify = async () => {
         try {
@@ -18,7 +20,11 @@ export const Profile = () => {
                 }
             });
             const data = await result.json()
-            if (result.ok) {
+            if(!result.ok){
+                alert ("You must be logged in to access this page")
+                navigate("/")
+            }
+            else if (result.ok) {
                 console.log(data)
                 setUser(`${data.user.first_name} ${data.user.last_name}`)
                 const pet = await fetch(backendUrl + "/pet", {
