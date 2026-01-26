@@ -3,37 +3,37 @@ export const Footer = () => (
 		<div className="col-12 text-white pt-5 fs-10" style={{ background: "rgb(48, 130, 114)" }}>
 			<div className="row text-center d-flex justify-content-center pb-3">
 				<div className="col-1 pb-3">
-					<div className="y pb-2">Monday</div>
+					<div className="day pb-2">Monday</div>
 					<div className="hours">9:00 am - 5:00 pm</div>
 				</div>
 				<div className="vr p-0 footer-vertical-divider"></div>
 				<div className="col-1 pb-3">
-					<div className="y pb-2">Tuesday</div>
+					<div className="day pb-2">Tuesday</div>
 					<div className="hours">9:00 am - 5:00 pm</div>
 				</div>
 				<div className="vr p-0 footer-vertical-divider"></div>
 				<div className="col-1 pb-3">
-					<div className="y pb-2">Wednesday</div>
+					<div className="day pb-2">Wednesday</div>
 					<div className="hours">9:00 am - 5:00 pm</div>
 				</div>
 				<div className="vr p-0 footer-vertical-divider"></div>
 				<div className="col-1 pb-3">
-					<div className="y pb-2">Thursday</div>
+					<div className="day pb-2">Thursday</div>
 					<div className="hours">9:00 am - 5:00 pm</div>
 				</div>
 				<div className="vr p-0 footer-vertical-divider"></div>
 				<div className="col-1 pb-3">
-					<div className="y pb-2">Friday</div>
+					<div className="day pb-2">Friday</div>
 					<div className="hours">9:00 am - 5:00 pm</div>
 				</div>
 				<div className="vr p-0 footer-vertical-divider"></div>
 				<div className="col-1 pb-3">
-					<div className="y pb-2">Saturday</div>
+					<div className="day pb-2">Saturday</div>
 					<div className="hours">9:00 am - 5:00 pm</div>
 				</div>
 				<div className="vr p-0 footer-vertical-divider"></div>
 				<div className="col-1 pb-3">
-					<div className="y pb-2">Sunday</div>
+					<div className="day pb-2">Sunday</div>
 					<div className="hours">Closed</div>
 				</div>
 			</div>
