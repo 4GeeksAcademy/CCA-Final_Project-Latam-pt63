@@ -58,7 +58,7 @@ export const Profile = () => {
 
     return (
         <>
-            <div className="container">
+            {/* <div className="container">
                 <div>
                     <h1 className="mt-4">My Profile</h1>
                 </div>
@@ -88,7 +88,17 @@ export const Profile = () => {
                 <div className="mt-4">
                     <h1>My Pets</h1>
                 </div>
+                
+            </div> */}
+            
+            <div className="container py-4">
+                <div className="row g-3">
+                    {pets.map((pet) => (
+                        <PetCard key={pet.pet_id} pet={pet} />
+                    ))}
+                </div>
             </div>
+         
         </>
     )
 }
