@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer"
 
 export const Login = () => {
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  const { store, dispatch } = useGlobalReducer()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +41,8 @@ export const Login = () => {
 
       localStorage.setItem("jwt-token", data.token);
       localStorage.setItem("role", data.role);
+      localStorage.setItem("login-status", true);
+      dispatch({ type: "LoggedIn" });
 
       navigate("/");
     } catch (err) {

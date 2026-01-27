@@ -14,6 +14,7 @@ import { Homepage } from "./pages/Homepage";
 import { Services } from "./pages/Services";
 import { About } from "./pages/About";
 import { Profile } from "./pages/Profile";
+import { EditProfile } from "./pages/EditProfile";
 import { RegisterPet } from "./pages/RegisterPet.jsx";
 import { PetCard } from "./components/PetCard.jsx";
 import { PetCardDetails } from "../front/components/PetCardDetails.jsx";
@@ -32,6 +33,7 @@ export const router = createBrowserRouter(
       <Route path="/services" element={<Services />} />
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/editprofile/:userId" element={<EditProfile />} />
       { }
       <Route path="/register-pet" element={<RegisterPet />} />
       <Route path="/pets" element={<PetCard />} />
