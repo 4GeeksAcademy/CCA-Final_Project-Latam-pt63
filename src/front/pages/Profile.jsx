@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Profile = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({
+        address: "",
+        email: "",
+        first_name: "",
+        last_name: "",
+        phonenumber: "",
+        user_id: ""
+    });
 
-    const [petName, setPetName] = useState(null);
+    const [pets, setPets] = useState([]);
 
     const navigate = useNavigate();
 
@@ -20,13 +28,12 @@ export const Profile = () => {
                 }
             });
             const data = await result.json()
-            if(!result.ok){
-                alert ("You must be logged in to access this page")
+            if (!result.ok) {
+                alert("You must be logged in to access this page")
                 navigate("/")
             }
             else if (result.ok) {
-                console.log(data)
-                setUser(`${data.user.first_name} ${data.user.last_name}`)
+                setUser({ ...data.user })
                 const pet = await fetch(backendUrl + "/pet", {
                     method: "GET",
                     headers: {
@@ -34,10 +41,11 @@ export const Profile = () => {
                         Authorization: "Bearer " + token,
                     }
                 });
+                console.log("test :", user)
                 const petData = await pet.json()
                 if (pet.ok) {
                     console.log(petData)
-                    setPetName(petData.pets[0].name)
+                    setPets(petData.pets)
                 }
             }
         } catch (error) {
@@ -52,8 +60,33 @@ export const Profile = () => {
         <>
             <div className="container">
                 <div>
-                    <h1>Hello {user}</h1>
-                    <h2>Pets: {petName}</h2>
+                    <h1 className="mt-4">My Profile</h1>
+                </div>
+                <div className="card mb-3 mt-5 d-flex p-2" style={{ maxWidth: "540px" }}>
+                    <div className="card-body col-12">
+                        <div className="d-flex col-12">
+                            <p className="card-text col-3">Name:</p>
+                            <p className="card-text col-7">{user.first_name} {user.last_name}</p>
+                            <Link to={`/editprofile/${user.user_id}`} className="ms-auto">
+                                <i class="fa-solid fa-pen ms-auto text-black"></i>
+                            </Link>
+                        </div>
+                        <div className="d-flex">
+                            <p className="card-text col-3">Address:</p>
+                            <p className="card-text col-7">{user.address}</p>
+                        </div>
+                        <div className="d-flex">
+                            <p className="card-text col-3">Email:</p>
+                            <p className="card-text col-7">{user.email}</p>
+                        </div>
+                        <div className="d-flex">
+                            <p className="card-text col-3">Phone:</p>
+                            <p className="card-text col-7">{user.phonenumber}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-4">
+                    <h1>My Pets</h1>
                 </div>
             </div>
         </>

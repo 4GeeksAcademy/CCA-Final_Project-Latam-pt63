@@ -15,6 +15,7 @@ import { Homepage } from "./pages/Homepage"
 import { Services } from "./pages/Services";
 import { About } from "./pages/About"
 import { Profile } from "./pages/Profile";
+import { EditProfile } from "./pages/EditProfile";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +37,7 @@ export const router = createBrowserRouter(
       <Route path="/services" element={<Services />} />
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/editprofile/:userId" element={<EditProfile />} />
     </Route>
   )
 );
