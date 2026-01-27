@@ -20,8 +20,8 @@ export const Profile = () => {
                 }
             });
             const data = await result.json()
-            if(!result.ok){
-                alert ("You must be logged in to access this page")
+            if (!result.ok) {
+                alert("You must be logged in to access this page")
                 navigate("/")
             }
             else if (result.ok) {
@@ -50,12 +50,22 @@ export const Profile = () => {
 
     return (
         <>
-            <div className="container">
+            {/* <div className="container">
                 <div>
                     <h1>Hello {user}</h1>
                     <h2>Pets: {petName}</h2>
                 </div>
+                
+            </div> */}
+            
+            <div className="container py-4">
+                <div className="row g-3">
+                    {pets.map((pet) => (
+                        <PetCard key={pet.pet_id} pet={pet} />
+                    ))}
+                </div>
             </div>
+         
         </>
     )
 }
