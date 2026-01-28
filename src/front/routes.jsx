@@ -17,7 +17,8 @@ import { Profile } from "./pages/Profile";
 import { EditProfile } from "./pages/EditProfile";
 import { RegisterPet } from "./pages/RegisterPet.jsx";
 import { PetCard } from "./components/PetCard.jsx";
-import { PetCardDetails } from "../front/components/PetCardDetails.jsx";
+import { PetInfo } from "./pages/PetInfo.jsx";
+
 
 
 export const router = createBrowserRouter(
@@ -37,8 +38,7 @@ export const router = createBrowserRouter(
       { }
       <Route path="/register-pet" element={<RegisterPet />} />
       <Route path="/pets" element={<PetCard />} />
-      <Route path="/pets/:petId" element={<PetCardDetails />} />
-
+      <Route path="/pets/:petId" element={<PetInfo />} />
     </Route>
   )
 );

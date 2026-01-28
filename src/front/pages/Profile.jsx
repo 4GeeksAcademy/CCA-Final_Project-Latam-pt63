@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { PetCard } from "../components/PetCard";
 
 export const Profile = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -12,6 +13,11 @@ export const Profile = () => {
         phonenumber: "",
         user_id: ""
     });
+
+    const Logout = () => {
+        localStorage.removeItem("jwt-token");
+        localStorage.removeItem("login-status");
+    };
 
     const [pets, setPets] = useState([]);
 
@@ -30,6 +36,7 @@ export const Profile = () => {
             const data = await result.json()
             if (!result.ok) {
                 alert("You must be logged in to access this page")
+                Logout()
                 navigate("/")
             }
             else if (result.ok) {
@@ -58,7 +65,7 @@ export const Profile = () => {
 
     return (
         <>
-            {/* <div className="container">
+            <div className="container">
                 <div>
                     <h1 className="mt-4">My Profile</h1>
                 </div>
@@ -85,11 +92,14 @@ export const Profile = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-4">
+                <div className="mt-4 d-flex justify-content-between">
                     <h1>My Pets</h1>
+                    <Link to={'/register-pet'}>
+                    <button type="button" className="btn btn-primary">+ Add Pet</button>
+                    </Link>
                 </div>
                 
-            </div> */}
+            </div>
             
             <div className="container py-4">
                 <div className="row g-3">
