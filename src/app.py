@@ -560,6 +560,34 @@ def create_vaccine():
     db.session.commit()
     return jsonify(new_vaccine.serialize()), 201
 
+@app.route('/vaccine/<int:pet_id>',methods=['GET'])
+@jwt_required()
+def get_vaccines(pet_id):
+    user = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
+    pet = Pets.query.get(pet_id)
+    if pet is None:
+        return jsonify({'msg':'Pet not found'}),404
+    if admin is None:
+        user_info = Users.query.filter_by(email=user).first()
+        if user_info is None:
+            return jsonify({'msg':'User not found'}),404
+        if user_info.user_id != pet.owner_id:
+            return jsonify({'msg':'You cant access information of a pet you dont own'}),400
+        vaccines = Vaccines.query.filter_by(pet_id=pet_id).all()
+        vaccines_serialized = []
+        for vaccine in vaccines:
+            vaccines_serialized.append(vaccine.serialize())
+        return jsonify({'vaccines': vaccines_serialized})
+    else:
+        vaccines = Vaccines.query.filter_by(pet_id=pet_id).all()
+        vaccines_serialized = []
+        for vaccine in vaccines:
+            vaccines_serialized.append(vaccine.serialize())
+        return jsonify({'vaccines': vaccines_serialized})
+
+        
+
 
 @app.route('/appointment/<int:appointment_id>', methods=['PUT'])
 @jwt_required()
