@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MedicalHistoryCard } from "../components/MedicalHistoryCard";
+import { VaccineCard } from "../components/VaccineCard";
 
 
 export const PetInfo = () => {
@@ -17,6 +18,7 @@ export const PetInfo = () => {
         vaccines: ""
     });
     const [petHistory, setPetHistory] = useState([])
+    const [vaccines,setVaccines] = useState([])
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const { petId } = useParams()
@@ -56,6 +58,17 @@ export const PetInfo = () => {
                     if (petRecord.ok) {
                         setPetHistory(recordData.history)
                         console.log("data 3:", recordData.history)
+                        const vaccines = await fetch(backendUrl + "/vaccine/" + petId, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token,
+                            }
+                        });
+                        const vaccineData = await vaccines.json()
+                        if (vaccines.ok){
+                            setVaccines(vaccineData.vaccines)
+                        }
                     }
                 }
             }
@@ -91,8 +104,6 @@ export const PetInfo = () => {
                                 <div className="d-flex bg-light w-100 p-2 rounded mt-4">
                                     Notes : {pet.info}
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -101,6 +112,12 @@ export const PetInfo = () => {
                     <h2 className="mb-4">Medical History : </h2>
                     {petHistory.map((item) => {
                         return (<MedicalHistoryCard record={item} />)
+                    })}
+                </div>
+                 <div className="mt-4">
+                    <h2 className="mb-4">Vaccines : </h2>
+                    {vaccines.map((item) => {
+                        return (<VaccineCard vaccine={item} />)
                     })}
                 </div>
             </div>
