@@ -2,9 +2,19 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MedicalHistoryCard } from "../components/MedicalHistoryCard";
 import { VaccineCard } from "../components/VaccineCard";
+import Swal from 'sweetalert2'
+import { useNavigate } from "react-router-dom";
 
 
 export const PetInfo = () => {
+
+    const Logout = () => {
+        localStorage.removeItem("jwt-token");
+        localStorage.removeItem("login-status");
+        localStorage.removeItem("role");
+    };
+
+    const navigate = useNavigate();
 
     const [pet, setPet] = useState({
         name: "",
@@ -18,7 +28,7 @@ export const PetInfo = () => {
         vaccines: ""
     });
     const [petHistory, setPetHistory] = useState([])
-    const [vaccines,setVaccines] = useState([])
+    const [vaccines, setVaccines] = useState([])
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const { petId } = useParams()
@@ -66,11 +76,20 @@ export const PetInfo = () => {
                             }
                         });
                         const vaccineData = await vaccines.json()
-                        if (vaccines.ok){
+                        if (vaccines.ok) {
                             setVaccines(vaccineData.vaccines)
                         }
                     }
                 }
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'You must be logged in to access this page',
+                    icon: 'error',
+                    confirmButtonText: 'Return'
+                })
+                Logout()
+                navigate("/")
             }
         } catch (error) {
             console.error(error)
@@ -114,7 +133,7 @@ export const PetInfo = () => {
                         return (<MedicalHistoryCard record={item} />)
                     })}
                 </div>
-                 <div className="mt-4">
+                <div className="mt-4">
                     <h2 className="mb-4">Vaccines : </h2>
                     {vaccines.map((item) => {
                         return (<VaccineCard vaccine={item} />)

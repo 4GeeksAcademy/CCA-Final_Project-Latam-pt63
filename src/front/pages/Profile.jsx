@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { PetCard } from "../components/PetCard";
+import Swal from 'sweetalert2'
 
 export const Profile = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -17,6 +18,7 @@ export const Profile = () => {
     const Logout = () => {
         localStorage.removeItem("jwt-token");
         localStorage.removeItem("login-status");
+        localStorage.removeItem("role");
     };
 
     const [pets, setPets] = useState([]);
@@ -35,7 +37,12 @@ export const Profile = () => {
             });
             const data = await result.json()
             if (!result.ok) {
-                alert("You must be logged in to access this page")
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'You must be logged in to access this page',
+                    icon: 'error',
+                    confirmButtonText: 'Return'
+                })
                 Logout()
                 navigate("/")
             }
@@ -48,10 +55,8 @@ export const Profile = () => {
                         Authorization: "Bearer " + token,
                     }
                 });
-                console.log("test :", user)
                 const petData = await pet.json()
                 if (pet.ok) {
-                    console.log(petData)
                     setPets(petData.pets)
                 }
             }
@@ -95,12 +100,12 @@ export const Profile = () => {
                 <div className="mt-4 d-flex justify-content-between">
                     <h1>My Pets</h1>
                     <Link to={'/register-pet'}>
-                    <button type="button" className="btn btn-primary">+ Add Pet</button>
+                        <button type="button" className="btn custom-green-background">+ Add Pet</button>
                     </Link>
                 </div>
-                
+
             </div>
-            
+
             <div className="container py-4">
                 <div className="row g-3">
                     {pets.map((pet) => (
@@ -108,7 +113,7 @@ export const Profile = () => {
                     ))}
                 </div>
             </div>
-         
+
         </>
     )
 }
