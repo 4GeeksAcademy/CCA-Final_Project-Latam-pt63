@@ -364,6 +364,21 @@ def create_doctor():
     db.session.commit()
     return jsonify({'msg': 'Doctor created successfully'}), 201
 
+@app.route('/doctors', methods=['GET'])
+@jwt_required()
+def get_doctor_info():
+    user = get_jwt_identity()
+    valid_user = Users.query.filter_by(email=user).first()
+    valid_admin = Doctors.query.filter_by(email=user).first()
+    if valid_user != None or valid_admin != None:
+        doctors = Doctors.query.all()
+        doctors_serialized = []
+        for doctor in doctors:
+            doctors_serialized.append(doctor.serialize())
+        return jsonify({'doctors': doctors_serialized}),200
+    else:
+        return jsonify({'msg':'user not found'}),404
+
 
 @app.route('/users', methods=['GET'])
 @jwt_required()
