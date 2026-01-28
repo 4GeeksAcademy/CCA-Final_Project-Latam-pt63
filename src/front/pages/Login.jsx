@@ -43,8 +43,11 @@ export const Login = () => {
       localStorage.setItem("role", data.role);
       localStorage.setItem("login-status", true);
       dispatch({ type: "LoggedIn" });
-
-      navigate("/");
+      if (localStorage.getItem("role") == "admin"){
+        navigate("/private/clients")
+      }else{
+        navigate("/");
+      }
     } catch (err) {
       setFeedback("Network error. Check backend URL.");
     } finally {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import Swal from 'sweetalert2'
 
 export const EditProfile = () => {
 
@@ -72,9 +73,19 @@ export const EditProfile = () => {
             });
             const data = await result.json()
             if (!result.ok) {
-                alert(data.msg)
+                Swal.fire({
+                    title: 'Error!',
+                    text: data.msg,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
             } else {
-                alert(data.msg + " Please log back in")
+                Swal.fire({
+                    title: 'Success',
+                    text: data.msg + ", please log back in",
+                    icon: 'success',
+                    confirmButtonText: 'Cool'
+                })
                 Logout()
                 navigate("/")
             }

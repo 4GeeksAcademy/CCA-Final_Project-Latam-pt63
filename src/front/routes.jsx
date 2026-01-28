@@ -18,6 +18,7 @@ import { EditProfile } from "./pages/EditProfile";
 import { RegisterPet } from "./pages/RegisterPet.jsx";
 import { PetCard } from "./components/PetCard.jsx";
 import { PetInfo } from "./pages/PetInfo.jsx";
+import { AdminClients } from "./pages/AdminClients.jsx";
 
 
 
@@ -39,6 +40,7 @@ export const router = createBrowserRouter(
       <Route path="/register-pet" element={<RegisterPet />} />
       <Route path="/pets" element={<PetCard />} />
       <Route path="/pets/:petId" element={<PetInfo />} />
+      <Route path="/private/clients" element={<AdminClients />} />
     </Route>
   )
 );

@@ -1,3 +1,8 @@
 .footer-vertical-divider{
     opacity: 1;
 }
+
+.custom-green-background{
+    background-color:  rgb(48, 130, 114);
+    color: white;
+}
