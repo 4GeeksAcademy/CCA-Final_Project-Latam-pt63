@@ -91,6 +91,9 @@ export const Login = () => {
         <p className="mt-3 mb-0 text-center">
           Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
+        <p className="mt-3 mb-0 text-center">
+          <Link to="/request-reset">Forgot your password?</Link>
+        </p>
       </form>
     </div>
   );

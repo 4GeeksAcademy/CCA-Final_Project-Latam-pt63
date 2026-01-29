@@ -22,6 +22,10 @@ from flask_jwt_extended import JWTManager
 import uuid
 from datetime import datetime, timedelta, timezone
 
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -364,6 +368,7 @@ def create_doctor():
     db.session.commit()
     return jsonify({'msg': 'Doctor created successfully'}), 201
 
+
 @app.route('/doctors', methods=['GET'])
 @jwt_required()
 def get_doctor_info():
@@ -375,9 +380,9 @@ def get_doctor_info():
         doctors_serialized = []
         for doctor in doctors:
             doctors_serialized.append(doctor.serialize())
-        return jsonify({'doctors': doctors_serialized}),200
+        return jsonify({'doctors': doctors_serialized}), 200
     else:
-        return jsonify({'msg':'user not found'}),404
+        return jsonify({'msg': 'user not found'}), 404
 
 
 @app.route('/users', methods=['GET'])
@@ -485,7 +490,7 @@ def create_appointment():
         user_info = Users.query.filter_by(email=user).first()
         if user_info is None:
             return jsonify({'msg': 'User not found'}), 404
-        body = request.get_json(silent=True)
+        body = request.get_json()
         if body is None:
             return jsonify({'msg': 'You must include information in the body'}), 400
         if 'doctor_id' not in body:
@@ -560,20 +565,21 @@ def create_vaccine():
     db.session.commit()
     return jsonify(new_vaccine.serialize()), 201
 
-@app.route('/vaccine/<int:pet_id>',methods=['GET'])
+
+@app.route('/vaccine/<int:pet_id>', methods=['GET'])
 @jwt_required()
 def get_vaccines(pet_id):
     user = get_jwt_identity()
     admin = Doctors.query.filter_by(email=user).first()
     pet = Pets.query.get(pet_id)
     if pet is None:
-        return jsonify({'msg':'Pet not found'}),404
+        return jsonify({'msg': 'Pet not found'}), 404
     if admin is None:
         user_info = Users.query.filter_by(email=user).first()
         if user_info is None:
-            return jsonify({'msg':'User not found'}),404
+            return jsonify({'msg': 'User not found'}), 404
         if user_info.user_id != pet.owner_id:
-            return jsonify({'msg':'You cant access information of a pet you dont own'}),400
+            return jsonify({'msg': 'You cant access information of a pet you dont own'}), 400
         vaccines = Vaccines.query.filter_by(pet_id=pet_id).all()
         vaccines_serialized = []
         for vaccine in vaccines:
@@ -585,8 +591,6 @@ def get_vaccines(pet_id):
         for vaccine in vaccines:
             vaccines_serialized.append(vaccine.serialize())
         return jsonify({'vaccines': vaccines_serialized})
-
-        
 
 
 @app.route('/appointment/<int:appointment_id>', methods=['PUT'])
@@ -681,8 +685,25 @@ def send_recovery_link():
     new_password.time = time_limit
     db.session.add(new_password)
     db.session.commit()
-    return jsonify({'msg': 'New password request generated successfully',
-                    'link': f"https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/{new_uuid}"}), 200
+
+    message = Mail(
+        from_email='andresesquivel2011@gmail.com',
+        to_emails=valid_user.email,
+        subject='Password Reset',
+        html_content=f"<strong>Here is your recovery <a href=https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/reset-password/{new_uuid}>link</a></strong>")
+    try:
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+    # sg.set_sendgrid_data_residency("eu")
+    # uncomment the above line if you are sending mail using a regional EU subuser
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e.message)
+
+    return jsonify({'msg': 'New password request generated successfully, Please check your email',
+                    'link': f"https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/reset-password/{new_uuid}"}), 200
 
 
 @app.route('/reset-password/<string:user_uuid>', methods=['PUT'])
