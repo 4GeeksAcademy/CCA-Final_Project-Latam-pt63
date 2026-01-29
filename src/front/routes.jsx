@@ -15,6 +15,7 @@ import { Services } from "./pages/Services";
 import { About } from "./pages/About";
 import { Profile } from "./pages/Profile";
 import { RegisterPet } from "./pages/RegisterPet.jsx";
+import { BookAppointment } from "./pages/BookAppointment";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +32,8 @@ export const router = createBrowserRouter(
       <Route path="/profile" element={<Profile />} />
       { }
       <Route path="/register-pet" element={<RegisterPet />} />
+      <Route path="/book" element={<BookAppointment />} />
+      
 
     </Route>
   )
