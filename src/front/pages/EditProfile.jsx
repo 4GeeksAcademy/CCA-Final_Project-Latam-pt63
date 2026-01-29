@@ -48,7 +48,12 @@ export const EditProfile = () => {
             });
             const data = await result.json()
             if (!result.ok) {
-                alert("You must be logged in to access this page")
+               Swal.fire({
+                    title: 'Error!',
+                    text: data.msg,
+                    icon: 'error',
+                    confirmButtonText: 'Return'
+                })
                 navigate("/")
             } else if (result.ok) {
                 setUser({ ...data.user })
@@ -70,6 +75,7 @@ export const EditProfile = () => {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 }
+               
             });
             const data = await result.json()
             if (!result.ok) {

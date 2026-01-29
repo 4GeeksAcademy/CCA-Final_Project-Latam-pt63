@@ -24,6 +24,8 @@ import { AdminClients } from "./pages/AdminClients.jsx";
 import { PetCard } from "./components/PetCard.jsx";
 import { PetInfo } from "./pages/PetInfo.jsx";
 import { AdminClients } from "./pages/AdminClients.jsx";
+import { PasswordReset } from "./pages/ResetPassword.jsx";
+import { RequestReset } from "./pages/RequestReset.jsx";
 
 
 
@@ -54,6 +56,8 @@ export const router = createBrowserRouter(
       <Route path="/pets" element={<PetCard />} />
       <Route path="/pets/:petId" element={<PetInfo />} />
       <Route path="/private/clients" element={<AdminClients />} />
+      <Route path="/reset-password/:Uuid" element={<PasswordReset />} />
+      <Route path="/request-reset" element={<RequestReset />} />
     </Route>
   )
 );
