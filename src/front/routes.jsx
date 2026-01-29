@@ -14,12 +14,18 @@ import { Homepage } from "./pages/Homepage";
 import { Services } from "./pages/Services";
 import { About } from "./pages/About";
 import { Profile } from "./pages/Profile";
+import { EditProfile } from "./pages/EditProfile";
 import { RegisterPet } from "./pages/RegisterPet.jsx";
 import { BookAppointment } from "./pages/BookAppointment";
 import { EditProfile } from "./pages/EditProfile";
 import { PetCard } from "./components/PetCard.jsx";
 import { PetInfo } from "./pages/PetInfo.jsx";
 import { AdminClients } from "./pages/AdminClients.jsx";
+import { PetCard } from "./components/PetCard.jsx";
+import { PetInfo } from "./pages/PetInfo.jsx";
+import { AdminClients } from "./pages/AdminClients.jsx";
+
+
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,6 +49,11 @@ export const router = createBrowserRouter(
       <Route path="/pets/:petId" element={<PetInfo />} />
       <Route path="/private/clients" element={<AdminClients />} />
 
+      { }
+      <Route path="/register-pet" element={<RegisterPet />} />
+      <Route path="/pets" element={<PetCard />} />
+      <Route path="/pets/:petId" element={<PetInfo />} />
+      <Route path="/private/clients" element={<AdminClients />} />
     </Route>
   )
 );
