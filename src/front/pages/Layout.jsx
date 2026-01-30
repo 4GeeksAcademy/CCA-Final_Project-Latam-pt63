@@ -10,6 +10,7 @@ export const Layout = () => {
     if (localStorage.getItem("role") == "admin") {
         return (
             <ScrollToTop>
+                <NavVet />
                 <Outlet />
                 <Footer />
             </ScrollToTop>

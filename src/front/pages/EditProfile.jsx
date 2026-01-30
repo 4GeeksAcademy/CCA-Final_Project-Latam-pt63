@@ -75,7 +75,6 @@ export const EditProfile = () => {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 }
-               
             });
             const data = await result.json()
             if (!result.ok) {
@@ -88,11 +87,10 @@ export const EditProfile = () => {
             } else {
                 Swal.fire({
                     title: 'Success',
-                    text: data.msg + ", please log back in",
+                    text: data.msg ,
                     icon: 'success',
                     confirmButtonText: 'Cool'
                 })
-                Logout()
                 navigate("/")
             }
         } catch (error) {
@@ -117,7 +115,7 @@ export const EditProfile = () => {
                                 className="form-control"
                                 name="first_name"
                                 value={user.first_name}
-                                disabled
+                                onChange={HandleChange}
                             />
                         </div>
 
@@ -127,7 +125,7 @@ export const EditProfile = () => {
                                 className="form-control"
                                 name="last_name"
                                 value={user.last_name}
-                                disabled
+                                onChange={HandleChange}
                             />
                         </div>
                     </div>
@@ -138,7 +136,7 @@ export const EditProfile = () => {
                             type="email"
                             name="email"
                             value={user.email}
-                            onChange={HandleChange}
+                            disabled
                         />
                     </div>
                     <div className="mb-3">

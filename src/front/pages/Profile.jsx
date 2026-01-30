@@ -48,17 +48,7 @@ export const Profile = () => {
             }
             else if (result.ok) {
                 setUser({ ...data.user })
-                const pet = await fetch(backendUrl + "/pet", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token,
-                    }
-                });
-                const petData = await pet.json()
-                if (pet.ok) {
-                    setPets(petData.pets)
-                }
+                setPets(data.user.pets)  
             }
         } catch (error) {
             console.error(error)

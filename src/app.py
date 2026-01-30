@@ -395,12 +395,23 @@ def get_users():
         if user_info is None:
             return jsonify({'msg': 'User not found'}), 404
         else:
-            return jsonify({'user': user_info.serialize()}), 200
+            userdict = user_info.serialize()
+            pets_serialized = []
+            for pet in user_info.pets:
+                pets_serialized.append(pet.serialize())
+            userdict['pets'] = pets_serialized
+            return jsonify({'user': userdict}), 200
     else:
         users = Users.query.all()
         users_serialized = []
         for user in users:
-            users_serialized.append(user.serialize())
+            pets_serialized = []
+            userdict = user.serialize()
+            for pet in user.pets:
+                pets_serialized.append(pet.serialize())
+                print(type(user))
+            userdict['pets'] = pets_serialized
+            users_serialized.append(userdict)
         return jsonify({'users': users_serialized}), 200
 
 
@@ -417,6 +428,10 @@ def modify_user(user_id):
         if user_info.user_id != user_id:
             return jsonify({'msg': 'You cant modify a different user'}), 400
         else:
+            if 'first_name' in body:
+                user_info.first_name = body['first_name']
+            if 'last_name' in body:
+                user_info.last_name = body['last_name']
             if 'phonenumber' in body:
                 user_info.phonenumber = body['phonenumber']
             if 'address' in body:
@@ -428,13 +443,10 @@ def modify_user(user_id):
         update_user = Users.query.get(user_id)
         if update_user is None:
             return jsonify({'msg': 'User not found'}), 404
-        if 'email' in body:
-            valid_user_email = Users.query.filter_by(
-                email=body['email']).first()
-            valid_admin_email = Doctors.query.filter_by(
-                email=body['email']).first()
-            if valid_user_email is None and valid_admin_email is None:
-                update_user.email = body['email']
+        if 'first_name' in body:
+            user_info.first_name = body['first_name']
+        if 'last_name' in body:
+            user_info.last_name = body['last_name']
         if 'phonenumber' in body:
             update_user.phonenumber = body['phonenumber']
         if 'address' in body:
@@ -680,7 +692,7 @@ def send_recovery_link():
     db.session.commit()
 
     message = Mail(
-        from_email='andresesquivel2011@gmail.com',
+        from_email='petcareproject47@gmail.com',
         to_emails=valid_user.email,
         subject='Password Reset',
         html_content=f"<strong>Here is your recovery <a href=https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/reset-password/{new_uuid}>link</a></strong>")
