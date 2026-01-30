@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MedicalHistoryCard } from "../components/MedicalHistoryCard";
+import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 import { VaccineCard } from "../components/VaccineCard";
 import Swal from 'sweetalert2'
 import { useNavigate } from "react-router-dom";
@@ -34,7 +35,7 @@ export const PetInfo = () => {
     const { petId } = useParams()
     const token = localStorage.getItem('jwt-token')
 
-    const reverseList = ()=>{
+    const reverseList = () => {
         const newList = [...petHistory].reverse();
         setPetHistory(newList)
     }
@@ -114,7 +115,15 @@ export const PetInfo = () => {
                 <div className="card mb-3 mt-3 pet-info-card">
                     <div className="row g-0">
                         <div className="col-md-4 pet-image">
-                            <img src={pet.image} className="img-fluid rounded-start object-fit-cover h-100" alt="..." />
+                            <img
+                                src={pet?.image ? pet.image : petPlaceholder}
+                                alt={pet.name}
+                                className="pet-info-image"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = petPlaceholder;
+                                }}
+                            />
                         </div>
                         <div className="col-md-8">
                             <div className="card-body ps-5 h-100 d-flex flex-column">
@@ -137,9 +146,9 @@ export const PetInfo = () => {
                 <div className="mt-4">
                     <h2 className="mb-4">Medical History</h2>
                     {
-                    petHistory.map((item) => {
-                        return (<MedicalHistoryCard record={item} />)
-                    })}
+                        petHistory.map((item) => {
+                            return (<MedicalHistoryCard record={item} />)
+                        })}
                 </div>
                 <div className="mt-4">
                     <h2 className="mb-4">Vaccines</h2>
