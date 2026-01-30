@@ -67,7 +67,7 @@ export const Signup = () => {
     };
 
     return (
-        <div className="container py-5" style={{ maxWidth: 520 }}>
+        <div className="container py-5 min-vh-100" style={{ maxWidth: 520 }}>
             <h2 className="mb-3">Sign up</h2>
 
             {feedback !== "" && <div className="alert alert-danger">{feedback}</div>}

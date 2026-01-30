@@ -417,13 +417,6 @@ def modify_user(user_id):
         if user_info.user_id != user_id:
             return jsonify({'msg': 'You cant modify a different user'}), 400
         else:
-            if 'email' in body:
-                valid_user_email = Users.query.filter_by(
-                    email=body['email']).first()
-                valid_admin_email = Doctors.query.filter_by(
-                    email=body['email']).first()
-                if valid_user_email is None and valid_admin_email is None:
-                    user_info.email = body['email']
             if 'phonenumber' in body:
                 user_info.phonenumber = body['phonenumber']
             if 'address' in body:

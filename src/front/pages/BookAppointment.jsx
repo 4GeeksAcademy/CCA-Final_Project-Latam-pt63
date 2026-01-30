@@ -21,9 +21,7 @@ export const BookAppointment = () => {
             if (!token) {
                 alert("You must be logged in to book an appointment");
                 navigate("/login");
-                return;
-            }
-
+            }else{
             try {
                 const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/pet", {
                     method: "GET",
@@ -41,7 +39,7 @@ export const BookAppointment = () => {
             } catch (error) {
                 console.log("Connection error:", error);
             }
-        };
+        };}
 
         loadPets();
     }, []);
@@ -109,7 +107,7 @@ export const BookAppointment = () => {
     };
 
     return (
-        <div className="container mt-5 mb-5">
+        <div className="container mt-5 mb-5 min-vh-100">
             <h1 className="text-center mb-4" style={verdeEstilo}>
                 Book Appointment
             </h1>

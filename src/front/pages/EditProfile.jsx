@@ -107,7 +107,7 @@ export const EditProfile = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="container min-vh-100">
                 <h1 className="mt-3">Edit Info</h1>
                 <form className="card p-3 mt-5" onSubmit={HandleSubmit}>
                     <div className="row">
