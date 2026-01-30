@@ -70,7 +70,7 @@ export const Profile = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="container min-vh-100">
                 <div>
                     <h1 className="mt-4">My Profile</h1>
                 </div>
@@ -103,17 +103,12 @@ export const Profile = () => {
                         <button type="button" className="btn custom-green-background">+ Add Pet</button>
                     </Link>
                 </div>
-
-            </div>
-
-            <div className="container py-4">
                 <div className="row g-3">
                     {pets.map((pet) => (
                         <PetCard key={pet.pet_id} pet={pet} />
                     ))}
                 </div>
             </div>
-
         </>
     )
 }

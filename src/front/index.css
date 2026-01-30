@@ -6,3 +6,21 @@
     background-color:  rgb(48, 130, 114);
     color: white;
 }
+
+.pet-notes{
+    background-color:  rgba(48, 130, 114, 0.158);
+    border-left: solid 4px yellow;
+}
+.pet-name{
+    color: rgb(48, 130, 114);
+    font-weight: 700;
+}
+.pet-image{
+    aspect-ratio: 1/1;
+    max-height: 300px;
+    max-width: 300px;
+}
+.pet-info-card{
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    border: none;
+}

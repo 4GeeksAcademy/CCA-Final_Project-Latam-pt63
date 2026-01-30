@@ -56,7 +56,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="container py-5" style={{ maxWidth: 450 }}>
+    <div className="container py-5 min-vh-100" style={{ maxWidth: 450 }}>
       <h2 className="mb-3">Login</h2>
 
       {feedback !== "" && <div className="alert alert-danger">{feedback}</div>}
@@ -90,6 +90,9 @@ export const Login = () => {
 
         <p className="mt-3 mb-0 text-center">
           Don't have an account? <Link to="/signup">Sign up</Link>
+        </p>
+        <p className="mt-3 mb-0 text-center">
+          <Link to="/request-reset">Forgot your password?</Link>
         </p>
       </form>
     </div>
