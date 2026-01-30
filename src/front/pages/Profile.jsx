@@ -69,6 +69,7 @@ export const Profile = () => {
             }
             else if (result.ok) {
                 setUser({ ...data.user })
+                setPets(data.user.pets)  
                 const pet = await fetch(backendUrl + "/pet", {
                     method: "GET",
                     headers: {
