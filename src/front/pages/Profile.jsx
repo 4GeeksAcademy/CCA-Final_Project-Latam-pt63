@@ -25,6 +25,27 @@ export const Profile = () => {
 
     const navigate = useNavigate();
 
+    const calculateAge = (birthdate) => {
+        if (!birthdate) return "N/A";
+
+        const birthDate = new Date(birthdate);
+        const today = new Date();
+        
+        let years = today.getFullYear() - birthDate.getFullYear();
+        let months = today.getMonth() - birthDate.getMonth();
+
+        if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+            years--;
+            months += 12;
+        }
+
+        if (years > 0) {
+            return years + " years";
+        } else {
+            return months + " months";
+        }
+    };
+
     const Verify = async () => {
         try {
             const token = localStorage.getItem('jwt-token')
@@ -49,6 +70,23 @@ export const Profile = () => {
             else if (result.ok) {
                 setUser({ ...data.user })
                 setPets(data.user.pets)  
+                const pet = await fetch(backendUrl + "/pet", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token,
+                    }
+                });
+                const petData = await pet.json()
+                if (pet.ok) {
+                    const petsWithAge = petData.pets.map((p) => {
+                        return {
+                            ...p, 
+                            age: calculateAge(p.birthdate) 
+                        };
+                    });
+                    setPets(petsWithAge)
+                }
             }
         } catch (error) {
             console.error(error)

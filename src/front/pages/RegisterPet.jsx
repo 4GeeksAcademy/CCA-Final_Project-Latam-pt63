@@ -7,8 +7,18 @@ export const RegisterPet = () => {
     const preset_name = "pet_pictures";
     const cloud_name = "dfbnzltqo";
 
+    const petBreeds = {
+        "Dog": ["Golden Retriever", "Poodle", "Bulldog", "Other"],
+        "Cat": ["Siamese", "Persian", "Maine Coon", "Other"],
+        "Bird": ["Parrot", "Canary", "Cockatiel", "Other"],
+        "Other": ["Other", "Mix", "Unknown"] 
+    };
+
     const [name, setName] = useState("");
-    const [birthdate, setBirthdate] = useState("");
+    
+    const [ageYears, setAgeYears] = useState(0);
+    const [ageMonths, setAgeMonths] = useState(0);
+    
     const [petType, setPetType] = useState("");
     const [breed, setBreed] = useState("");
     const [allergies, setAllergies] = useState("");
@@ -18,9 +28,21 @@ export const RegisterPet = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const handleTypeChange = (e) => {
+        setPetType(e.target.value);
+        setBreed(""); 
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        let today = new Date();
+        let birthYear = today.getFullYear() - ageYears;
+        let birthMonth = today.getMonth() - ageMonths;
+        
+        let calculatedDate = new Date(birthYear, birthMonth, 1);
+        let birthdateString = calculatedDate.toISOString().split('T')[0];
 
         let imageUrl = "https://unsplash.com/photos/yellow-labrador-retriever-biting-yellow-tulip-flower-Sg3XwuEpybU";
 
@@ -47,7 +69,7 @@ export const RegisterPet = () => {
 
         const petData = {
             name: name,
-            birthdate: birthdate,
+            birthdate: birthdateString,
             pet_type: petType,
             breed: breed,
             allergies: allergies,
@@ -98,19 +120,73 @@ export const RegisterPet = () => {
                         <label className="form-label">Name</label>
                         <input type="text" className="form-control border-custom-green" value={name} onChange={(e) => setName(e.target.value)} required />
                     </div>
+
+                    {}
                     <div className="mb-3">
-                        <label className="form-label">Birthdate</label>
-                        <input type="date" className="form-control border-custom-green" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} required />
+                        <label className="form-label">Age</label>
+                        <div className="d-flex gap-2">
+                            <div className="w-50">
+                                <input 
+                                    type="number" 
+                                    className="form-control border-custom-green" 
+                                    placeholder="Years" 
+                                    min="0"
+                                    value={ageYears} 
+                                    onChange={(e) => setAgeYears(e.target.value)} 
+                                    required 
+                                />
+                                <small className="text-muted">Years</small>
+                            </div>
+                            <div className="w-50">
+                                <input 
+                                    type="number" 
+                                    className="form-control border-custom-green" 
+                                    placeholder="Months" 
+                                    min="0" 
+                                    max="11"
+                                    value={ageMonths} 
+                                    onChange={(e) => setAgeMonths(e.target.value)} 
+                                    required 
+                                />
+                                <small className="text-muted">Months</small>
+                            </div>
+                        </div>
                     </div>
 
+                    {}
                     <div className="mb-3">
                         <label className="form-label">Type</label>
-                        <input type="text" className="form-control border-custom-green" value={petType} onChange={(e) => setPetType(e.target.value)} placeholder="Dog, Cat..." required />
+                        <select 
+                            className="form-select border-custom-green" 
+                            value={petType} 
+                            onChange={handleTypeChange} 
+                            required
+                        >
+                            <option value="">Select a type...</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Bird">Bird</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
 
+                    {}
                     <div className="mb-3">
                         <label className="form-label">Breed</label>
-                        <input type="text" className="form-control border-custom-green" value={breed} onChange={(e) => setBreed(e.target.value)} required />
+                        <select 
+                            className="form-select border-custom-green" 
+                            value={breed} 
+                            onChange={(e) => setBreed(e.target.value)} 
+                            required
+                            disabled={!petType}
+                        >
+                            <option value="">Select a breed...</option>
+                            {petType && petBreeds[petType].map((raza, index) => (
+                                <option key={index} value={raza}>
+                                    {raza}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="mb-3">
@@ -137,7 +213,6 @@ export const RegisterPet = () => {
 
                     <div className="mb-4">
                         <label className="form-label">Upload image</label>
-                        { }
                         <input
                             type="file"
                             className="form-control border-custom-green"
@@ -148,7 +223,6 @@ export const RegisterPet = () => {
                     </div>
 
                     <div className="d-grid gap-2">
-                        { }
                         <button type="submit" className="btn btn-custom-green btn-lg" disabled={loading}>
                             {loading ? "Uploading..." : "Register"}
                         </button>
