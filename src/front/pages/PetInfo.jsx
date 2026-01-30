@@ -34,6 +34,11 @@ export const PetInfo = () => {
     const { petId } = useParams()
     const token = localStorage.getItem('jwt-token')
 
+    const reverseList = ()=>{
+        const newList = [...petHistory].reverse();
+        setPetHistory(newList)
+    }
+
     const VerifyUser = async () => {
         try {
             const result = await fetch(backendUrl + "/users", {
@@ -67,6 +72,7 @@ export const PetInfo = () => {
                     const recordData = await petRecord.json()
                     if (petRecord.ok) {
                         setPetHistory(recordData.history)
+
                         console.log("data 3:", recordData.history)
                         const vaccines = await fetch(backendUrl + "/vaccine/" + petId, {
                             method: "GET",
@@ -100,41 +106,43 @@ export const PetInfo = () => {
         VerifyUser()
     }, [])
 
+
     return (
         <>
-            <div className="container">
-                <h1 className="mt-4">Pet Info :</h1>
-                <div className="card mb-3 mt-3">
+            <div className="container min-vh-100">
+                <h1 className="mt-4">Pet Info</h1>
+                <div className="card mb-3 mt-3 pet-info-card">
                     <div className="row g-0">
-                        <div className="col-md-4">
+                        <div className="col-md-4 pet-image">
                             <img src={pet.image} className="img-fluid rounded-start object-fit-cover h-100" alt="..." />
                         </div>
                         <div className="col-md-8">
-                            <div className="card-body ps-5">
-                                <h5 className="card-title">Name : {pet.name}</h5>
-                                <div className="d-flex mt-3">
-                                    <h5 className="card-text col-4">Age : {pet.birthdate}</h5>
-                                    <h5 className="card-text col-4">Type : {pet.pet_type}</h5>
+                            <div className="card-body ps-5 h-100 d-flex flex-column">
+                                <h5 className="card-title fs-1 pet-name">{pet.name}</h5>
+                                <div className="d-flex mt-3 ">
+                                    <h5 className="card-text col-4">Age: {pet.birthdate}</h5>
+                                    <h5 className="card-text col-4">Type: {pet.pet_type}</h5>
                                 </div>
                                 <div className="d-flex mt-2">
-                                    <h5 className="card-text col-4">Allergies : {pet.allergies}</h5>
+                                    <h5 className="card-text col-4">Allergies: {pet.allergies}</h5>
                                     <h5 className="card-text">Breed: {pet.breed}</h5>
                                 </div>
-                                <div className="d-flex bg-light w-100 p-2 rounded mt-4">
-                                    Notes : {pet.info}
+                                <div className=" w-100 p-2 rounded mt-auto pet-notes">
+                                    Notes: {pet.info}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="mt-4">
-                    <h2 className="mb-4">Medical History : </h2>
-                    {petHistory.map((item) => {
+                    <h2 className="mb-4">Medical History</h2>
+                    {
+                    petHistory.map((item) => {
                         return (<MedicalHistoryCard record={item} />)
                     })}
                 </div>
                 <div className="mt-4">
-                    <h2 className="mb-4">Vaccines : </h2>
+                    <h2 className="mb-4">Vaccines</h2>
                     {vaccines.map((item) => {
                         return (<VaccineCard vaccine={item} />)
                     })}

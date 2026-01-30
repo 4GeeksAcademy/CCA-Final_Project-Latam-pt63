@@ -5,7 +5,6 @@ import {
   Route,
 } from "react-router-dom";
 import { Layout } from "./pages/Layout";
-import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
 import { Login } from "./pages/Login";
@@ -17,11 +16,6 @@ import { Profile } from "./pages/Profile";
 import { EditProfile } from "./pages/EditProfile";
 import { RegisterPet } from "./pages/RegisterPet.jsx";
 import { BookAppointment } from "./pages/BookAppointment";
-import { EditProfile } from "./pages/EditProfile";
-import { PetCard } from "./components/PetCard.jsx";
-import { PetInfo } from "./pages/PetInfo.jsx";
-import { AdminClients } from "./pages/AdminClients.jsx";
-import { PetCard } from "./components/PetCard.jsx";
 import { PetInfo } from "./pages/PetInfo.jsx";
 import { AdminClients } from "./pages/AdminClients.jsx";
 import { PasswordReset } from "./pages/ResetPassword.jsx";
@@ -47,14 +41,9 @@ export const router = createBrowserRouter(
       { }
       <Route path="/register-pet" element={<RegisterPet />} />
       <Route path="/book" element={<BookAppointment />} />
-      <Route path="/pets" element={<PetCard />} />
       <Route path="/pets/:petId" element={<PetInfo />} />
-      <Route path="/private/clients" element={<AdminClients />} />
 
       { }
-      <Route path="/register-pet" element={<RegisterPet />} />
-      <Route path="/pets" element={<PetCard />} />
-      <Route path="/pets/:petId" element={<PetInfo />} />
       <Route path="/private/clients" element={<AdminClients />} />
       <Route path="/reset-password/:Uuid" element={<PasswordReset />} />
       <Route path="/request-reset" element={<RequestReset />} />

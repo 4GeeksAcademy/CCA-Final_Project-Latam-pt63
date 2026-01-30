@@ -73,7 +73,7 @@ export const PasswordReset = () => {
     }
     return (
         <>
-            <div className="container">
+            <div className="container min-vh-100">
                 <h1 className="mt-3 text-center">Reset Password</h1>
                 <div className="d-flex justify-content-center">
                     <form className="card col-6 p-3 mt-5" onSubmit={HandleSubmit}>

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export const About = () => {
     return (
         <>
-            <div className="container">
+            <div className="container min-vh-100">
                 <div>
                     <h1>This is the About us page</h1>
                 </div>

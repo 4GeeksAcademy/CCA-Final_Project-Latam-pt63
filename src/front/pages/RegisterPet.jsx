@@ -89,7 +89,7 @@ export const RegisterPet = () => {
     };
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-4 min-vh-100">
             <h1 className="text-center mb-4">Register Pet</h1>
 
             <div className="card p-4 border-custom-green mx-auto" style={{ maxWidth: "600px" }}>
