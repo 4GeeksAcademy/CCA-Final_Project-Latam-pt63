@@ -1,84 +1,63 @@
-// src/front/components/PetCard.jsx
 import React from "react";
+import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 import { Link } from "react-router-dom";
 
 export const PetCard = ({ pet }) => {
   return (
-<div className="card border-0 shadow-sm rounded-4 h-100">
-      <div className="card-body">
-        <div className="d-flex gap-3 ">
+    <div className="col-12 col-md-6 col-lg-4">
+      <div className="card pet-card h-100">
+        <div className="card-body">
+          <div className="d-flex gap-3">
 
-          <div style={{ width: 160, height: 160, borderRadius: 10, overflow: "hidden", flex: "0 0 auto", background: "#f2f2f2", }}>
-            <img
-              src={pet?.image }
-              alt={pet?.name || "image"}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </div>
+            <div className="pet-image-wrapper">
+              <img
+                src={pet?.image ? pet.image : petPlaceholder}
+                alt={pet?.name || "pet"}
+                className="pet-image"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = petPlaceholder;
+                }}
+              />
+            </div>
 
-          <div className="flex-grow-1">
-            <div className="d-flex justify-content-between align-items-start">
-              <div className="w-100">
-                <div className="mb-2 d-flex">
-                  <div style={{ width: 90 }} className="text-muted">
-                    Name:
-                  </div>
-                  <div className="fw-semibold">
-                    {pet?.name || "n/a"}
-                  </div>
-                </div>
-
-                <div className="mb-2 d-flex">
-                  <div style={{ width: 90 }} className="text-muted">
-                    Age:
-                  </div>
-                  <div className="fw-semibold">
-                    {pet?.age ?? "n/a"}
-                  </div>
-                </div>
-
-                <div className="mb-2 d-flex">
-                  <div style={{ width: 90 }} className="text-muted">
-                    Type:
-                  </div>
-                  <div className="fw-semibold">
-                    {pet?.pet_type || pet?.type || "n/a"}
-                  </div>
-                </div>
-
-                <div className="mb-3 d-flex">
-                  <div style={{ width: 90 }} className="text-muted">
-                    Breed:
-                  </div>
-                  <div className="fw-semibold">
-                    {pet?.breed || "n/a"}
-                  </div>
-                </div>
-
-                <div className="d-flex align-items-center gap-3">
-                  <div className="text-muted">Next appointment:</div>
-                  <div className="px-3 py-1 border rounded-pill fw-semibold">
-                    {pet?.next_appointment || "n/a"}
-                  </div>
-                </div>
+            <div className="flex-grow-1 d-flex flex-column">
+              <div className="mb-2 d-flex">
+                <span className="pet-label">Name:</span>
+                <span className="pet-value">{pet?.name || "n/a"}</span>
               </div>
 
+              <div className="mb-2 d-flex">
+                <span className="pet-label">Age:</span>
+                <span className="pet-value">{pet?.age ?? "n/a"}</span>
+              </div>
 
-              <div className="ms-3">
-                {pet?.pet_id || pet?.id ? (
+              <div className="mb-2 d-flex">
+                <span className="pet-label">Type:</span>
+                <span className="pet-value">{pet?.pet_type || "n/a"}</span>
+              </div>
+
+              <div className="mb-3 d-flex">
+                <span className="pet-label">Breed:</span>
+                <span className="pet-value">{pet?.breed || "n/a"}</span>
+              </div>
+
+              <div className="mt-auto d-flex justify-content-between align-items-center">
+                <span className="pet-badge">
+                  {pet?.next_appointment || "No appointment"}
+                </span>
+
+                <div className="pet-actions">
                   <Link
-                    to={`/pets/${pet?.pet_id || pet?.id}`}
+                    to={`/pets/${pet?.pet_id}`}
                     className="btn btn-outline-dark btn-sm"
                   >
                     History
                   </Link>
-                ) : (
-                  <button className="btn btn-outline-dark btn-sm" disabled>
-                    History
-                  </button>
-                )}
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
