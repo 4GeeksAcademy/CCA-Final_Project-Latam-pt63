@@ -91,7 +91,7 @@ export const EditProfile = () => {
                     icon: 'success',
                     confirmButtonText: 'Cool'
                 })
-                navigate("/")
+                navigate("/profile") 
             }
         } catch (error) {
             console.error(error)
@@ -104,65 +104,75 @@ export const EditProfile = () => {
     }, [])
 
     return (
-        <>
-            <div className="container min-vh-100">
-                <h1 className="mt-3">Edit Info</h1>
-                <form className="card p-3 mt-5" onSubmit={HandleSubmit}>
-                    <div className="row">
-                        <div className="col-md-6 mb-3">
-                            <label className="form-label">First name</label>
-                            <input
-                                className="form-control"
-                                name="first_name"
-                                value={user.first_name}
-                                onChange={HandleChange}
-                            />
-                        </div>
 
-                        <div className="col-md-6 mb-3">
-                            <label className="form-label">Last name</label>
-                            <input
-                                className="form-control"
-                                name="last_name"
-                                value={user.last_name}
-                                onChange={HandleChange}
-                            />
-                        </div>
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Email</label>
+        <div className="container py-5 min-vh-100" style={{ maxWidth: "550px" }}>
+            <h2 className="mb-3">Edit Profile</h2>
+            
+            {}
+            <form className="card p-4 border-0 shadow-sm" onSubmit={HandleSubmit}>
+                <div className="row">
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">First name</label>
                         <input
                             className="form-control"
-                            type="email"
-                            name="email"
-                            value={user.email}
-                            disabled
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Phone number</label>
-                        <input
-                            className="form-control"
-                            name="phonenumber"
-                            value={user.phonenumber}
+                            name="first_name"
+                            value={user.first_name}
                             onChange={HandleChange}
                         />
                     </div>
-                    <div className="mb-3">
-                        <label className="form-label">Address</label>
+
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">Last name</label>
                         <input
                             className="form-control"
-                            name="address"
-                            value={user.address}
+                            name="last_name"
+                            value={user.last_name}
                             onChange={HandleChange}
                         />
                     </div>
-                    <div className="d-flex justify-content-center">
-                        <button className="btn rounded-1 text-light" onClick={() => UpdateInfo()} style={{ background: "rgb(48, 130, 114)" }}>Confirm Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </>
+                </div>
+                
+                <div className="mb-3">
+                    <label className="form-label">Email</label>
+                    <input
+                        className="form-control bg-light"
+                        type="email"
+                        name="email"
+                        value={user.email}
+                        disabled
+                    />
+                </div>
+                
+                <div className="mb-3">
+                    <label className="form-label">Phone number</label>
+                    <input
+                        className="form-control"
+                        name="phonenumber"
+                        value={user.phonenumber}
+                        onChange={HandleChange}
+                    />
+                </div>
+                
+                <div className="mb-3">
+                    <label className="form-label">Address</label>
+                    <input
+                        className="form-control"
+                        name="address"
+                        value={user.address}
+                        onChange={HandleChange}
+                    />
+                </div>
+
+                {}
+                <button 
+                    type="button" 
+                    className="btn rounded-0 w-100 text-light mt-2" 
+                    onClick={() => UpdateInfo()} 
+                    style={{ background: "rgb(48, 130, 114)" }}
+                >
+                    Save Changes
+                </button>
+            </form>
+        </div>
     )
 }

@@ -103,11 +103,20 @@ body {
   margin-bottom: 10px;
 }
 
-
 .pet-notes {
   background-color: rgba(48, 130, 114, 0.12);
   border-left: 4px solid rgb(48, 130, 114);
   padding: 14px;
   border-radius: 10px;
   font-size: 0.95rem;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
