@@ -113,6 +113,15 @@ body {
   font-size: 0.95rem;
 }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
 .admin-pet-card-image {
   aspect-ratio: 1/1;
   width: 50px;

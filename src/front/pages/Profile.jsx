@@ -15,6 +15,8 @@ export const Profile = () => {
         user_id: ""
     });
 
+    const [loading, setLoading] = useState(true);
+
     const Logout = () => {
         localStorage.removeItem("jwt-token");
         localStorage.removeItem("login-status");
@@ -30,7 +32,7 @@ export const Profile = () => {
 
         const birthDate = new Date(birthdate);
         const today = new Date();
-        
+
         let years = today.getFullYear() - birthDate.getFullYear();
         let months = today.getMonth() - birthDate.getMonth();
 
@@ -69,7 +71,6 @@ export const Profile = () => {
             }
             else if (result.ok) {
                 setUser({ ...data.user })
-                setPets(data.user.pets)  
                 const pet = await fetch(backendUrl + "/pet", {
                     method: "GET",
                     headers: {
@@ -81,8 +82,8 @@ export const Profile = () => {
                 if (pet.ok) {
                     const petsWithAge = petData.pets.map((p) => {
                         return {
-                            ...p, 
-                            age: calculateAge(p.birthdate) 
+                            ...p,
+                            age: calculateAge(p.birthdate)
                         };
                     });
                     setPets(petsWithAge)
@@ -90,53 +91,97 @@ export const Profile = () => {
             }
         } catch (error) {
             console.error(error)
+        } finally {
+            setLoading(false);
         }
     }
+
     useEffect(() => {
         Verify()
     }, [])
 
-    return (
-        <>
-            <div className="container min-vh-100">
-                <div>
-                    <h1 className="mt-4">My Profile</h1>
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center min-vh-100">
+                <div className="spinner-border" style={{ color: "rgb(48, 130, 114)", width: "3rem", height: "3rem" }} role="status">
+                    <span className="visually-hidden">Loading...</span>
                 </div>
-                <div className="card mb-3 mt-5 d-flex p-2" style={{ maxWidth: "540px" }}>
-                    <div className="card-body col-12">
-                        <div className="d-flex col-12">
-                            <p className="card-text col-3">Name:</p>
-                            <p className="card-text col-7">{user.first_name} {user.last_name}</p>
-                            <Link to={`/editprofile/${user.user_id}`} className="ms-auto">
-                                <i class="fa-solid fa-pen ms-auto text-black"></i>
-                            </Link>
-                        </div>
-                        <div className="d-flex">
-                            <p className="card-text col-3">Address:</p>
-                            <p className="card-text col-7">{user.address}</p>
-                        </div>
-                        <div className="d-flex">
-                            <p className="card-text col-3">Email:</p>
-                            <p className="card-text col-7">{user.email}</p>
-                        </div>
-                        <div className="d-flex">
-                            <p className="card-text col-3">Phone:</p>
-                            <p className="card-text col-7">{user.phonenumber}</p>
+            </div>
+        )
+    }
+
+    return (
+        <div className="container py-5 min-vh-100">
+            { }
+            <div className="row justify-content-center mb-5">
+                <div className="col-12 col-md-8">
+                    <h2 className="mb-4">My Profile</h2>
+
+                    { }
+                    <div className="card p-4 border-0 shadow-sm">
+                        <div className="card-body">
+                            <div className="d-flex justify-content-between align-items-start mb-3">
+                                <h4 className="card-title text-muted mb-0">Personal Information</h4>
+                                <Link to={`/editprofile/${user.user_id}`} className="text-decoration-none">
+                                    <i className="fa-solid fa-pen text-secondary fs-5" title="Edit Profile"></i>
+                                </Link>
+                            </div>
+                            <hr className="my-3" />
+
+                            <div className="row mb-2">
+                                <div className="col-sm-3 fw-bold text-secondary">Name:</div>
+                                <div className="col-sm-9">{user.first_name} {user.last_name}</div>
+                            </div>
+                            <div className="row mb-2">
+                                <div className="col-sm-3 fw-bold text-secondary">Address:</div>
+                                <div className="col-sm-9">{user.address || "Not provided"}</div>
+                            </div>
+                            <div className="row mb-2">
+                                <div className="col-sm-3 fw-bold text-secondary">Email:</div>
+                                <div className="col-sm-9">{user.email}</div>
+                            </div>
+                            <div className="row mb-2">
+                                <div className="col-sm-3 fw-bold text-secondary">Phone:</div>
+                                <div className="col-sm-9">{user.phonenumber || "Not provided"}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="mt-4 d-flex justify-content-between">
-                    <h1>My Pets</h1>
-                    <Link to={'/register-pet'}>
-                        <button type="button" className="btn custom-green-background">+ Add Pet</button>
-                    </Link>
-                </div>
-                <div className="row g-3">
-                    {pets.map((pet) => (
-                        <PetCard key={pet.pet_id} pet={pet} />
-                    ))}
+            </div>
+
+            { }
+            <div className="row justify-content-center">
+                <div className="col-12 col-md-8">
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2>My Pets</h2>
+                        <Link to={'/register-pet'}>
+                            { }
+                            <button
+                                type="button"
+                                className="btn rounded-0 text-light px-4 py-2"
+                                style={{ background: "rgb(48, 130, 114)" }}
+                            >
+                                + Add Pet
+                            </button>
+                        </Link>
+                    </div>
+
+                    { }
+                    <div className="row g-4">
+                        {pets.length > 0 ? (
+                            pets.map((pet) => (
+                                <div className="col-12" key={pet.pet_id}>
+                                    <PetCard pet={pet} />
+                                </div>
+                            ))
+                        ) : (
+                            <div className="alert alert-light text-center shadow-sm">
+                                You haven't registered any pets yet.
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
