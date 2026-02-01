@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap");
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
 }
 
@@ -15,7 +15,9 @@ body {
   border-radius: 16px;
   background-color: #ffffff;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .pet-card:hover {
@@ -119,4 +121,26 @@ input[type=number]::-webkit-outer-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+}
+.admin-pet-card-image {
+  aspect-ratio: 1/1;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.admin-pet-card{
+  box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.12);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.admin-pet-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid  rgb(48, 130, 114);
+
+}
+.admin-pet-card-buttons{
+  background-color: rgba(48, 130, 114, 0.082);
+  color: rgb(48, 130, 114);
 }
