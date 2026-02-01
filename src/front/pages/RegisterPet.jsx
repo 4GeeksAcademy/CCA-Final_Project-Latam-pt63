@@ -111,127 +111,127 @@ export const RegisterPet = () => {
     };
 
     return (
-        <div className="container mt-4 min-vh-100">
-            <h1 className="text-center mb-4">Register Pet</h1>
+        <div className="container py-5 min-vh-100" style={{ maxWidth: "550px" }}>
+            <h2 className="mb-3">Register Pet</h2>
 
-            <div className="card p-4 border-custom-green mx-auto" style={{ maxWidth: "600px" }}>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label className="form-label">Name</label>
-                        <input type="text" className="form-control border-custom-green" value={name} onChange={(e) => setName(e.target.value)} required />
-                    </div>
-
+            {}
+            <form onSubmit={handleSubmit} className="card p-3">
+                <div className="mb-3">
+                    <label className="form-label">Name</label>
                     {}
-                    <div className="mb-3">
-                        <label className="form-label">Age</label>
-                        <div className="d-flex gap-2">
-                            <div className="w-50">
-                                <input 
-                                    type="number" 
-                                    className="form-control border-custom-green" 
-                                    placeholder="Years" 
-                                    min="0"
-                                    value={ageYears} 
-                                    onChange={(e) => setAgeYears(e.target.value)} 
-                                    required 
-                                />
-                                <small className="text-muted">Years</small>
-                            </div>
-                            <div className="w-50">
-                                <input 
-                                    type="number" 
-                                    className="form-control border-custom-green" 
-                                    placeholder="Months" 
-                                    min="0" 
-                                    max="11"
-                                    value={ageMonths} 
-                                    onChange={(e) => setAgeMonths(e.target.value)} 
-                                    required 
-                                />
-                                <small className="text-muted">Months</small>
-                            </div>
+                    <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} required />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Age</label>
+                    <div className="d-flex gap-2">
+                        <div className="w-50">
+                            <input 
+                                type="number" 
+                                className="form-control" 
+                                placeholder="Years" 
+                                min="0"
+                                value={ageYears} 
+                                onChange={(e) => setAgeYears(e.target.value)} 
+                                required 
+                            />
+                            <small className="text-muted">Years</small>
+                        </div>
+                        <div className="w-50">
+                            <input 
+                                type="number" 
+                                className="form-control" 
+                                placeholder="Months" 
+                                min="0" 
+                                max="11"
+                                value={ageMonths} 
+                                onChange={(e) => setAgeMonths(e.target.value)} 
+                                required 
+                            />
+                            <small className="text-muted">Months</small>
                         </div>
                     </div>
+                </div>
 
-                    {}
-                    <div className="mb-3">
-                        <label className="form-label">Type</label>
-                        <select 
-                            className="form-select border-custom-green" 
-                            value={petType} 
-                            onChange={handleTypeChange} 
-                            required
-                        >
-                            <option value="">Select a type...</option>
-                            <option value="Dog">Dog</option>
-                            <option value="Cat">Cat</option>
-                            <option value="Bird">Bird</option>
-                            <option value="Other">Other</option>
-                        </select>
+                <div className="mb-3">
+                    <label className="form-label">Type</label>
+                    <select 
+                        className="form-select" 
+                        value={petType} 
+                        onChange={handleTypeChange} 
+                        required
+                    >
+                        <option value="">Select a type...</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Bird">Bird</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Breed</label>
+                    <select 
+                        className="form-select" 
+                        value={breed} 
+                        onChange={(e) => setBreed(e.target.value)} 
+                        required
+                        disabled={!petType}
+                    >
+                        <option value="">Select a breed...</option>
+                        {petType && petBreeds[petType].map((raza, index) => (
+                            <option key={index} value={raza}>
+                                {raza}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Allergies</label>
+                    <input type="text" className="form-control" value={allergies} onChange={(e) => setAllergies(e.target.value)} placeholder="None, Pollen..." required />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label d-block">Neutered</label>
+                    <div className="form-check form-check-inline">
+                        <input className="form-check-input" type="radio" name="neuteredOptions" id="yesNeutered" onChange={() => setNeutered(true)} />
+                        <label className="form-check-label" htmlFor="yesNeutered">Yes</label>
                     </div>
-
-                    {}
-                    <div className="mb-3">
-                        <label className="form-label">Breed</label>
-                        <select 
-                            className="form-select border-custom-green" 
-                            value={breed} 
-                            onChange={(e) => setBreed(e.target.value)} 
-                            required
-                            disabled={!petType}
-                        >
-                            <option value="">Select a breed...</option>
-                            {petType && petBreeds[petType].map((raza, index) => (
-                                <option key={index} value={raza}>
-                                    {raza}
-                                </option>
-                            ))}
-                        </select>
+                    <div className="form-check form-check-inline">
+                        <input className="form-check-input" type="radio" name="neuteredOptions" id="noNeutered" onChange={() => setNeutered(false)} />
+                        <label className="form-check-label" htmlFor="noNeutered">No</label>
                     </div>
+                </div>
 
-                    <div className="mb-3">
-                        <label className="form-label">Allergies</label>
-                        <input type="text" className="form-control border-custom-green" value={allergies} onChange={(e) => setAllergies(e.target.value)} placeholder="None, Pollen..." required />
-                    </div>
+                <div className="mb-3">
+                    <label className="form-label">Additional info</label>
+                    <textarea className="form-control" rows="3" value={info} onChange={(e) => setInfo(e.target.value)}></textarea>
+                </div>
 
-                    <div className="mb-3">
-                        <label className="form-label d-block">Neutered</label>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="neuteredOptions" id="yesNeutered" onChange={() => setNeutered(true)} />
-                            <label className="form-check-label" htmlFor="yesNeutered">Yes</label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" name="neuteredOptions" id="noNeutered" onChange={() => setNeutered(false)} />
-                            <label className="form-check-label" htmlFor="noNeutered">No</label>
-                        </div>
-                    </div>
+                <div className="mb-4">
+                    <label className="form-label">Upload image</label>
+                    <input
+                        type="file"
+                        className="form-control"
+                        accept="image/*"
+                        onChange={(e) => setSelectedFile(e.target.files[0])}
+                    />
+                    <small className="text-muted">Select a photo (Optional)</small>
+                </div>
 
-                    <div className="mb-3">
-                        <label className="form-label">Additional info</label>
-                        <textarea className="form-control border-custom-green" rows="3" value={info} onChange={(e) => setInfo(e.target.value)}></textarea>
-                    </div>
+                {}
+                <button 
+                    type="submit" 
+                    className="btn rounded-0 w-100 text-light" 
+                    style={{ background: "rgb(48, 130, 114)" }} 
+                    disabled={loading}
+                >
+                    {loading ? "Uploading..." : "Register"}
+                </button>
 
-                    <div className="mb-4">
-                        <label className="form-label">Upload image</label>
-                        <input
-                            type="file"
-                            className="form-control border-custom-green"
-                            accept="image/*"
-                            onChange={(e) => setSelectedFile(e.target.files[0])}
-                        />
-                        <small className="text-muted">Select a photo (Optional)</small>
-                    </div>
+            </form>
 
-                    <div className="d-grid gap-2">
-                        <button type="submit" className="btn btn-custom-green btn-lg" disabled={loading}>
-                            {loading ? "Uploading..." : "Register"}
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-
-            <button onClick={scrollToTop} className="scroll-to-top">↑ Top</button>
         </div>
     );
 };

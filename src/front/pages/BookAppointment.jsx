@@ -11,9 +11,6 @@ export const BookAppointment = () => {
     const [motive, setMotive] = useState("");
     const [info, setInfo] = useState("");
 
-    const verdeEstilo = { color: "#308272" };
-    const verdeFondo = { backgroundColor: "#308272", color: "white" };
-
     useEffect(() => {
         const loadPets = async () => {
             const token = localStorage.getItem("jwt-token");
@@ -21,25 +18,26 @@ export const BookAppointment = () => {
             if (!token) {
                 alert("You must be logged in to book an appointment");
                 navigate("/login");
-            }else{
-            try {
-                const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/pet", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-                });
+            } else {
+                try {
+                    const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/pet", {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setPets(data.pets);
-                } else {
-                    console.log("Error loading pets");
+                    if (response.ok) {
+                        const data = await response.json();
+                        setPets(data.pets);
+                    } else {
+                        console.log("Error loading pets");
+                    }
+                } catch (error) {
+                    console.log("Connection error:", error);
                 }
-            } catch (error) {
-                console.log("Connection error:", error);
-            }
-        };}
+            };
+        }
 
         loadPets();
     }, []);
@@ -107,114 +105,95 @@ export const BookAppointment = () => {
     };
 
     return (
-        <div className="container mt-5 mb-5 min-vh-100">
-            <h1 className="text-center mb-4" style={verdeEstilo}>
-                Book Appointment
-            </h1>
+        <div className="container py-5 min-vh-100" style={{ maxWidth: "550px" }}>
+            <h2 className="mb-3">Book Appointment</h2>
 
-            <div className="card p-4 shadow-sm mx-auto" style={{ maxWidth: "600px", border: "2px solid #308272" }}>
-                <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="card p-3">
 
-                    { }
-                    <div className="mb-3">
-                        <label className="form-label fw-bold" style={verdeEstilo}>Pet Name</label>
-                        <select
-                            className="form-select"
-                            value={selectedPet}
-                            onChange={(e) => setSelectedPet(e.target.value)}
-                        >
-                            <option value="">Select a pet</option>
+                <div className="mb-3">
+                    <label className="form-label">Pet Name</label>
+                    <select
+                        className="form-select"
+                        value={selectedPet}
+                        onChange={(e) => setSelectedPet(e.target.value)}
+                    >
+                        <option value="">Select a pet</option>
+                        {pets.map((pet) => (
+                            <option key={pet.pet_id} value={pet.pet_id}>
+                                {pet.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-                            { }
-                            {pets.map((pet) => (
-                                <option key={pet.pet_id} value={pet.pet_id}>
-                                    {pet.name}
-                                </option>
-                            ))}
+                <div className="mb-3">
+                    <label className="form-label">Date</label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        value={date}
+                        onChange={(e) => {
+                            setDate(e.target.value);
+                            e.target.blur();
+                        }}
+                    />
+                </div>
 
-                        </select>
-                    </div>
+                <div className="mb-3">
+                    <label className="form-label">Time</label>
+                    <select
+                        className="form-select"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                    >
+                        <option value="">Select a time</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                    </select>
+                </div>
 
-                    { }
-                    <div className="mb-3">
-                        <label className="form-label fw-bold" style={verdeEstilo}>Date</label>
-                        <input
-                            type="date"
-                            className="form-control"
-                            value={date}
-                            onChange={(e) => {
-                                setDate(e.target.value);
-                                e.target.blur();
-                            }}
-                        />
-                    </div>
+                <div className="mb-3">
+                    <label className="form-label">Motive</label>
+                    <select
+                        className="form-select"
+                        value={motive}
+                        onChange={(e) => setMotive(e.target.value)}
+                    >
+                        <option value="">Select a service</option>
+                        <option value="Wellness Care">General Consultation</option>
+                        <option value="Vaccination">Vaccination</option>
+                        <option value="Surgery">Surgery</option>
+                        <option value="Microchipping">Microchipping</option>
+                        <option value="Dental Cleaning">Dental Cleaning</option>
+                        <option value="Grooming">Grooming</option>
+                    </select>
+                </div>
 
-                    { }
-                    <div className="mb-3">
-                        <label className="form-label fw-bold" style={verdeEstilo}>Time</label>
-                        <select
-                            className="form-select"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                        >
-                            <option value="">Select a time</option>
-                            <option value="09:00">9:00 AM</option>
-                            <option value="10:00">10:00 AM</option>
-                            <option value="11:00">11:00 AM</option>
-                            <option value="12:00">12:00 PM</option>
-                            <option value="13:00">1:00 PM</option>
-                            <option value="14:00">2:00 PM</option>
-                            <option value="15:00">3:00 PM</option>
-                            <option value="16:00">4:00 PM</option>
-                            <option value="17:00">5:00 PM</option>
-                        </select>
-                    </div>
+                <div className="mb-3">
+                    <label className="form-label">Additional Info</label>
+                    <textarea
+                        className="form-control"
+                        rows="3"
+                        value={info}
+                        onChange={(e) => setInfo(e.target.value)}
+                    ></textarea>
+                </div>
 
-                    { }
-                    <div className="mb-3">
-                        <label className="form-label fw-bold" style={verdeEstilo}>Motive</label>
-                        <select
-                            className="form-select"
-                            value={motive}
-                            onChange={(e) => setMotive(e.target.value)}
-                        >
-                            <option value="">Select a service</option>
-                            <option value="Wellness Care">General Consultation</option>
-                            <option value="Vaccination">Vaccination</option>
-                            <option value="Surgery">Surgery</option>
-                            <option value="Microchipping">Microchipping</option>
-                            <option value="Dental Cleaning">Dental Cleaning</option>
-                            <option value="Grooming">Grooming</option>
-                        </select>
-                    </div>
-
-                    { }
-                    <div className="mb-3">
-                        <label className="form-label fw-bold" style={verdeEstilo}>Additional Info</label>
-                        <textarea
-                            className="form-control"
-                            rows="3"
-                            value={info}
-                            onChange={(e) => setInfo(e.target.value)}
-                        ></textarea>
-                    </div>
-
-                    { }
-                    <button type="submit" className="btn w-100 fw-bold" style={verdeFondo}>
-                        Schedule Appointment
-                    </button>
-                </form>
-            </div>
-
-            { }
-            <div className="text-end mt-3">
                 <button
-                    className="btn btn-outline-secondary btn-sm rounded-circle"
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    type="submit"
+                    className="btn rounded-0 w-100 text-light"
+                    style={{ background: "rgb(48, 130, 114)" }}
                 >
-                    ⬆
+                    Schedule Appointment
                 </button>
-            </div>
+            </form>
         </div>
     );
 };
