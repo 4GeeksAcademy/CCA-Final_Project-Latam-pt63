@@ -20,6 +20,7 @@ import { PetInfo } from "./pages/PetInfo.jsx";
 import { AdminClients } from "./pages/AdminClients.jsx";
 import { PasswordReset } from "./pages/ResetPassword.jsx";
 import { RequestReset } from "./pages/RequestReset.jsx";
+import { AdminPets } from "./pages/AdminPets.jsx";
 
 
 
@@ -37,7 +38,7 @@ export const router = createBrowserRouter(
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/editprofile/:userId" element={<EditProfile />} />
-      
+
       { }
       <Route path="/register-pet" element={<RegisterPet />} />
       <Route path="/book" element={<BookAppointment />} />
@@ -47,6 +48,7 @@ export const router = createBrowserRouter(
       <Route path="/private/clients" element={<AdminClients />} />
       <Route path="/reset-password/:Uuid" element={<PasswordReset />} />
       <Route path="/request-reset" element={<RequestReset />} />
+      <Route path="/private/pets" element={<AdminPets />} />
     </Route>
   )
 );
