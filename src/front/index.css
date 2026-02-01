@@ -279,3 +279,10 @@ textarea.form-control:focus {
   border-color: var(--vet-green) !important;
   box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
 }
+
+#services,
+#about,
+#contact,
+#more-info {
+  scroll-margin-top: 110px;
+}

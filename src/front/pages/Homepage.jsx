@@ -16,7 +16,7 @@ export const Homepage = () => {
         secondaryHref="#contact"
       />
 
-      <section id="services" className="py-5">
+      <section id="services" className="py-5 mt-2 pt-6">
         <div className="container">
           <div className="d-flex align-items-end justify-content-between gap-3 flex-wrap mb-4">
             <h2 className="fw-bold m-0">Services</h2>
@@ -25,7 +25,7 @@ export const Homepage = () => {
             </a>
           </div>
 
-          <div className="row g-4">
+          <div className="row g-4 mt-4">
             {[{t: "Checkups & Consultations", d: "Routine visits, diagnosis, and personalized treatment plans.",},
               {t: "Vaccinations", d: "Core vaccines and tailored prevention schedules for every stage of life.",},
               {t: "Surgery", d: "Soft-tissue procedures with pre-op testing and post-op follow-up.", },
