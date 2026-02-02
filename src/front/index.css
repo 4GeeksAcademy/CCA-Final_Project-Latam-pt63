@@ -1,23 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap");
 
+:root {
+  --vet-green: rgb(48, 130, 114);
+  --vet-green-hover: rgb(40, 110, 96);
+  --vet-green-active: rgb(34, 95, 84);
+}
+
 body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
+  padding-top: 77px;
+}
+
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
 }
 
 .custom-green-background {
-  background-color: rgb(48, 130, 114);
+  background-color: var(--vet-green);
   color: white;
 }
 
 .pet-card {
   border: none;
-  border-radius: 16px;
   background-color: #ffffff;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .pet-card:hover {
@@ -28,7 +38,6 @@ body {
 .pet-image-wrapper {
   width: 140px;
   height: 140px;
-  border-radius: 14px;
   overflow: hidden;
   background-color: #f1f1f1;
   flex-shrink: 0;
@@ -55,7 +64,6 @@ body {
 
 .pet-badge {
   padding: 4px 12px;
-  border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 400;
   background-color: #e9ecef;
@@ -63,14 +71,12 @@ body {
 
 .pet-actions .btn {
   font-weight: 500;
-  border-radius: 10px;
 }
 
 .pet-info-card {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  border-radius: 20px;
   border: none;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   overflow: hidden;
@@ -97,7 +103,7 @@ body {
 
 .pet-name {
   font-weight: 600;
-  color: rgb(48, 130, 114);
+  color: var(--vet-green);
 }
 
 .pet-info-card h5 {
@@ -107,9 +113,8 @@ body {
 
 .pet-notes {
   background-color: rgba(48, 130, 114, 0.12);
-  border-left: 4px solid rgb(48, 130, 114);
+  border-left: 4px solid var(--vet-green);
   padding: 14px;
-  border-radius: 10px;
   font-size: 0.95rem;
 }
 
@@ -126,21 +131,158 @@ input[type=number] {
   aspect-ratio: 1/1;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
 }
-.admin-pet-card{
+
+.admin-pet-card {
   box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.12);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.admin-pet-card:hover{
+
+.admin-pet-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid  rgb(48, 130, 114);
-
+  border: 1px solid var(--vet-green);
 }
-.admin-pet-card-buttons{
+
+.admin-pet-card-buttons {
   background-color: rgba(48, 130, 114, 0.082);
-  color: rgb(48, 130, 114);
+  color: var(--vet-green);
+}
+
+.banner-home {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.banner-home::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.banner-home-content {
+  position: relative;
+  z-index: 1;
+}
+
+.service-card {
+  background: var(--vet-green);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+}
+
+.service-card .text-muted {
+  color: #ffffff !important;
+}
+
+.service-card a,
+.service-card .link-vet {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+.service-card a:hover,
+.service-card .link-vet:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+.btn-vet {
+  background-color: var(--vet-green);
+  border-color: var(--vet-green);
+  color: #fff;
+}
+
+.btn-vet:hover,
+.btn-vet:focus {
+  background-color: var(--vet-green-hover);
+  border-color: var(--vet-green-hover);
+  color: #fff;
+}
+
+.btn-vet:active {
+  background-color: var(--vet-green-active);
+  border-color: var(--vet-green-active);
+}
+
+.btn-vet-outline {
+  background: transparent;
+  border: 2px solid var(--vet-green);
+  color: var(--vet-green);
+}
+
+.btn-vet-outline:hover,
+.btn-vet-outline:focus {
+  background: var(--vet-green);
+  border-color: var(--vet-green);
+  color: #fff;
+}
+
+.btn-vet-outline-white {
+  background: transparent;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+  border-radius: 0 !important;
+}
+
+.btn-vet-outline-white:hover,
+.btn-vet-outline-white:focus,
+.btn-vet-outline-white:active {
+  background: #fff !important;
+  border-color: #fff !important;
+  color: var(--vet-green) !important;
+}
+
+.btn-vet-outline-white:focus {
+  box-shadow: none !important;
+}
+.link-vet {
+  color: var(--vet-green) !important;
+  text-decoration: none;
+}
+
+.link-vet:hover,
+.link-vet:focus {
+  color: var(--vet-green-hover) !important;
+  text-decoration: underline;
+}
+
+.link-primary {
+  color: var(--vet-green) !important;
+}
+
+.link-primary:hover {
+  color: var(--vet-green-hover) !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--vet-green) !important;
+  box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
+}
+
+textarea.form-control:focus {
+  border-color: var(--vet-green) !important;
+  box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
+}
+
+#services,
+#about,
+#contact,
+#more-info {
+  scroll-margin-top: 110px;
 }
