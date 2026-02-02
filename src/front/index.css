@@ -6,6 +6,12 @@
   --vet-green-active: rgb(34, 95, 84);
 }
 
+:root {
+  --vet-green: rgb(48, 130, 114);
+  --vet-green-hover: rgb(40, 110, 96);
+  --vet-green-active: rgb(34, 95, 84);
+}
+
 body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
@@ -19,6 +25,7 @@ body {
 
 .custom-green-background {
   background-color: var(--vet-green);
+  background-color: var(--vet-green);
   color: white;
 }
 
@@ -26,9 +33,7 @@ body {
   border: none;
   background-color: #ffffff;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .pet-card:hover {
@@ -105,6 +110,7 @@ body {
 .pet-name {
   font-weight: 600;
   color: var(--vet-green);
+  color: var(--vet-green);
 }
 
 .pet-info-card h5 {
@@ -115,6 +121,7 @@ body {
 .pet-notes {
   background-color: rgba(48, 130, 114, 0.12);
   border-left: 4px solid var(--vet-green);
+  border-left: 4px solid var(--vet-green);
   padding: 14px;
   font-size: 0.95rem;
 }
@@ -123,8 +130,13 @@ input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
+input[type="number"] {
 input[type="number"] {
   -moz-appearance: textfield;
 }
@@ -148,17 +160,22 @@ textarea.form-control:focus {
 }
 
 .admin-pet-card {
+
+.admin-pet-card {
   box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.12);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
+.admin-pet-card:hover {
 
 .admin-pet-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--vet-green);
+  border: 1px solid var(--vet-green);
 }
+
+.admin-pet-card-buttons {
 
 .admin-pet-card-buttons {
   background-color: rgba(48, 130, 114, 0.082);
@@ -305,4 +322,16 @@ textarea.form-control:focus {
 .hover-card-effect:hover {
   transform: translateY(-8px);
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+textarea.form-control:focus {
+  border-color: var(--vet-green) !important;
+  box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
+}
+
+#services,
+#about,
+#contact,
+#more-info {
+  scroll-margin-top: 110px;
 }
