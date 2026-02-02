@@ -36,7 +36,7 @@ export const AdminPetCard = ({ pet }) => {
 
     return (
         <div className="col-4">
-            <div className="card admin-pet-card">
+            <div className="card admin-pet-card p-3">
                 <div className="card-body">
                     <div className="d-flex">
                         <img src={pet.image || "https://w7.pngwing.com/pngs/573/926/png-transparent-paw-dog-paw-prints-animals-photography-paw.png"} className="object-fit-cover admin-pet-card-image" alt={pet.name} />

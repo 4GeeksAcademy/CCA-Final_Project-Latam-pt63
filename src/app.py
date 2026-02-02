@@ -284,8 +284,9 @@ def signup():
         return jsonify({'msg': 'You must include an address'}), 400
     if 'password' not in body:
         return jsonify({'msg': 'You must include a password'}), 400
-    valid_email = Users.query.filter_by(email=body['email']).first()
-    if valid_email != None:
+    valid_user_email = Users.query.filter_by(email=body['email']).first()
+    valid_doctor_email = Doctors.query.filter_by(email=body['email']).first()
+    if valid_user_email != None or valid_doctor_email != None:
         return jsonify({'msg': 'Email already exists'}), 400
     new_user = Users()
     new_user.first_name = body['first_name']
@@ -351,7 +352,8 @@ def create_doctor():
         return jsonify({'msg': 'missing (specialty)'}), 400
 
     doctor_existente = Doctors.query.filter_by(email=body['email']).first()
-    if doctor_existente:
+    valid_user_email = Users.query.filter_by(email=body['email']).first()
+    if doctor_existente != None or valid_user_email != None:
         return jsonify({'msg': 'email already registered'}), 400
 
     new_doctor = Doctors()
