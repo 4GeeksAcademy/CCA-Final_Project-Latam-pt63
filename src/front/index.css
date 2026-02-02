@@ -113,13 +113,13 @@ body {
   font-size: 0.95rem;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 .admin-pet-card-image {
@@ -128,19 +128,38 @@ input[type=number] {
   height: 50px;
   border-radius: 50%;
 }
-.admin-pet-card{
+.admin-pet-card {
   box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.12);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
 }
-.admin-pet-card:hover{
+.admin-pet-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid  rgb(48, 130, 114);
-
+  border: 1px solid rgb(48, 130, 114);
 }
-.admin-pet-card-buttons{
+.admin-pet-card-buttons {
   background-color: rgba(48, 130, 114, 0.082);
   color: rgb(48, 130, 114);
+}
+
+.hover-card-effect {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.hover-card-effect:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.hover-card-effect:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
 }

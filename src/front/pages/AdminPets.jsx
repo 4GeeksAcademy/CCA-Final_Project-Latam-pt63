@@ -1,14 +1,36 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { AdminPetCard } from "../components/AdminPetCard";
 
 export const AdminPets = () => {
 
     const [pets, setPets] = useState([])
-
+    const [loading, setLoading] = useState(true);
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-    const VerifyAdmin = async () => {
+    const calculateAge = (birthdate) => {
+        if (!birthdate) return "N/A";
 
+        const birthDate = new Date(birthdate);
+        const today = new Date();
+
+        let years = today.getFullYear() - birthDate.getFullYear();
+        let months = today.getMonth() - birthDate.getMonth();
+
+        if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+            years--;
+            months += 12;
+        }
+
+        if (years > 0) {
+            return `${years} ${years === 1 ? "year" : "years"}`;
+        } else {
+            if (months === 0) return "Newborn";
+            return `${months} ${months === 1 ? "month" : "months"}`;
+        }
+    };
+
+    const VerifyAdmin = async () => {
         try {
             const token = localStorage.getItem('jwt-token')
             const result = await fetch(backendUrl + "/private", {
@@ -19,18 +41,26 @@ export const AdminPets = () => {
                 }
             });
             const data = await result.json()
+
             if (result.ok) {
-                const pets = await fetch(backendUrl + "/pet", {
+                const petsResponse = await fetch(backendUrl + "/pet", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + token,
                     }
                 });
-                const petdata = await pets.json()
-                if (pets.ok) {
-                    setPets(petdata.pets)
-                    console.log(petdata.pets)
+                const petdata = await petsResponse.json()
+
+                if (petsResponse.ok) {
+                    const petsWithAge = petdata.pets.map((p) => {
+                        return {
+                            ...p,
+                            age: calculateAge(p.birthdate)
+                        };
+                    });
+
+                    setPets(petsWithAge)
                 } else {
                     alert(petdata.msg)
                 }
@@ -39,6 +69,8 @@ export const AdminPets = () => {
             }
         } catch (error) {
             console.error(error)
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -46,21 +78,39 @@ export const AdminPets = () => {
         VerifyAdmin()
     }, [])
 
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center min-vh-100">
+                <div className="spinner-border" style={{ color: "rgb(48, 130, 114)", width: "3rem", height: "3rem" }} role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <>
             <div className="container min-vh-100">
-                <div className="mt-3 mb-3 d-flex justify-content-between">
-                    <h1>Pets</h1>
-                    <div className="mt-1 col-1">
-                        <button type="button" className="btn btn-secondary  custom-green-background w-100">+ Add Pet</button>
+                <div className="mt-4 mb-4 d-flex justify-content-between align-items-center">
+                    <h1>Pets List</h1>
+                    <div>
+                        <Link to="/register-pet">
+                            <button
+                                type="button"
+                                className="btn rounded-0 text-light px-4"
+                                style={{ background: "rgb(48, 130, 114)" }}
+                            >
+                                + Add Pet
+                            </button>
+                        </Link>
                     </div>
                 </div>
-                
+
                 <div className="row g-3">
                     {pets.map((pet) => {
                         return (
-                            <AdminPetCard pet={pet} />)
+                            <AdminPetCard key={pet.pet_id} pet={pet} />
+                        )
                     })}
                 </div>
 
