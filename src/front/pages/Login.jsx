@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer"
+import Animals from "../assets/img/animals-homepage.jpg";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -43,9 +44,9 @@ export const Login = () => {
       localStorage.setItem("role", data.role);
       localStorage.setItem("login-status", true);
       dispatch({ type: "LoggedIn" });
-      if (localStorage.getItem("role") == "admin"){
+      if (localStorage.getItem("role") == "admin") {
         navigate("/private/clients")
-      }else{
+      } else {
         navigate("/");
       }
     } catch (err) {
@@ -56,45 +57,47 @@ export const Login = () => {
   };
 
   return (
-    <div className="container py-5 min-vh-100" style={{ maxWidth: 450 }}>
-      <h2 className="mb-3">Login</h2>
+    <div>
+      <div className="container py-5 min-vh-100" style={{ maxWidth: 450 }}>
+        <h2 className="mb-3">Login</h2>
 
-      {feedback !== "" && <div className="alert alert-danger">{feedback}</div>}
+        {feedback !== "" && <div className="alert alert-danger">{feedback}</div>}
 
-      <form onSubmit={handleSubmit} className="card p-3">
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input
-            className="form-control"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="email@example.uy"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="card p-3">
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input
+              className="form-control"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@example.uy"
+            />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Password</label>
-          <input
-            className="form-control"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-          />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              className="form-control"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
+          </div>
 
-        <button className="btn rounded-0 w-100 text-light" style={{ background: "rgb(48, 130, 114)" }} disabled={isLoading}>
-          {isLoading ? "Loading..." : "Sign in"}
-        </button>
+          <button className="btn rounded-0 w-100 text-light" style={{ background: "rgb(48, 130, 114)" }} disabled={isLoading}>
+            {isLoading ? "Loading..." : "Sign in"}
+          </button>
 
-        <p className="mt-3 mb-0 text-center">
-          Don't have an account? <Link to="/signup">Sign up</Link>
-        </p>
-        <p className="mt-3 mb-0 text-center">
-          <Link to="/request-reset">Forgot your password?</Link>
-        </p>
-      </form>
+          <p className="mt-3 mb-0 text-center">
+            Don't have an account? <Link to="/signup">Sign up</Link>
+          </p>
+          <p className="mt-3 mb-0 text-center">
+            <Link to="/request-reset">Forgot your password?</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 };
