@@ -9,7 +9,6 @@
 body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  padding-top: 77px;
 }
 
 *,
@@ -27,7 +26,9 @@ body {
   border: none;
   background-color: #ffffff;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .pet-card:hover {
@@ -127,6 +128,19 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--vet-green) !important;
+  box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
+}
+
+textarea.form-control:focus {
+  border-color: var(--vet-green) !important;
+  box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
+}
+
 .admin-pet-card-image {
   aspect-ratio: 1/1;
   width: 50px;
@@ -135,7 +149,9 @@ input[type="number"] {
 
 .admin-pet-card {
   box-shadow: 0 5px 5px 1px rgba(0, 0, 0, 0.12);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .admin-pet-card:hover {
@@ -177,7 +193,9 @@ input[type="number"] {
   color: #ffffff;
   border: 2px solid rgba(255, 255, 255, 0.85) !important;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .service-card:hover {
@@ -200,6 +218,7 @@ input[type="number"] {
   color: #ffffff !important;
   text-decoration: underline;
 }
+
 .btn-vet {
   background-color: var(--vet-green);
   border-color: var(--vet-green);
@@ -244,11 +263,13 @@ input[type="number"] {
   background: #fff !important;
   border-color: #fff !important;
   color: var(--vet-green) !important;
+  border-radius: 0 !important;
 }
 
 .btn-vet-outline-white:focus {
   box-shadow: none !important;
 }
+
 .link-vet {
   color: var(--vet-green) !important;
   text-decoration: none;
@@ -268,21 +289,21 @@ input[type="number"] {
   color: var(--vet-green-hover) !important;
 }
 
-.form-control:focus,
-.form-select:focus,
-.form-check-input:focus {
-  border-color: var(--vet-green) !important;
-  box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
-}
-
-textarea.form-control:focus {
-  border-color: var(--vet-green) !important;
-  box-shadow: 0 0 0 0.2rem rgba(48, 130, 114, 0.25) !important;
-}
-
 #services,
 #about,
 #contact,
 #more-info {
   scroll-margin-top: 110px;
+}
+
+.hover-card-effect {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.hover-card-effect:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
 }

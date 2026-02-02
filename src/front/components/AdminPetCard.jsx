@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export const AdminPetCard = ({ pet }) => {
+    const placeholderImage = "https://w7.pngwing.com/pngs/573/926/png-transparent-paw-dog-paw-prints-animals-photography-paw.png";
 
     const [owner, setOwner] = useState({
         first_name: "",
@@ -13,6 +15,8 @@ export const AdminPetCard = ({ pet }) => {
     const GetOwner = async () => {
         try {
             const token = localStorage.getItem('jwt-token')
+            if (!pet.owner_id) return;
+
             const result = await fetch(backendUrl + "/users/" + pet.owner_id, {
                 method: "GET",
                 headers: {
@@ -31,36 +35,62 @@ export const AdminPetCard = ({ pet }) => {
 
     useEffect(() => {
         GetOwner()
-    }, [])
+    }, [pet.owner_id])
 
 
     return (
-        <div className="col-4">
-            <div className="card admin-pet-card p-3">
+        <div className="col-12 col-md-6 col-lg-4">
+            <div className="card h-100 border-0 shadow-sm hover-card-effect">
                 <div className="card-body">
-                    <div className="d-flex">
-                        <img src={pet.image || "https://w7.pngwing.com/pngs/573/926/png-transparent-paw-dog-paw-prints-animals-photography-paw.png"} className="object-fit-cover admin-pet-card-image" alt={pet.name} />
-                        <div className=" ms-3">
-                            <h5 className="card-title mb-0">{pet.name}</h5>
-                            <p className="card-text">{pet.pet_type}</p>
+
+                    <div className="d-flex align-items-center mb-3">
+                        <div style={{ width: "50px", height: "50px", flexShrink: 0 }}>
+                            { }
+                            <img
+                                src={pet.image ? pet.image : placeholderImage}
+                                className="w-100 h-100 rounded-circle object-fit-cover"
+                                alt={pet.name}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = placeholderImage;
+                                }}
+                            />
+                        </div>
+                        <div className="ms-3">
+                            <h5 className="card-title mb-0 fw-bold text-dark">{pet.name}</h5>
+                            <small className="text-muted">{pet.pet_type}</small>
                         </div>
                     </div>
-                    <div className="d-flex justify-content-between mt-4 ms-1 me-1 mb-0">
-                        <p className="fw-lighter">Breed :</p>
-                        <p>{pet.breed}</p>
+
+                    <div className="small">
+                        <div className="d-flex justify-content-between mb-2">
+                            <span className="text-secondary">Breed:</span>
+                            <span className="fw-medium">{pet.breed}</span>
+                        </div>
+
+                        <div className="d-flex justify-content-between mb-2">
+                            <span className="text-secondary">Age:</span>
+                            { }
+                            <span className="fw-medium">{pet.age || "N/A"}</span>
+                        </div>
+
+                        <div className="d-flex justify-content-between mb-2">
+                            <span className="text-secondary">Owner:</span>
+                            <span className="fw-medium">
+                                {owner.first_name} {owner.last_name}
+                            </span>
+                        </div>
                     </div>
-                    <div className="d-flex justify-content-between ms-1 me-1 mt-0 mb-0">
-                        <p className="fw-lighter">Age :</p>
-                        <p clas>{pet.birthdate}</p>
-                    </div>
-                    <div className="d-flex justify-content-between ms-1 me-1 mb-0">
-                        <p className="fw-lighter">Owner :</p>
-                        <p>{owner.first_name} {owner.last_name}</p>
-                    </div>
-                    <hr className="mt-0"></hr>
-                    <div className="d-flex justify-content-center">
-                        <a href="#" className="btn btn-secondary me-2 w-50 admin-pet-card-buttons border-0">History</a>
-                        <a href="#" className="btn btn-secondary  ms-2 w-50 admin-pet-card-buttons border-0">Edit</a>
+
+                    <hr className="my-3 text-muted opacity-25"></hr>
+
+                    <div className="d-flex gap-2">
+                        <Link to={`/pets/${pet.pet_id}`} className="btn btn-sm w-50 text-white rounded-0" style={{ background: "rgb(48, 130, 114)" }}>
+                            History
+                        </Link>
+                        <button className="btn btn-sm w-50 btn-outline-secondary rounded-0">
+                            Edit
+                        </button>
                     </div>
                 </div>
             </div>
