@@ -472,9 +472,20 @@ def get_single_user(user_id):
             return jsonify({'msg': 'User not found'}), 404
         if user_info.user_id != user_id:
             return jsonify({'msg': 'You cant access this information'}), 400
-        return jsonify({'user': user_info.serialize()}), 200
+        else:
+            userdict = user_info.serialize()
+            pets_serialized = []
+            for pet in user_info.pets:
+                pets_serialized.append(pet.serialize())
+            userdict['pets'] = pets_serialized
+            return jsonify({'user': userdict}), 200
     else:
-        return jsonify({'user': requested_user.serialize()}), 200
+        userdict = requested_user.serialize()
+        pets_serialized = []
+        for pet in requested_user.pets:
+            pets_serialized.append(pet.serialize())
+        userdict['pets'] = pets_serialized
+        return jsonify({'user': userdict}), 200
 
 
 @app.route('/private', methods=['GET'])

@@ -136,7 +136,7 @@ export const Homepage = () => {
                   <strong>WhatsApp:</strong> +1 (805) 555-0199
                 </p>
                 <p className="mb-0">
-                  <strong>Email:</strong> hello@vetcare.example
+                  <strong>Email:</strong> services@vetcare.com
                 </p>
 
 
