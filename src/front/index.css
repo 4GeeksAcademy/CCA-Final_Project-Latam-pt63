@@ -327,6 +327,19 @@ textarea.form-control:focus {
 .bg-warning-subtle {
   background-color: #fff3cd !important;
   color: #664d03 !important;
+.admin-navbar-buttons{
+  background-color: rgba(248, 249, 250);
+  border: none;
+  color: black;
+}
+.admin-navbar-buttons:hover{
+  color: black;
+  background-color: lightgrey;
+}
+.admin-navbar-buttons:active ,.admin-navbar-buttons:focus{
+  color: white;
+  background-color: var(--vet-green)!important;
+}
 
 .about-section {
   background: #fff;
