@@ -9,6 +9,7 @@
 body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
+  padding-top: 77px;
 }
 
 *,
@@ -306,4 +307,169 @@ textarea.form-control:focus {
 .hover-card-effect:hover {
   transform: translateY(-8px);
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+
+.about-section {
+  background: #fff;
+}
+
+.about-copy {
+  max-width: 720px;
+}
+
+.about-p {
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: #222;
+  margin-bottom: 1.05rem;
+}
+
+.about-highlight {
+  color: #f18a00; /* acento tipo el de tu captura */
+  font-weight: 600;
+}
+
+.about-signature {
+  font-weight: 600;
+  color: #222;
+}
+
+/* Reveal (fade + slide) */
+.about-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 700ms ease, transform 700ms ease;
+}
+
+.about-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Imagen a la derecha con efecto */
+.about-imageWrap {
+  position: relative;
+}
+
+@media (min-width: 992px) {
+  .about-imageWrap {
+    position: sticky;
+    top: 90px; /* queda linda mientras scrolleás */
+  }
+}
+
+.about-imageCard {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(0);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.about-imageCard:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.16);
+}
+
+.about-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.about-highlight {
+  color: var(--vet-green);
+  font-weight: 700;
+}
+
+.about-title {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.about-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(10px);
+  will-change: opacity, transform, filter;
+}
+
+.about-section.is-visible .about-word,
+.about-reveal.is-visible .about-word {
+  animation: wordIn 650ms ease forwards;
+  animation-delay: var(--d);
+}
+
+@keyframes wordIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.about-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 130, 114, 0.08),
+    rgba(48, 130, 114, 0.16),
+    rgba(48, 130, 114, 0.08)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.about-imageCard {
+  position: relative;
+}
+
+.about-image {
+  transition: opacity 450ms ease, filter 450ms ease, transform 450ms ease;
+}
+
+.about-image.loading {
+  opacity: 0;
+  filter: blur(10px);
+  transform: scale(1.03);
+}
+
+.about-image.loaded {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.about-badge {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px !important;
+  border: 1px solid rgba(48, 130, 114, 0.25);
+  background: rgba(48, 130, 114, 0.06);
+  color: #111;
+  font-weight: 600;
+}
+
+.about-badge .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px !important;
+  background: var(--vet-green);
+  display: inline-block;
 }
