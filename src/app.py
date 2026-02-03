@@ -529,6 +529,15 @@ def create_appointment():
         if pet.owner_id != user_info.user_id:
             return jsonify({'msg': 'You cant make an appointment for a pet you dont own'}), 400
 
+        # VALIDACIÓN: Cita duplicada
+        existing_appointment = Appointments.query.filter_by(
+            doctor_id=body['doctor_id'], 
+            date=body['date'], 
+            time=body['time']
+        ).first()
+        if existing_appointment:
+             return jsonify({'msg': 'Doctor already has an appointment at this time'}), 400
+
         new_appointment = Appointments()
         new_appointment.doctor_id = body['doctor_id']
         new_appointment.pet_id = body['pet_id']
@@ -556,6 +565,15 @@ def create_appointment():
         valid_doctor_id = Doctors.query.get(doctor_id)
         if valid_doctor_id is None:
             return jsonify({'msg': 'Doctor not found'}), 404
+
+        # VALIDACIÓN: Cita duplicada
+        existing_appointment = Appointments.query.filter_by(
+            doctor_id=body['doctor_id'], 
+            date=body['date'], 
+            time=body['time']
+        ).first()
+        if existing_appointment:
+             return jsonify({'msg': 'Doctor already has an appointment at this time'}), 400
 
         new_appointment = Appointments()
         new_appointment.doctor_id = body['doctor_id']
@@ -746,6 +764,25 @@ def reset_password(user_uuid):
     user.password = pw_hash
     db.session.commit()
     return jsonify({'msg': 'Password changed successfully'}), 200
+
+@app.route('/appointments', methods=['GET'])
+@jwt_required()
+def get_all_appointments():
+    appointments = Appointments.query.all()
+    results = []
+
+    for appt in appointments:
+        data = appt.serialize()
+  
+        pet = Pets.query.get(appt.pet_id)
+        if pet:
+            data['pet_name'] = pet.name
+        else:
+            data['pet_name'] = "Unknown Pet"
+            
+        results.append(data)
+
+    return jsonify(results), 200
 
 
 # this only runs if `$ python src/main.py` is executed

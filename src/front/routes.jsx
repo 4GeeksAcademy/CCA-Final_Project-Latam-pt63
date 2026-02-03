@@ -22,7 +22,7 @@ import { PasswordReset } from "./pages/ResetPassword.jsx";
 import { RequestReset } from "./pages/RequestReset.jsx";
 import { AdminPets } from "./pages/AdminPets.jsx";
 import { ClientDetails } from "./pages/ClientDetails.jsx";
-
+import { AdminAgenda } from "./pages/AdminAgenda.jsx";
 
 
 export const router = createBrowserRouter(
@@ -51,6 +51,7 @@ export const router = createBrowserRouter(
       <Route path="/request-reset" element={<RequestReset />} />
       <Route path="/private/pets" element={<AdminPets />} />
       <Route path="/private/clients/:clientId" element={<ClientDetails />} />
+      <Route path="/private/agenda" element={<AdminAgenda />} />
     </Route>
   )
 );
