@@ -309,6 +309,19 @@ textarea.form-control:focus {
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
 }
 
+.admin-navbar-buttons{
+  background-color: rgba(248, 249, 250);
+  border: none;
+  color: black;
+}
+.admin-navbar-buttons:hover{
+  color: black;
+  background-color: lightgrey;
+}
+.admin-navbar-buttons:active ,.admin-navbar-buttons:focus{
+  color: white;
+  background-color: var(--vet-green)!important;
+}
 
 .about-section {
   background: #fff;

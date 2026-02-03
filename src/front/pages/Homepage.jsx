@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TransitionHome } from "./TransitionHome.jsx";
 import Animals from "../assets/img/animals-homepage.jpg";
 import Animals2 from "../assets/img/animals-homepage2.jpg";
 
 export const Homepage = () => {
+
+  const Navbar = localStorage.getItem("role")
+
+  useEffect(() => {
+   }, [Navbar])
+   
   return (
     <div className="no-radius">
       <TransitionHome
@@ -26,12 +32,12 @@ export const Homepage = () => {
           </div>
 
           <div className="row g-4 mt-4">
-            {[{t: "Checkups & Consultations", d: "Routine visits, diagnosis, and personalized treatment plans.",},
-              {t: "Vaccinations", d: "Core vaccines and tailored prevention schedules for every stage of life.",},
-              {t: "Surgery", d: "Soft-tissue procedures with pre-op testing and post-op follow-up.", },
-              {t: "In-House Lab", d: "Fast bloodwork and basic testing to speed up answers.",},
-              {t: "Grooming", d: "Baths, nail trims, ear cleaning, and coat care for comfort and hygiene.",},
-              {t: "Urgent Care", d: "Same-day care for vomiting, injuries, allergic reactions, and more.",},
+            {[{ t: "Checkups & Consultations", d: "Routine visits, diagnosis, and personalized treatment plans.", },
+            { t: "Vaccinations", d: "Core vaccines and tailored prevention schedules for every stage of life.", },
+            { t: "Surgery", d: "Soft-tissue procedures with pre-op testing and post-op follow-up.", },
+            { t: "In-House Lab", d: "Fast bloodwork and basic testing to speed up answers.", },
+            { t: "Grooming", d: "Baths, nail trims, ear cleaning, and coat care for comfort and hygiene.", },
+            { t: "Urgent Care", d: "Same-day care for vomiting, injuries, allergic reactions, and more.", },
             ].map((x) => (
               <div className="col-sm-6 col-lg-4" key={x.t}>
                 <div className="p-4 border h-100 service-card">

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export const ClientInfoCard = ({ info }) => {
     return (
-        <><div className="mt-3">
+        <><div className="mt-3 ms-5 ps-5">
             <h1>Client Info</h1>
             <div class="card mt-3 rounded border-top-0">
                 <h4 class="card-header custom-green-background d-flex align-items-center rounded-top"> <div
