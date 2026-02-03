@@ -40,7 +40,7 @@ export const AdminPetCard = ({ pet }) => {
 
     return (
         <div className="col-12 col-md-6 col-lg-4">
-            <div className="card h-100 border-0 shadow-sm hover-card-effect">
+            <div className="card  bg-light h-100 border-1 shadow-sm hover-card-effect rounded">
                 <div className="card-body">
 
                     <div className="d-flex align-items-center mb-3">
@@ -85,10 +85,10 @@ export const AdminPetCard = ({ pet }) => {
                     <hr className="my-3 text-muted opacity-25"></hr>
 
                     <div className="d-flex gap-2">
-                        <Link to={`/pets/${pet.pet_id}`} className="btn btn-sm w-50 text-white rounded-0" style={{ background: "rgb(48, 130, 114)" }}>
+                        <Link to={`/pets/${pet.pet_id}`} className="btn btn-sm w-50 text-white rounded" style={{ background: "rgb(48, 130, 114)" }}>
                             History
                         </Link>
-                        <button className="btn btn-sm w-50 btn-outline-secondary rounded-0">
+                        <button className="btn btn-sm w-50 btn-outline-secondary rounded">
                             Edit
                         </button>
                     </div>

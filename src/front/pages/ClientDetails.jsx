@@ -89,7 +89,7 @@ export const ClientDetails = () => {
         <>
             <div className="container min-vh-100">
                 <ClientInfoCard info={clientInfo} />
-                <div className="mt-3">
+                <div className="mt-3 ms-5 ps-5">
                     <div class="card">
                         <h5 class="card-header d-flex align-items-center">
                             <i className="fa-solid fa-paw me-3"></i>Registered Pets  <div
@@ -105,7 +105,7 @@ export const ClientDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-3">
+                <div className="mt-3 ms-5 mb-5 ps-5">
                     <div class="card">
                         <h5 class="card-header">
                             <i className="fa-solid fa-calendar me-3"></i>Appointment History {history.length}</h5>

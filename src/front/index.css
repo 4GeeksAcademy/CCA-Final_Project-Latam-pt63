@@ -9,6 +9,7 @@
 body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
+  padding-top: 77px;
 }
 
 *,
@@ -306,4 +307,18 @@ textarea.form-control:focus {
 .hover-card-effect:hover {
   transform: translateY(-8px);
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+.admin-navbar-buttons{
+  background-color: rgba(248, 249, 250);
+  border: none;
+  color: black;
+}
+.admin-navbar-buttons:hover{
+  color: black;
+  background-color: lightgrey;
+}
+.admin-navbar-buttons:active ,.admin-navbar-buttons:focus{
+  color: white;
+  background-color: var(--vet-green)!important;
 }

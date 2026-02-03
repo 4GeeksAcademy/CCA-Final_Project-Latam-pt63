@@ -90,14 +90,15 @@ export const AdminPets = () => {
 
     return (
         <>
-            <div className="container min-vh-100">
-                <div className="mt-4 mb-4 d-flex justify-content-between align-items-center">
-                    <h1>Pets List</h1>
+            <div className="container min-vh-100 ">
+                <div className=" pb-5 ps-5 ms-5 ">
+                <div className="mt-4 ms-1 mb-4 d-flex justify-content-between align-items-center justify-content-center">
+                    <h1>Pets</h1>
                     <div>
                         <Link to="/register-pet">
                             <button
                                 type="button"
-                                className="btn rounded-0 text-light px-4"
+                                className="btn rounded text-light px-4"
                                 style={{ background: "rgb(48, 130, 114)" }}
                             >
                                 + Add Pet
@@ -113,7 +114,7 @@ export const AdminPets = () => {
                         )
                     })}
                 </div>
-
+</div>
             </div>
         </>
     )
