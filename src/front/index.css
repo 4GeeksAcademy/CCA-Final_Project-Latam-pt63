@@ -127,6 +127,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .form-control:focus,
@@ -306,4 +307,23 @@ textarea.form-control:focus {
 .hover-card-effect:hover {
   transform: translateY(-8px);
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+.bg-vet {
+  background-color: var(--vet-green) !important;
+  color: white !important;
+}
+
+.text-vet {
+  color: var(--vet-green) !important;
+}
+
+.bg-success-subtle {
+  background-color: #d1e7dd !important;
+  color: #0f5132 !important;
+}
+
+.bg-warning-subtle {
+  background-color: #fff3cd !important;
+  color: #664d03 !important;
 }
