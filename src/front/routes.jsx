@@ -24,6 +24,7 @@ import { AdminPets } from "./pages/AdminPets.jsx";
 import { ClientDetails } from "./pages/ClientDetails.jsx";
 import { AdminAgenda } from "./pages/AdminAgenda.jsx";
 import { AdminPetHistory } from "./pages/AdminPetHistory.jsx";
+import { AppointmentDetails } from "./pages/AppointmentDetails";
 
 
 export const router = createBrowserRouter(
@@ -38,22 +39,26 @@ export const router = createBrowserRouter(
       <Route path="/signup" element={<Signup />} />
       <Route path="/services" element={<Services />} />
       <Route path="/about" element={<About />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/editprofile/:userId" element={<EditProfile />} />
 
       { }
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/editprofile/:userId" element={<EditProfile />} />
       <Route path="/register-pet" element={<RegisterPet />} />
       <Route path="/book" element={<BookAppointment />} />
       <Route path="/pets/:petId" element={<PetInfo />} />
+      <Route path="/reset-password/:Uuid" element={<PasswordReset />} />
+      <Route path="/request-reset" element={<RequestReset />} />
 
       { }
       <Route path="/private/clients" element={<AdminClients />} />
-      <Route path="/reset-password/:Uuid" element={<PasswordReset />} />
-      <Route path="/request-reset" element={<RequestReset />} />
       <Route path="/private/pets" element={<AdminPets />} />
       <Route path="/private/clients/:clientId" element={<ClientDetails />} />
       <Route path="/private/agenda" element={<AdminAgenda />} />
       <Route path="/private/pets/history/:petId" element={<AdminPetHistory />} />
+
+      { }
+      <Route path="/private/agenda/details/:appointmentId" element={<AppointmentDetails />} />
+
     </Route>
   )
 );
