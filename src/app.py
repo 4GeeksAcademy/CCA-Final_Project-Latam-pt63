@@ -529,14 +529,13 @@ def create_appointment():
         if pet.owner_id != user_info.user_id:
             return jsonify({'msg': 'You cant make an appointment for a pet you dont own'}), 400
 
-        # VALIDACIÓN: Cita duplicada
         existing_appointment = Appointments.query.filter_by(
-            doctor_id=body['doctor_id'], 
-            date=body['date'], 
+            doctor_id=body['doctor_id'],
+            date=body['date'],
             time=body['time']
         ).first()
         if existing_appointment:
-             return jsonify({'msg': 'Doctor already has an appointment at this time'}), 400
+            return jsonify({'msg': 'Doctor already has an appointment at this time'}), 400
 
         new_appointment = Appointments()
         new_appointment.doctor_id = body['doctor_id']
@@ -566,14 +565,13 @@ def create_appointment():
         if valid_doctor_id is None:
             return jsonify({'msg': 'Doctor not found'}), 404
 
-        # VALIDACIÓN: Cita duplicada
         existing_appointment = Appointments.query.filter_by(
-            doctor_id=body['doctor_id'], 
-            date=body['date'], 
+            doctor_id=body['doctor_id'],
+            date=body['date'],
             time=body['time']
         ).first()
         if existing_appointment:
-             return jsonify({'msg': 'Doctor already has an appointment at this time'}), 400
+            return jsonify({'msg': 'Doctor already has an appointment at this time'}), 400
 
         new_appointment = Appointments()
         new_appointment.doctor_id = body['doctor_id']
@@ -627,6 +625,16 @@ def get_vaccines(pet_id):
         for vaccine in vaccines:
             vaccines_serialized.append(vaccine.serialize())
         return jsonify({'vaccines': vaccines_serialized})
+
+
+@app.route('/appointment/<int:appointment_id>', methods=['GET'])
+@jwt_required()
+def get_single_appointment(appointment_id):
+    user = get_jwt_identity()
+    appointment = Appointments.query.get(appointment_id)
+    if appointment is None:
+        return jsonify({"msg": "Appointment not found"}), 404
+    return jsonify(appointment.serialize()), 200
 
 
 @app.route('/appointment/<int:appointment_id>', methods=['PUT'])
@@ -765,21 +773,38 @@ def reset_password(user_uuid):
     db.session.commit()
     return jsonify({'msg': 'Password changed successfully'}), 200
 
+
 @app.route('/appointments', methods=['GET'])
 @jwt_required()
 def get_all_appointments():
-    appointments = Appointments.query.all()
-    results = []
+    user = get_jwt_identity()
+    admin = Doctors.query.filter_by(email=user).first()
 
+    if admin is not None:
+        appointments = Appointments.query.all()
+    else:
+        user_info = Users.query.filter_by(email=user).first()
+        if user_info is None:
+            return jsonify({'msg': 'User not found'}), 404
+
+        user_pets = Pets.query.filter_by(owner_id=user_info.user_id).all()
+        if not user_pets:
+            return jsonify([]), 200
+
+        pet_ids = [p.id for p in user_pets]
+        appointments = Appointments.query.filter(
+            Appointments.pet_id.in_(pet_ids)).all()
+
+    results = []
     for appt in appointments:
         data = appt.serialize()
-  
+
         pet = Pets.query.get(appt.pet_id)
         if pet:
             data['pet_name'] = pet.name
         else:
             data['pet_name'] = "Unknown Pet"
-            
+
         results.append(data)
 
     return jsonify(results), 200
