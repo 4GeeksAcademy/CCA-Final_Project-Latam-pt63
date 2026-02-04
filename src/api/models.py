@@ -80,6 +80,7 @@ class Pets(db.Model):
             "neutered": self.neutered,
             "info": self.info,
             "image": self.image,
+            "owner_name": f"{self.owner.first_name} {self.owner.last_name}" if self.owner else None
         }
 
 # //----- Creado por Carlos -----//

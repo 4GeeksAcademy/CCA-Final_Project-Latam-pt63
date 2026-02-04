@@ -10,6 +10,7 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   padding-top: 77px;
+  background-color: rgba(248, 249, 250);
 }
 
 *,
@@ -326,10 +327,9 @@ textarea.form-control:focus {
 
 .bg-warning-subtle {
   background-color: #fff3cd !important;
-  color: #664d03 !important;
-}
-  .admin-navbar-buttons{
-  background-color: rgba(248, 249, 250);
+  color: #664d03 !important;}
+.admin-navbar-buttons{
+  background-color: white;
   border: none;
   color: black;
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
 // import AnimalsAbaut from "../assets/img/animals-about.jpg"; 
 import AnimalsAbaut from "../assets/img/animals-about.jpg";
 import  Doctor1  from "../assets/img/Doctor1.jpg";
