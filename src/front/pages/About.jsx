@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import AnimalsAbaut from "../assets/img/animals-about.jpg";
+
 
 export const About = () => {
   const boxRef = useRef(null);
@@ -135,7 +135,7 @@ export const About = () => {
                 {!imgReady && <div className="about-skeleton" />}
 
                 <img
-                  src={AnimalsAbaut} alt="Veterinary care" className={`img-fluid about-image ${imgReady ? "loaded" : "loading"}`}
+                  src="" alt="Veterinary care" className={`img-fluid about-image ${imgReady ? "loaded" : "loading"}`}
                   loading="eager" decoding="async" onLoad={() => setImgReady(true)} onError={() => setImgReady(true)}
                 />
               </div>

@@ -4,9 +4,9 @@ export const ClientInfoCard = ({ info }) => {
     return (
         <><div className="mt-3 ms-5 ps-5">
             <h1>Client Info</h1>
-            <div class="card mt-3 rounded border-top-0">
-                <h4 class="card-header custom-green-background d-flex align-items-center rounded-top"> <div
-                    className="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center" style={{ width: 60, height: 60 }}>
+            <div class="card mt-3 rounded-4 border-top-0">
+                <h4 class="card-header custom-green-background d-flex align-items-center rounded-top-4"> <div
+                    className="rounded-circle bg-white text-success fw-bold d-flex align-items-center justify-content-center" style={{ width: 60, height: 60 }}>
                     {info.first_name?.charAt(0)}
                 </div>
                     <div className="ms-3"> {info.first_name} {info.last_name}</div>

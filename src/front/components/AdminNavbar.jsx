@@ -19,8 +19,8 @@ export const AdminNavbar = () => {
 
     return (
         <>
-            <div className="d-flex flex-column flex-shrink-0 p-3 text-white fixed-top min-vh-100 bg-light" style={{ width: "15%" }}>
-                <a href="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <div className="d-flex flex-column flex-shrink-0 p-3 text-white fixed-top min-vh-100 bg-white" style={{ width: "15%" }}>
+                <a href="/private/clients" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                     <i className="fa-solid fa-paw ms-4 fs-2" style={{transform: "rotate(45deg)"}}></i>
                     <div className="fs-4 ps-3">VetCare</div>
                 </a>

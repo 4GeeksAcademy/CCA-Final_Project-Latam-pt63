@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 export const ClientsTable = ({ user = [], }) => {
   return (
     <div className="container my-4 min-vh-100 ms-5 ps-5">
-      <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
+      <div className="card shadow-sm border-0 rounded-4 overflow-hidden border-top">
 
         <div className="row bg-light px-4 py-3 fw-semibold text-muted small">
           <div className="col-3">Name</div>

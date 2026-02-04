@@ -23,6 +23,7 @@ import { RequestReset } from "./pages/RequestReset.jsx";
 import { AdminPets } from "./pages/AdminPets.jsx";
 import { ClientDetails } from "./pages/ClientDetails.jsx";
 import { AdminAgenda } from "./pages/AdminAgenda.jsx";
+import { AdminPetHistory } from "./pages/AdminPetHistory.jsx";
 
 
 export const router = createBrowserRouter(
@@ -52,6 +53,7 @@ export const router = createBrowserRouter(
       <Route path="/private/pets" element={<AdminPets />} />
       <Route path="/private/clients/:clientId" element={<ClientDetails />} />
       <Route path="/private/agenda" element={<AdminAgenda />} />
+      <Route path="/private/pets/history/:petId" element={<AdminPetHistory />} />
     </Route>
   )
 );
