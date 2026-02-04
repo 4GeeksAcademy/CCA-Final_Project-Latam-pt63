@@ -66,14 +66,19 @@ export const AdminClients = () => {
 
     return (
         <>
-            <div className="container vh-100">
-                <div className="d-flex justify-content-between">
-                    <div className="mt-3 justify-content-between">
-                        <h1>Clients</h1>
+            <div className="container min-vh-100">
+                <div className="d-flex ms-5">
+                    <div className="ms-2">
+                        <div className="mt-3 justify-content-between ms-5 ps-1">
+                            <h1>Clients</h1>
+                        </div>
                     </div>
-                    <div className="mt-3">
-                        <button type="button" className="btn custom-green-background">+New Client</button>
+                    
+                    
+                    <div className="mt-3 ms-auto">
+                        <button type="button" className="btn custom-green-background rounded">+New Client</button>
                     </div>
+                    
                 </div>
                 <ClientsTable user={clients} />
             </div>
