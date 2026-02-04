@@ -327,7 +327,8 @@ textarea.form-control:focus {
 .bg-warning-subtle {
   background-color: #fff3cd !important;
   color: #664d03 !important;
-.admin-navbar-buttons{
+}
+  .admin-navbar-buttons{
   background-color: rgba(248, 249, 250);
   border: none;
   color: black;
