@@ -809,6 +809,36 @@ def get_all_appointments():
 
     return jsonify(results), 200
 
+@app.route('/send-contact-email', methods=['POST'])
+def send_contact_email():
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'You must include information in the body'}), 400
+    if 'message' not in body:
+        return jsonify({'msg': 'You must include an email'}), 400
+    if 'name' not in body:
+        return jsonify({'msg': "You must include a name"})
+    if 'phone' not in body:
+        return jsonify({'msg': 'You must include a phone number'})
+
+    message = Mail(
+        from_email='petcareproject47@gmail.com',
+        to_emails='petcareproject47@gmail.com',
+        subject='Contact mail',
+        html_content=f"Name: {body['name']}, Message:{body['message']}, Phone:{body['phone']}")
+    try:
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+    # sg.set_sendgrid_data_residency("eu")
+    # uncomment the above line if you are sending mail using a regional EU subuser
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e.message)
+
+    return jsonify({'msg': 'New Message created successfully, Please check your email',}), 200
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ export const AdminClientHistoryCard = ({ record }) => {
                 </div>
                 <div>
                     <div className="fs-5"><strong>{record.motive}</strong></div>
-                    <div>{`${record.date}  •  Pet: ${record.pet_name}`}</div>
+                    <div>{`${record.date}  •  Pet: ${record.pet_data.name}`}</div>
                 </div>
                 <Link to={`/private/agenda/details/${record.appointment_id}`} className="ms-auto me-2 text-decoration-none text-dark">
                     <div className="ms-auto me-2">Details</div>
