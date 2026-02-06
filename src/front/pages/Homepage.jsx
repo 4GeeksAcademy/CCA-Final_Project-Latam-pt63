@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, } from "react";
+import { Link } from "react-router-dom";
 import { TransitionHome } from "./TransitionHome.jsx";
 import Animals from "../assets/img/animals-homepage.jpg";
 import Animals2 from "../assets/img/animals-homepage2.jpg";
@@ -8,8 +9,8 @@ export const Homepage = () => {
   const Navbar = localStorage.getItem("role")
 
   useEffect(() => {
-   }, [Navbar])
-   
+  }, [Navbar])
+
   return (
     <div className="no-radius">
       <TransitionHome
@@ -30,26 +31,28 @@ export const Homepage = () => {
               Ask a question
             </a>
           </div>
-
           <div className="row g-4 mt-4">
-            {[{ t: "Checkups & Consultations", d: "Routine visits, diagnosis, and personalized treatment plans.", },
-            { t: "Vaccinations", d: "Core vaccines and tailored prevention schedules for every stage of life.", },
-            { t: "Surgery", d: "Soft-tissue procedures with pre-op testing and post-op follow-up.", },
-            { t: "In-House Lab", d: "Fast bloodwork and basic testing to speed up answers.", },
-            { t: "Grooming", d: "Baths, nail trims, ear cleaning, and coat care for comfort and hygiene.", },
-            { t: "Urgent Care", d: "Same-day care for vomiting, injuries, allergic reactions, and more.", },
+            {[
+              { t: "Checkups & Consultations", d: "Routine visits, diagnosis, and personalized treatment plans." },
+              { t: "Vaccinations", d: "Core vaccines and tailored prevention schedules for every stage of life." },
+              { t: "Surgery", d: "Soft-tissue procedures with pre-op testing and post-op follow-up." },
+              { t: "In-House Lab", d: "Fast bloodwork and basic testing to speed up answers." },
+              { t: "Grooming", d: "Baths, nail trims, ear cleaning, and coat care for comfort and hygiene." },
+              { t: "Urgent Care", d: "Same-day care for vomiting, injuries, allergic reactions, and more." },
             ].map((x) => (
               <div className="col-sm-6 col-lg-4" key={x.t}>
                 <div className="p-4 border h-100 service-card">
                   <h5 className="mb-2">{x.t}</h5>
                   <p className="mb-3 text-muted">{x.d}</p>
-                  <a className="link-vet" href="#contact">
+
+                  <Link className="link-vet" to="/services">
                     Learn more →
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
@@ -60,7 +63,7 @@ export const Homepage = () => {
         primaryText="Message Us"
         primaryHref="#contact"
         secondaryText="See Services"
-        secondaryHref="#services"
+        secondaryHref="/services"
       />
 
       <section id="about" className="py-5 bg-light">
@@ -112,9 +115,10 @@ export const Homepage = () => {
                   <label className="form-label">Full Name</label>
                   <input className="form-control" placeholder="Jane Doe" />
                 </div>
+
                 <div className="col-md-6">
-                  <label className="form-label">Phone</label>
-                  <input className="form-control" placeholder="(805) 555-0123" />
+                  <label className="form-label">Email</label>
+                  <input type="email" className="form-control" placeholder="jane@email.com" />
                 </div>
                 <div className="col-12">
                   <label className="form-label">Message</label>

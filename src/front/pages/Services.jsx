@@ -135,7 +135,7 @@ export const Services = () => {
           <div className="services-cta-inner">
             <div>
               <h3 className="mb-1">Not sure which service you need?</h3>
-              <p className="mb-0 text-muted">
+              <p className="mb-0 text-muted ">
                 Tell us what’s going on and we’ll guide you to the right option.
               </p>
             </div>
