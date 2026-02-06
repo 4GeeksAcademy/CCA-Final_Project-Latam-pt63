@@ -208,6 +208,7 @@ textarea.form-control:focus {
 
 .service-card .text-muted {
   color: #ffffff !important;
+  
 }
 
 .service-card a,
@@ -609,4 +610,21 @@ textarea.form-control:focus {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.text-about{
+
+  font-size: 23px;
+}
+
+.text-about-link {
+  color: var(--vet-green);
+  font-weight: 300;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.text-about-link:hover {
+  color: var(--vet-green-hover);
+  text-decoration: underline;
 }
