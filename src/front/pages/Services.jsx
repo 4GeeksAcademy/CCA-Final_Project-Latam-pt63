@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SERVICES = [
   {
@@ -86,6 +87,25 @@ export const Services = () => {
 
   const toggle = (id) => setActive((cur) => (cur === id ? null : id));
 
+  const nav = useNavigate();
+  const where = useLocation();
+  const navH = 90;
+
+  const goTo = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - navH;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  const goContact = () => {
+    if (where.pathname === "/") {
+      goTo("contact");
+      return;
+    }
+    nav("/");
+    setTimeout(() => goTo("contact"), 120);
+  };
   return (
     <section className="services-page py-5">
       <div className="container">
@@ -139,9 +159,9 @@ export const Services = () => {
                 Tell us what’s going on and we’ll guide you to the right option.
               </p>
             </div>
-            <a href="/#contact" className="btn btn-outline-vet px-4 py-2">
+            <button type="button" onClick={goContact} className="btn btn-outline-vet px-4 py-2">
               Ask a question
-            </a>
+            </button>
           </div>
         </div>
       </div>
