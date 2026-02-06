@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const ClientInfoPetCard = ({ info }) => {
     return (
         <>
             <div className="col-6">
-                <div class="card rounded mb-3">
+                <div class="card border-1 bg-white p-2 rounded-4 shadow-sm hover-shadow-transition border-start  mt-3 hover-card-effect">
 
                     <div class="card-body">
                         <div className="d-flex">
@@ -21,7 +22,7 @@ export const ClientInfoPetCard = ({ info }) => {
                             <div className="ms-2 mt-2 mb-2">Age - {info.birthdate}</div>
                         </div>
 
-                        <a href="#" class="btn col-12 rounded bg-success-subtle">Medical history</a>
+                        <Link to={`/private/pets/history/${info.pet_id}`} class="btn col-12 rounded-4 bg-vet">Medical history</Link>
                     </div>
                 </div>
             </div>

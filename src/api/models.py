@@ -80,6 +80,7 @@ class Pets(db.Model):
             "neutered": self.neutered,
             "info": self.info,
             "image": self.image,
+            "owner_name": f"{self.owner.first_name} {self.owner.last_name}" if self.owner else None
         }
 
 # //----- Creado por Carlos -----//
@@ -145,6 +146,7 @@ class Appointments(db.Model):
     date: Mapped[str] = mapped_column(String(50), nullable=False)
     time: Mapped[str] = mapped_column(String(50), nullable=False)
     motive: Mapped[str] = mapped_column(String(250), nullable=False)
+    status: Mapped[str] = mapped_column(String(50), nullable=True)
     anamnesis: Mapped[str] = mapped_column(String(500), nullable=True)
     procedures: Mapped[str] = mapped_column(String(500), nullable=True)
     medication: Mapped[str] = mapped_column(String(500), nullable=True)
@@ -153,6 +155,26 @@ class Appointments(db.Model):
     pet: Mapped['Pets'] = relationship(back_populates='appointments')
 
     def serialize(self):
+        owner_data = None
+        if self.pet and self.pet.owner:
+            owner_data = {
+                "first_name": self.pet.owner.first_name,
+                "last_name": self.pet.owner.last_name,
+                "phonenumber": self.pet.owner.phonenumber,
+                "email": self.pet.owner.email,
+                "address": self.pet.owner.address
+            }
+
+        pet_data = None
+        if self.pet:
+            pet_data = {
+                "name": self.pet.name,
+                "breed": self.pet.breed,
+                "pet_type": self.pet.pet_type,
+                "allergies": self.pet.allergies,
+                "birthdate": self.pet.birthdate,
+            }
+
         return {
             "appointment_id": self.appointment_id,
             "doctor_id": self.doctor_id,
@@ -160,12 +182,14 @@ class Appointments(db.Model):
             "date": self.date,
             "time": self.time,
             "motive": self.motive,
+            "status": self.status,
             "anamnesis": self.anamnesis,
             "procedures": self.procedures,
             "medication": self.medication,
             "observations": self.observations,
-            "doctor_name": f"{self.doctor.first_name} {self.doctor.last_name}" if self.doctor else None,
-            "pet_name": self.pet.name if self.pet else None
+            "doctor_name": f"{self.doctor.first_name} {self.doctor.last_name}" if self.doctor else "No asignado",
+            "pet_data": pet_data,    
+            "owner_data": owner_data 
         }
 
 

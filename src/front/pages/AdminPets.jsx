@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AdminPetCard } from "../components/AdminPetCard";
+import Swal from 'sweetalert2'
+import { Navigate } from "react-router-dom";
+import { ModalNewPet } from "../components/ModalNewPet";
 
 export const AdminPets = () => {
 
+    const navigate = useNavigate()
+
     const [pets, setPets] = useState([])
+    const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -62,15 +68,60 @@ export const AdminPets = () => {
 
                     setPets(petsWithAge)
                 } else {
-                    alert(petdata.msg)
+                    Swal.fire({
+                        title: 'Error!',
+                        text: petdata.msg,
+                        icon: 'error',
+                        confirmButtonText: 'Return'
+                    })
                 }
             } else {
-                alert(data.msg)
+                Swal.fire({
+                    title: 'Error!',
+                    text: data.msg,
+                    icon: 'error',
+                    confirmButtonText: 'Return'
+                })
+                navigate('/')
             }
         } catch (error) {
             console.error(error)
         } finally {
             setLoading(false);
+        }
+    }
+
+    const handleAddPet = async (pet) => {
+        try {
+            console.log(pet)
+            const token = localStorage.getItem('jwt-token')
+            const result = await fetch(backendUrl + "/pet", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify(pet)
+            });
+            const data = await result.json()
+            if (result.ok) {
+                Swal.fire({
+                    title: 'Succes',
+                    text: data.msg,
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                })
+                VerifyAdmin()
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: data.msg,
+                    icon: 'error',
+                    confirmButtonText: 'Return'
+                })
+            }
+        } catch (error) {
+            console.error(error)
         }
     }
 
@@ -91,30 +142,32 @@ export const AdminPets = () => {
     return (
         <>
             <div className="container min-vh-100 ">
-                <div className=" pb-5 ps-5 ms-5 ">
-                <div className="mt-4 ms-1 mb-4 d-flex justify-content-between align-items-center justify-content-center">
-                    <h1>Pets</h1>
-                    <div>
-                        <Link to="/register-pet">
+                <div className=" pb-5 ps-5 ms-5 mt-0">
+                    <div className="mt-4 ms-1 mb-4 d-flex justify-content-between align-items-center justify-content-center">
+                        <h1>Pets</h1>
+                        <div>
+
                             <button
                                 type="button"
                                 className="btn rounded text-light px-4"
+                                onClick={() => { setShowModal(true) }}
                                 style={{ background: "rgb(48, 130, 114)" }}
                             >
                                 + Add Pet
                             </button>
-                        </Link>
+
+                        </div>
+                    </div>
+
+                    <div className="row g-3">
+                        {pets.map((pet) => {
+                            return (
+                                <AdminPetCard key={pet.pet_id} pet={pet} />
+                            )
+                        })}
                     </div>
                 </div>
-
-                <div className="row g-3">
-                    {pets.map((pet) => {
-                        return (
-                            <AdminPetCard key={pet.pet_id} pet={pet} />
-                        )
-                    })}
-                </div>
-</div>
+                < ModalNewPet show={showModal} onClose={() => setShowModal(false)} onSave={handleAddPet} />
             </div>
         </>
     )

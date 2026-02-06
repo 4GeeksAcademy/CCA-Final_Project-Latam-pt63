@@ -133,12 +133,14 @@ export const About = () => {
           <div className="col-12 col-lg-5">
             <div className="about-imageWrap">
               <div className="about-imageCard">
+                {}
                 {!imgReady && <div className="about-skeleton" />}
 
                 <img
                   src={AnimalsAbout} alt="Veterinary care" className={`img-fluid about-image ${imgReady ? "loaded" : "loading"}`}
                   loading="eager" decoding="async" onLoad={() => setImgReady(true)} onError={() => setImgReady(true)}
-                />
+                />  
+                {}
               </div>
 
               <div className="about-badge">
