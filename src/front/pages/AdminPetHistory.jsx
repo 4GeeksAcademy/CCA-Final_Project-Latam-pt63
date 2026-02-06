@@ -1,10 +1,25 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { AdminPetsAppointmentCard } from "../components/AdminPetsAppointmentCard";
 import Swal from "sweetalert2";
+import { set } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 export const AdminPetHistory = () => {
 
     const [pet, setPet] = useState({})
+    const [history, setHistory] = useState([])
+    const [vaccines, setVaccines] = useState([])
+
+    const Logout = () => {
+        localStorage.removeItem("jwt-token");
+        localStorage.removeItem("login-status");
+        localStorage.removeItem("role");
+    };
+
+    const navigate = useNavigate()
+
+    window.dispatchEvent(new Event("storageUpdate"));
 
 
     const placeholderImage = "https://w7.pngwing.com/pngs/573/926/png-transparent-paw-dog-paw-prints-animals-photography-paw.png";
@@ -25,19 +40,42 @@ export const AdminPetHistory = () => {
             const data = await result.json()
             if (result.ok) {
                 setPet({ ...data })
+                const historyResult = await fetch(backendUrl + "/history/" + petId, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    }
+                });
+                const historyData = await historyResult.json()
+                if (historyResult.ok) {
+                    setHistory(historyData.history)
+                    const vaccinesResult = await fetch(backendUrl + "/vaccine/" + petId, {
+                        method: "GET",
+                        headers: {
+                            "Content-type": "application/json",
+                            Authorization: "Bearer " + token
+                        }
+                    });
+                    const vaccineData = await vaccinesResult.json()
+                    if (vaccinesResult.ok) {
+                        setVaccines(vaccineData.vaccines)
+                    }
+                }
             }
-            else{
+            else {
                 Swal.fire({
                     title: 'Error!',
                     text: data.msg,
                     icon: 'error',
                     confirmButtonText: 'Return'
                 })
+                Logout()
+                navigate('/')
             }
         } catch (error) {
             console.error(error)
         }
-
     }
 
     useEffect(() => {
@@ -96,7 +134,39 @@ export const AdminPetHistory = () => {
                             <h5 class="card-header d-flex align-items-center ">
                                 <i class="fa-regular fa-file-lines me-3"></i>Appointment History
                             </h5>
-                            <div>{pet.name}</div>
+                            <div>
+                                {history.map((item) => {
+                                    return (
+                                        <AdminPetsAppointmentCard info={item} />
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-3 ms-5 mb-5 ps-5">
+                        <div className="card rounded-4">
+                            <h5 className="card-header d-flex align-items-center ">
+                                <i className="fa-solid fa-syringe me-3"></i>Vaccines
+                            </h5>
+                            <div className="row ps-3 pe-3 pb-3">
+                                {vaccines.map((vaccine) => {
+                                    return (
+                                        <div className="col-6 mt-3">
+                                            <div className="card rounded-4">
+                                                <div className="card-header">
+                                                    {vaccine.vaccine_name}
+                                                </div>
+                                                <div className="card-body pb-0">
+                                                    <div className="d-flex">
+                                                        <p className="card-text col-3">Applied : {vaccine.vaccination_date}</p>
+                                                        <p className="card-text col-3">Expires : {vaccine.expiry_date}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
