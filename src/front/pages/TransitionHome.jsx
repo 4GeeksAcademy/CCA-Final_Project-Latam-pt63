@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const TransitionHome = ({
   image,
@@ -10,6 +10,27 @@ export const TransitionHome = ({
   secondaryText,
   secondaryHref,
 }) => {
+  const nav = useNavigate();
+
+  const handleHashScroll = (e, href) => {
+    if (!href || !href.includes("#")) return;
+    e.preventDefault();
+    const hash = href.split("#")[1]; // "contact"
+    const go = () => {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    };
+
+    if (href.startsWith("/#")) {
+      nav("/");
+      setTimeout(go, 80);
+      return;
+    }
+
+
+    go();
+  };
+
   return (
     <section className="banner-home" style={{ backgroundImage: `url(${image})` }}>
       <div className="container banner-home-content py-5">
@@ -21,7 +42,11 @@ export const TransitionHome = ({
             {primaryText}
           </a>
 
-          <Link className="btn btn-vet-outline-white btn-lg" to={secondaryHref}>
+          <Link
+            className="btn btn-vet-outline-white btn-lg"
+            to={secondaryHref}
+            onClick={(e) => handleHashScroll(e, secondaryHref)}
+          >
             {secondaryText}
           </Link>
         </div>
