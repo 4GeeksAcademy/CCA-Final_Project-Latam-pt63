@@ -10,6 +10,7 @@ from api.models import db, Users, Pets, Doctors, Appointments, Vaccines, Passwor
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+import requests
 
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -809,6 +810,7 @@ def get_all_appointments():
 
     return jsonify(results), 200
 
+
 @app.route('/send-contact-email', methods=['POST'])
 def send_contact_email():
     body = request.get_json(silent=True)
@@ -837,7 +839,34 @@ def send_contact_email():
     except Exception as e:
         print(e.message)
 
-    return jsonify({'msg': 'New Message created successfully, Please check your email',}), 200
+    return jsonify({'msg': 'New Message created successfully, Please check your email', }), 200
+
+
+@app.route('/send-message', methods=['POST'])
+def send_test_message():
+    body = request.get_json(silent=True)
+    key = os.getenv("WHAPI_API_KEY")
+    url = "https://gate.whapi.cloud/messages/text"
+
+    if 'phone' not in body:
+        return jsonify({'msg':'No phonenumber in the body'}),400
+    if 'name' not in body:
+        return jsonify ({'msg' "No client name in the body"}),400
+    if 'pet_name' not in body:
+        return jsonify({'msg':'No pet name in the body'}),400
+
+    payload = {
+        "to": body['phone'],
+        "body": f"Hello {body['name']} this is VetCare Clinic, this is just a reminder that you have an appointment for {body['pet_name']}"
+    }
+    headers = {
+    "accept": "application/json",
+    "content-type": "application/json",
+    "authorization": "Bearer " + key
+}
+    response = requests.post(url, json=payload, headers=headers)
+
+    return jsonify({'msg': "Message sent",})
 
 
 # this only runs if `$ python src/main.py` is executed
