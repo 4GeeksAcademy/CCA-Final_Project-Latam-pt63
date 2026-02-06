@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ClientInfoCard } from "../components/ClientInfoCard";
 import { ClientInfoPetCard } from "../components/ClientInfoPetCard";
+import { AdminClientHistoryCard } from "../components/AdminClientHistoryCard";
 import Swal from 'sweetalert2'
 
 export const ClientDetails = () => {
@@ -90,28 +91,34 @@ export const ClientDetails = () => {
             <div className="container min-vh-100">
                 <ClientInfoCard info={clientInfo} />
                 <div className="mt-3 ms-5 ps-5">
-                    <div class="card">
+                    <div class="card rounded-4">
                         <h5 class="card-header d-flex align-items-center">
                             <i className="fa-solid fa-paw me-3"></i>Registered Pets  <div
-                                className="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center ms-2" style={{ width: 30, height: 30 }}>
+                                className="rounded-circle custom-green-background  fw-bold d-flex align-items-center justify-content-center ms-2" style={{ width: 30, height: 30 }}>
                                 <div className="text-center fs-5 ">{clientPets.length}</div>
                             </div></h5>
                         <div class="card-body">
                             <div className="row">
-                            {clientPets.map((pet)=>{
-                                return( <ClientInfoPetCard info={pet}/>)
-                            })}
+                                {clientPets.map((pet) => {
+                                    return (<ClientInfoPetCard info={pet} />)
+                                })}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="mt-3 ms-5 mb-5 ps-5">
-                    <div class="card">
-                        <h5 class="card-header">
-                            <i className="fa-solid fa-calendar me-3"></i>Appointment History {history.length}</h5>
+                    <div class="card rounded-4">
+                        <h5 class="card-header d-flex align-items-center ">
+                            <i className="fa-solid fa-calendar me-3"></i>Appointment History <div
+                                className="rounded-circle custom-green-background  fw-bold d-flex align-items-center justify-content-center ms-2" style={{ width: 30, height: 30 }}>
+                                <div className="text-center fs-5 ">{history.length}</div>
+                            </div></h5>
                         <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            {history.map((appointment)=>{
+                                return(
+                                    <AdminClientHistoryCard record={appointment}/>
+                                )
+                            })}
                         </div>
                     </div>
                 </div>

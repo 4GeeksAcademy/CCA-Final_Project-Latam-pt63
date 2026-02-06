@@ -10,6 +10,7 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   padding-top: 77px;
+  background-color: rgba(248, 249, 250);
 }
 
 *,
@@ -330,7 +331,7 @@ textarea.form-control:focus {
 }
 
 .admin-navbar-buttons{
-  background-color: rgba(248, 249, 250);
+  background-color: white;
   border: none;
   color: black;
 }
