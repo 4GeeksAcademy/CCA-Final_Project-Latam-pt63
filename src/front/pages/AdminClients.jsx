@@ -1,85 +1,126 @@
 import { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { ClientsTable } from "../components/ClientsTable";
-
+import { ModalNewClient } from "../components/ModalNewClient";
 
 export const AdminClients = () => {
+  const [showModal, setShowModal] = useState(false);
 
+  const [clients, setClients] = useState([]);
 
-    const [clients, setClients] = useState([])
+  const Logout = () => {
+    localStorage.removeItem("jwt-token");
+    localStorage.removeItem("login-status");
+    localStorage.removeItem("role");
+  };
+  const navigate = useNavigate();
 
-    const Logout = () => {
-        localStorage.removeItem("jwt-token");
-        localStorage.removeItem("login-status");
-        localStorage.removeItem("role");
-    };
-    const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-    const VerifyAdmin = async () => {
-
-        try {
-            const token = localStorage.getItem('jwt-token')
-            const result = await fetch(backendUrl + "/private", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token,
-                }
-            });
-            const data = await result.json();
-            if (!result.ok) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: data.msg,
-                    icon: 'error',
-                    confirmButtonText: 'Return'
-                })
-                Logout()
-                navigate("/")
-            } else {
-                const users = await fetch(backendUrl + "/users", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token,
-                    }
-                });
-                const clients = await users.json()
-                if (users.ok) {
-                    setClients(clients.users)
-                }
-            }
-        } catch (error) {
-            console.error(error)
+  const VerifyAdmin = async () => {
+    try {
+      const token = localStorage.getItem("jwt-token");
+      const result = await fetch(backendUrl + "/private", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      const data = await result.json();
+      if (!result.ok) {
+        Swal.fire({
+          title: "Error!",
+          text: data.msg,
+          icon: "error",
+          confirmButtonText: "Return",
+        });
+        Logout();
+        navigate("/");
+      } else {
+        const users = await fetch(backendUrl + "/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        });
+        const clients = await users.json();
+        if (users.ok) {
+          setClients(clients.users);
         }
-
+      }
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    useEffect(() => {
-        VerifyAdmin()
-    }, [])
+  const handleAddClient = async (client) => {
+    try {
+      const result = await fetch(backendUrl + "/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(client),
+      });
+      const data = await result.json();
+      if (result.ok) {
+        Swal.fire({
+          title: "Success",
+          text: data.msg,
+          icon: "success",
+          confirmButtonText: "Ok",
+        });
+        VerifyAdmin();
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: data.msg,
+          icon: "error",
+          confirmButtonText: "Return",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
+    VerifyAdmin();
+  }, []);
 
-    return (
-        <>
-            <div className="container min-vh-100">
-                <div className="d-flex ms-5 mt-0">
-                    <div className="ms-2">
-                        <div className="mt-3 justify-content-between ms-5 ps-1">
-                            <h1>Clients</h1>
-                        </div>
-                    </div>
-                    <div className="mt-3 ms-auto">
-                        <button type="button" className="btn custom-green-background rounded">+New Client</button>
-                    </div>
-
-                </div>
-                <ClientsTable user={clients} />
+  return (
+    <>
+      <div className="container min-vh-100">
+        <div className="d-flex ms-5 mt-0">
+          <div className="ms-2">
+            <div className="mt-3 justify-content-between ms-5 ps-1">
+              <h1>Clients</h1>
             </div>
-        </>
-    )
-}
+          </div>
+          <div className="mt-3 ms-auto">
+            <button
+              type="button"
+              className="btn custom-green-background rounded text-white"
+              style={{ background: "rgb(48, 130, 114)" }}
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              + New Client
+            </button>
+          </div>
+        </div>
+        <ClientsTable user={clients} />
+      </div>
+      <ModalNewClient
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSave={handleAddClient}
+      />
+    </>
+  );
+};

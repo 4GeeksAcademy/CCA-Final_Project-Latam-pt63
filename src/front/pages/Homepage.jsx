@@ -5,6 +5,8 @@ import Animals2 from "../assets/img/animals-homepage2.jpg";
 
 export const Homepage = () => {
 
+  window.dispatchEvent(new Event("storageUpdate"));
+
   const Navbar = localStorage.getItem("role")
 
   useEffect(() => {
