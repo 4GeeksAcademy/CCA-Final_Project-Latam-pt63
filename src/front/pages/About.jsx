@@ -228,7 +228,7 @@ export const About = () => {
                     <small className="text-muted d-block mb-3">Surgery • Dentistry</small>
 
                     <p className="mb-3 text-muted">
-                      From routine procedures to more complex interventions, she follows strict
+                      From routine procedures to more complex interventions, He follows strict
                       safety protocols and prioritizes comfort and pain control.
                     </p>
 
