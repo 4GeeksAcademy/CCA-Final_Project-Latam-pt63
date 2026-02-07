@@ -719,7 +719,7 @@ def send_recovery_link():
         return jsonify({'msg': 'You must include an email'}), 400
     valid_user = Users.query.filter_by(email=body['email']).first()
     if valid_user is None:
-        return jsonify({'msg': 'User not found'}), 404
+        return jsonify({'msg': 'No user found with that email'}), 404
     new_uuid = uuid.uuid4()
     current_time = datetime.now()
     time_limit = current_time + timedelta(minutes=30)
@@ -735,7 +735,7 @@ def send_recovery_link():
         from_email='petcareproject47@gmail.com',
         to_emails=valid_user.email,
         subject='Password Reset',
-        html_content=f"<strong>Here is your recovery <a href=https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/reset-password/{new_uuid}>link</a></strong>")
+        html_content=f"<strong>Here is your recovery <a href=https://bug-free-space-engine-7v4x69vxrq6qc7j-3000.app.github.dev/reset-password/{new_uuid}>link</a></strong>")
     try:
         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
     # sg.set_sendgrid_data_residency("eu")
@@ -819,15 +819,15 @@ def send_contact_email():
     if 'message' not in body:
         return jsonify({'msg': 'You must include an email'}), 400
     if 'name' not in body:
-        return jsonify({'msg': "You must include a name"})
-    if 'phone' not in body:
-        return jsonify({'msg': 'You must include a phone number'})
+        return jsonify({'msg': "You must include a name"}),400
+    if 'email' not in body:
+        return jsonify({'msg': 'You must include a email'}),400
 
     message = Mail(
         from_email='petcareproject47@gmail.com',
         to_emails='petcareproject47@gmail.com',
         subject='Contact mail',
-        html_content=f"Name: {body['name']}, Message:{body['message']}, Phone:{body['phone']}")
+        html_content=f"Name: {body['name']}, Message: {body['message']}, Email: {body['email']}")
     try:
         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
     # sg.set_sendgrid_data_residency("eu")

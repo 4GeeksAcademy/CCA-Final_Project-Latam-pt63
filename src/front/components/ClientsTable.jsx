@@ -1,10 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 
-export const ClientsTable = ({ user = [], }) => {
+export const ClientsTable = ({ user = [] }) => {
   return (
     <div className="container my-4 min-vh-100 ms-5 ps-5">
       <div className="card shadow-sm border-0 rounded-4 overflow-hidden border-top">
-
         <div className="row bg-light px-4 py-3 fw-semibold text-muted small">
           <div className="col-3">Name</div>
           <div className="col-3">Contact</div>
@@ -13,18 +12,18 @@ export const ClientsTable = ({ user = [], }) => {
           <div className="col-1 text-end">Actions</div>
         </div>
 
-
         {user.map((user, i) => (
-          <div
-            key={i}
-            className="row align-items-center px-4 py-3 border-top">
-
+          <div key={i} className="row align-items-center px-4 py-3 border-top">
             <div className="col-3 d-flex align-items-center gap-2">
               <div
-                className="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center" style={{ width: 36, height: 36 }}>
+                className="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center"
+                style={{ width: 36, height: 36 }}
+              >
                 {user.first_name?.charAt(0)}
               </div>
-              <span className="fw-medium">{user.first_name} {user.last_name}</span>
+              <span className="fw-medium">
+                {user.first_name} {user.last_name}
+              </span>
             </div>
             <div className="col-3 text-muted small">
               <div>
@@ -46,7 +45,10 @@ export const ClientsTable = ({ user = [], }) => {
               </span>
             </div>
             <div className="col-1 text-end small">
-              <Link to={`/private/clients/${user.user_id}`} className="text-decoration-none">
+              <Link
+                to={`/private/clients/${user.user_id}`}
+                className="text-decoration-none"
+              >
                 <a href="#" className="text-success me-2 text-decoration-none">
                   View
                 </a>

@@ -8,7 +8,6 @@ export const PetCard = ({ pet }) => {
       <div className="card h-100 border-0 shadow-sm overflow-hidden">
         <div className="card-body p-3">
           <div className="d-flex gap-3 align-items-start">
-            
             {}
             <div style={{ width: "110px", height: "110px", flexShrink: 0 }}>
               <img
@@ -34,17 +33,24 @@ export const PetCard = ({ pet }) => {
 
               <div className="small text-muted mb-3">
                 <div className="d-flex justify-content-between mb-1">
-                  <span>Age:</span> <span className="text-dark fw-bold">{pet?.age ?? "n/a"}</span>
+                  <span>Age:</span>{" "}
+                  <span className="text-dark fw-bold">{pet?.age ?? "n/a"}</span>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <span>Breed:</span> <span className="text-dark fw-bold">{pet?.breed || "n/a"}</span>
+                  <span>Breed:</span>{" "}
+                  <span className="text-dark fw-bold">
+                    {pet?.breed || "n/a"}
+                  </span>
                 </div>
               </div>
 
               {}
               <div className="mt-auto d-flex justify-content-between align-items-end">
-                <small className="text-muted fst-italic" style={{ fontSize: "0.8rem" }}>
-                   {pet?.next_appointment ? "📅 Booked" : "No appointment"}
+                <small
+                  className="text-muted fst-italic"
+                  style={{ fontSize: "0.8rem" }}
+                >
+                  {pet?.next_appointment ? "📅 Booked" : "No appointment"}
                 </small>
 
                 <Link
@@ -56,7 +62,6 @@ export const PetCard = ({ pet }) => {
                 </Link>
               </div>
             </div>
-
           </div>
         </div>
       </div>
