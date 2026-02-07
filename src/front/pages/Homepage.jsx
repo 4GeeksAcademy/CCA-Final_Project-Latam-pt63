@@ -45,7 +45,7 @@ export const Homepage = () => {
                   <h5 className="mb-2">{x.t}</h5>
                   <p className="mb-3 text-muted">{x.d}</p>
 
-                  <Link className="link-vet" to="/services">
+                  <Link className="service-learn-more" to="/services">
                     Learn more →
                   </Link>
                 </div>
@@ -83,13 +83,20 @@ export const Homepage = () => {
 
               <div className="mt-4">
                 <p className="mb-2">
-                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA (reference location)
+                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA
                 </p>
+
                 <p className="mb-0">
                   <strong>Phone:</strong> (805) 555-0137
                 </p>
               </div>
+              <div className="mt-4">
+                <Link className="link-vet" to="/about">
+                  Learn more →
+                </Link>
+              </div>
             </div>
+
 
             <div className="col-lg-6">
               <div className="ratio ratio-16x9 overflow-hidden border">
@@ -140,7 +147,10 @@ export const Homepage = () => {
               <div className="p-4 border h-100">
                 <h5 className="mb-3">Clinic Info</h5>
                 <p className="mb-2">
-                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA (reference location)
+                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA
+                </p>
+                <p className="mb-2">
+                  <strong>Hours:</strong>  Mon–Fri 9 AM–5 PM · Sat 9 AM–5 PM
                 </p>
                 <p className="mb-2">
                   <strong>WhatsApp:</strong> +1 (805) 555-0199

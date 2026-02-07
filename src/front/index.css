@@ -10,7 +10,8 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   padding-top: 77px;
-  background-color: rgba(248, 249, 250);
+background-color: rgba(248, 249, 250);
+
 }
 
 *,
@@ -627,4 +628,46 @@ textarea.form-control:focus {
 .text-about-link:hover {
   color: var(--vet-green-hover);
   text-decoration: underline;
+}
+
+.footer-a-muted { color: rgba(255,255,255,.75); }
+
+.footer-a-divider {
+  height: 1px;
+  background: rgba(255,255,255,.18);
+}
+
+.footer-a-icon{
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.14);
+}
+.footer-a-icon:hover{
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.20);
+}
+
+.footer-a-icon:focus-visible{
+  outline: 2px solid rgba(255,255,255,.7);
+  outline-offset: 3px;
+}
+
+.footer-a { border-top: 1px solid rgba(255,255,255,.18); }
+
+.service-card .service-learn-more{
+  color: #111 !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.service-card .service-learn-more:hover{
+  color: #000 !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
