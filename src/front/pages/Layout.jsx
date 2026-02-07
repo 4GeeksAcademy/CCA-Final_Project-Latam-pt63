@@ -22,6 +22,37 @@ export const Layout = () => {
     };
   }, []);
 
+    const [role, setRole] = useState(localStorage.getItem("role"))
+    
+    useEffect(() => {
+        const updateRole = () => {
+            setRole(localStorage.getItem("role"));
+        };
+        window.addEventListener("storage", updateRole);
+        window.addEventListener("storageUpdate", updateRole);
+        return () => {
+            window.removeEventListener("storage", updateRole);
+            window.removeEventListener("storageUpdate", updateRole);
+        };
+    }, []);
+
+    if (role == "admin") {
+        return (
+            <ScrollToTop>
+            <AdminNavbar />
+                <Outlet />
+            </ScrollToTop>
+        )
+    } else {
+        return (
+            <ScrollToTop>
+                <NavVet />
+                <Outlet />
+                <Footer />
+            </ScrollToTop>
+        )
+    }
+}
   if (role == "admin") {
     return (
       <ScrollToTop>

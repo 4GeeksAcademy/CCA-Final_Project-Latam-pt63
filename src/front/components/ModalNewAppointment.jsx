@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
 
 export const ModalNewAppointment = ({ show, onClose, onSave }) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
