@@ -137,10 +137,12 @@ export const Profile = () => {
 
     if (loading) {
         return (
+            <div>
             <div className="d-flex justify-content-center align-items-center min-vh-100">
                 <div className="spinner-border" style={{ color: "rgb(48, 130, 114)", width: "3rem", height: "3rem" }} role="status">
                     <span className="visually-hidden">Loading...</span>
                 </div>
+            </div>
             </div>
         )
     }
