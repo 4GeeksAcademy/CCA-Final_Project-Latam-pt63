@@ -10,6 +10,8 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   padding-top: 77px;
+background-color: rgba(248, 249, 250);
+
 }
 
 *,
@@ -207,6 +209,7 @@ textarea.form-control:focus {
 
 .service-card .text-muted {
   color: #ffffff !important;
+  
 }
 
 .service-card a,
@@ -328,8 +331,9 @@ textarea.form-control:focus {
   background-color: #fff3cd !important;
   color: #664d03 !important;
 }
-  .admin-navbar-buttons{
-  background-color: rgba(248, 249, 250);
+
+.admin-navbar-buttons{
+  background-color: white;
   border: none;
   color: black;
 }
@@ -358,7 +362,7 @@ textarea.form-control:focus {
 }
 
 .about-highlight {
-  color: #f18a00; /* acento tipo el de tu captura */
+  color: #f18a00; 
   font-weight: 600;
 }
 
@@ -367,7 +371,6 @@ textarea.form-control:focus {
   color: #222;
 }
 
-/* Reveal (fade + slide) */
 .about-reveal {
   opacity: 0;
   transform: translateY(14px);
@@ -379,7 +382,6 @@ textarea.form-control:focus {
   transform: translateY(0);
 }
 
-/* Imagen a la derecha con efecto */
 .about-imageWrap {
   position: relative;
 }
@@ -504,4 +506,168 @@ textarea.form-control:focus {
   border-radius: 999px !important;
   background: var(--vet-green);
   display: inline-block;
+}
+
+.services-page {
+  background: #fbfbfa;
+}
+
+.services-hero {
+  padding: 18px 18px;
+  border: 1px solid rgba(48, 130, 114, 0.18);
+  background: rgba(48, 130, 114, 0.04);
+}
+
+.services-title {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.services-sub {
+  color: #545b62;
+}
+
+.services-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+  padding: 18px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.services-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.10);
+}
+
+.services-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid rgba(48, 130, 114, 0.25);
+  background: rgba(48, 130, 114, 0.08);
+  color: var(--vet-green);
+  margin-bottom: 10px;
+}
+
+.services-card-title {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.services-card-lead {
+  color: #5c636a;
+  margin-bottom: 12px;
+}
+
+.services-list {
+  padding-left: 18px;
+  margin: 0 0 14px 0;
+  color: #2b2f33;
+}
+
+.services-list li {
+  margin-bottom: 6px;
+}
+
+.services-more {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 10px 0 8px 0;
+  color: var(--vet-green);
+  font-weight: 600;
+}
+
+.services-more:hover {
+  color: var(--vet-green-hover);
+  text-decoration: underline;
+}
+
+.services-details {
+  max-height: 0;
+  overflow: hidden;
+  color: #42484e;
+  transition: max-height 220ms ease;
+}
+
+.services-details.open {
+  max-height: 200px;
+}
+
+.services-cta {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+  padding: 18px;
+}
+
+.services-cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.text-about{
+
+  font-size: 23px;
+}
+
+.text-about-link {
+  color: var(--vet-green);
+  font-weight: 300;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.text-about-link:hover {
+  color: var(--vet-green-hover);
+  text-decoration: underline;
+}
+
+.footer-a-muted { color: rgba(255,255,255,.75); }
+
+.footer-a-divider {
+  height: 1px;
+  background: rgba(255,255,255,.18);
+}
+
+.footer-a-icon{
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.14);
+}
+.footer-a-icon:hover{
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.20);
+}
+
+.footer-a-icon:focus-visible{
+  outline: 2px solid rgba(255,255,255,.7);
+  outline-offset: 3px;
+}
+
+.footer-a { border-top: 1px solid rgba(255,255,255,.18); }
+
+.service-card .service-learn-more{
+  color: #111 !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.service-card .service-learn-more:hover{
+  color: #000 !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }

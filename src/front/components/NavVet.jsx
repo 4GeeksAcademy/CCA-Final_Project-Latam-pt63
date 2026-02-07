@@ -13,10 +13,9 @@ export const NavVet = () => {
     });
     localStorage.removeItem("jwt-token");
     localStorage.removeItem("login-status");
-    localStorage.removeItem("role")
+    localStorage.removeItem("role");
   };
   window.dispatchEvent(new Event("storageUpdate"));
-  
 
   if (login) {
     return (
