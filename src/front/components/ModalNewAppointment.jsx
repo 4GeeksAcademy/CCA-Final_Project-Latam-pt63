@@ -15,6 +15,8 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
 
   const [availablePets, setAvailablePets] = useState([]);
 
+
+  
   // Horarios
   const timeSlots = [
     "09:00 AM",
