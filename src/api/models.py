@@ -1,6 +1,6 @@
 import datetime
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Integer, ForeignKey, Date, DateTime, Float
+from sqlalchemy import String, Boolean, Integer, ForeignKey, Date, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
@@ -32,6 +32,7 @@ class Users(db.Model):
             "phonenumber": self.phonenumber,
             "address": self.address,
             "password": self.password,
+
             # do not serialize the password, its a security breach
         }
 
@@ -52,9 +53,6 @@ class Pets(db.Model):
     pet_type: Mapped[str] = mapped_column(String(30), nullable=False)
     birthdate: Mapped[str] = mapped_column(String(50), nullable=True)
     breed: Mapped[str] = mapped_column(String(120), nullable=True)
-    sex: Mapped[str] = mapped_column(String(20), nullable=True)
-    weight: Mapped[float] = mapped_column(Float, nullable=True)
-    
     allergies: Mapped[str] = mapped_column(
         String(255), nullable=True)
 
@@ -78,8 +76,6 @@ class Pets(db.Model):
             "pet_type": self.pet_type,
             "birthdate": self.birthdate,
             "breed": self.breed,
-            "sex": self.sex,           
-            "weight": self.weight,     
             "allergies": self.allergies,
             "neutered": self.neutered,
             "info": self.info,
@@ -177,8 +173,6 @@ class Appointments(db.Model):
                 "pet_type": self.pet.pet_type,
                 "allergies": self.pet.allergies,
                 "birthdate": self.pet.birthdate,
-                "sex": self.pet.sex,        
-                "weight": self.pet.weight  
             }
 
         return {

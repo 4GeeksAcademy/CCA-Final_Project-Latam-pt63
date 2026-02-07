@@ -14,6 +14,7 @@ import requests
 
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -26,6 +27,7 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+# from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -40,6 +42,7 @@ jwt = JWTManager(app)
 
 bcrypt = Bcrypt(app)
 
+# database condiguration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
@@ -51,16 +54,23 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
 
+# add the admin
 setup_admin(app)
 
+# add the admin
 setup_commands(app)
 
+# Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
+
+# Handle/serialize errors like a JSON object
 
 
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
+
+# generate sitemap with all your endpoints
 
 
 @app.route('/')
@@ -69,13 +79,15 @@ def sitemap():
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 
+# any other endpoint will try to serve it like a static file
+
 
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
         path = 'index.html'
     response = send_from_directory(static_file_dir, path)
-    response.cache_control.max_age = 0
+    response.cache_control.max_age = 0  # avoid cache memory
     return response
 
 
@@ -113,29 +125,34 @@ def create_pet():
     user = get_jwt_identity()
     admin = Doctors.query.filter_by(email=user).first()
 
-    body = request.get_json(silent=True) or {}
-
     if admin is None:
         user_info = Users.query.filter_by(email=user).first()
+        print("user: ", user_info)
         if user_info is None:
             return jsonify({'msg': 'User doesnt exist'}), 400
+        body = request.get_json(silent=True) or {}
         owner_id = user_info.user_id
+        pet_type = (body.get("pet_type") or "")
+        name = (body.get("name") or "")
+        birthdate = (body.get("birthdate") or "")
+        breed = (body.get("breed") or "")
+        allergies = (body.get("allergies") or "")
+        neutered = body.get("neutered")
+
     else:
+        body = request.get_json(silent=True) or {}
         owner_id = (body.get("owner_id") or "")
         if isinstance(owner_id, str):
             if owner_id != "" and not owner_id.isdigit():
                 return jsonify({"msg": "owner_id must be an integer"}), 400
             if owner_id != "":
                 owner_id = int(owner_id)
-
-    pet_type = (body.get("pet_type") or "")
-    name = (body.get("name") or "")
-    birthdate = (body.get("birthdate") or "")
-    breed = (body.get("breed") or "")
-    allergies = (body.get("allergies") or "")
-    neutered = body.get("neutered")
-    sex = (body.get("sex") or "")
-    weight = body.get("weight")
+        pet_type = (body.get("pet_type") or "")
+        name = (body.get("name") or "")
+        birthdate = (body.get("birthdate") or "")
+        breed = (body.get("breed") or "")
+        allergies = (body.get("allergies") or "")
+        neutered = body.get("neutered")
 
     if owner_id == "":
         return jsonify({"msg": "owner_id is required"}), 400
@@ -147,19 +164,15 @@ def create_pet():
         return jsonify({"msg": "birthdate is required"}), 400
     if breed == "":
         return jsonify({"msg": "breed is required"}), 400
-    if sex == "":
-        return jsonify({"msg": "sex is required"}), 400
     if allergies == "":
         return jsonify({"msg": "allergies is required. Use 'none' if there are no allergies"}), 400
     if neutered is None:
         return jsonify({"msg": "neutered is required"}), 400
     if not isinstance(neutered, bool):
         return jsonify({"msg": "neutered must be a boolean (true/false)"}), 400
-
     owner = Users.query.get(owner_id)
     if owner is None:
         return jsonify({"msg": "Owner not found"}), 404
-
     new_pet = Pets()
     new_pet.owner_id = owner_id
     new_pet.pet_type = pet_type
@@ -168,8 +181,6 @@ def create_pet():
     new_pet.breed = breed
     new_pet.allergies = allergies
     new_pet.neutered = neutered
-    new_pet.sex = sex
-    new_pet.weight = weight
     new_pet.info = body.get("info")
     new_pet.image = body.get("image")
 
@@ -224,10 +235,6 @@ def update_pet(pet_id):
         pet.breed = (body.get("breed") or "")
     if "allergies" in body:
         pet.allergies = (body.get("allergies") or "")
-    if "sex" in body:
-        pet.sex = (body.get("sex") or "")
-    if "weight" in body:
-        pet.weight = body.get("weight")
 
     if "neutered" in body:
         neutered = body.get("neutered")
@@ -252,8 +259,6 @@ def update_pet(pet_id):
         return jsonify({"msg": "birthdate is required"}), 400
     if (pet.breed or "") == "":
         return jsonify({"msg": "breed is required"}), 400
-    if (pet.sex or "") == "":
-        return jsonify({"msg": "sex is required"}), 400
     if (pet.allergies or "") == "":
         return jsonify({"msg": "allergies is required. Use 'none' if there are no allergies"}), 400
     if pet.neutered is None:
@@ -658,30 +663,9 @@ def update_appointment(appointment_id):
         appointment.motive = body['motive']
     if 'status' in body:
         appointment.status = body['status']
-    if 'anamnesis' in body:
-        appointment.anamnesis = body['anamnesis']
-    if 'medication' in body:
-        appointment.medication = body['medication']
-    if 'procedures' in body:
-        appointment.procedures = body['procedures']
-    if 'observations' in body:
-        appointment.observations = body['observations']
-    if 'vaccine_name' in body and body['vaccine_name']:
-        try:
-            new_vaccine = Vaccines(
-                vaccine_name=body['vaccine_name'],
-                vaccination_date=body.get(
-                    'vaccination_date', datetime.now().strftime("%Y-%m-%d")),
-                expiry_date=body.get('expiry_date', ''),
-                pet_id=appointment.pet_id
-            )
-            db.session.add(new_vaccine)
-            print(f"💉 Vacuna creada: {body['vaccine_name']}")
-        except Exception as e:
-            print(f"Error creando vacuna: {e}")
 
     db.session.commit()
-    return jsonify({'msg': 'Consulta guardada exitosamente'}), 200
+    return jsonify({'msg': 'Appointment updated successfully'}), 200
 
 
 @app.route('/appointment/<int:appointment_id>', methods=['DELETE'])
@@ -797,33 +781,32 @@ def get_all_appointments():
     user = get_jwt_identity()
     admin = Doctors.query.filter_by(email=user).first()
 
-    all_appointments = Appointments.query.all()
-    results = []
-
-    current_user_id = None
-    if admin is None:
+    if admin is not None:
+        appointments = Appointments.query.all()
+    else:
         user_info = Users.query.filter_by(email=user).first()
-        if user_info:
-            current_user_id = user_info.user_id
+        if user_info is None:
+            return jsonify({'msg': 'User not found'}), 404
 
-    for appt in all_appointments:
+        user_pets = Pets.query.filter_by(owner_id=user_info.user_id).all()
+        if not user_pets:
+            return jsonify([]), 200
+
+        pet_ids = [p.id for p in user_pets]
+        appointments = Appointments.query.filter(
+            Appointments.pet_id.in_(pet_ids)).all()
+
+    results = []
+    for appt in appointments:
+        data = appt.serialize()
+
         pet = Pets.query.get(appt.pet_id)
-
-        if admin is not None:
-            data = appt.serialize()
-            data['pet_name'] = pet.name if pet else "Unknown Pet"
-            results.append(data)
+        if pet:
+            data['pet_name'] = pet.name
         else:
-            if pet and pet.owner_id == current_user_id:
-                data = appt.serialize()
-                data['pet_name'] = pet.name
-                results.append(data)
-            else:
-                results.append({
-                    "date": str(appt.date),
-                    "time": str(appt.time),
-                    "status": appt.status
-                })
+            data['pet_name'] = "Unknown Pet"
+
+        results.append(data)
 
     return jsonify(results), 200
 
