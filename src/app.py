@@ -442,9 +442,9 @@ def modify_user(user_id):
         if update_user is None:
             return jsonify({'msg': 'User not found'}), 404
         if 'first_name' in body:
-            user_info.first_name = body['first_name']
+            update_user.first_name = body['first_name']
         if 'last_name' in body:
-            user_info.last_name = body['last_name']
+            update_user.last_name = body['last_name']
         if 'phonenumber' in body:
             update_user.phonenumber = body['phonenumber']
         if 'address' in body:
