@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { ClientsTable } from "../components/ClientsTable";
 import { ModalNewClient } from "../components/ModalNewClient";
+import { ModalEditClient } from "../components/ModalEditClient";
 
 export const AdminClients = () => {
   const [showModal, setShowModal] = useState(false);
@@ -88,6 +89,7 @@ export const AdminClients = () => {
     }
   };
 
+
   useEffect(() => {
     VerifyAdmin();
   }, []);
@@ -114,7 +116,7 @@ export const AdminClients = () => {
             </button>
           </div>
         </div>
-        <ClientsTable user={clients} />
+        <ClientsTable user={clients} setClients={setClients}/>
       </div>
       <ModalNewClient
         show={showModal}

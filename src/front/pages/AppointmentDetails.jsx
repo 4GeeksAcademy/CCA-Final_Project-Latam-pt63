@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { ModalConsultation } from "../components/ModalConsultation";
-import Swal from 'sweetalert2';
+import { useParams, Link } from "react-router-dom";
 
 export const AppointmentDetails = () => {
     const { appointmentId } = useParams();

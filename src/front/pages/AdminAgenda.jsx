@@ -10,7 +10,6 @@ import {
   subWeeks,
 } from "date-fns";
 import { enUS } from "date-fns/locale";
-import Swal from 'sweetalert2';
 
 export const AdminAgenda = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -89,6 +88,33 @@ export const AdminAgenda = () => {
     generateWeek(referenceDate);
     getAppointments();
   }, []);
+
+  const getAppointments = async () => {
+    try {
+      const token = localStorage.getItem("jwt-token");
+      if (!token) return;
+      const response = await fetch(backendUrl + "/appointments", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const formattedData = data.map((appt) => ({
+          ...appt,
+          id: appt.appointment_id,
+          status: appt.status || "Pending",
+          pet_name: appt.pet_name || "Unknown Pet",
+        }));
+
+        setAppointments(formattedData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const markAsConfirmed = async (appointmentId) => {
     try {
