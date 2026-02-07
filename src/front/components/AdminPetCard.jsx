@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export const AdminPetCard = ({ pet }) => {
   const placeholderImage =
@@ -16,25 +17,29 @@ export const AdminPetCard = ({ pet }) => {
   const GetOwner = async () => {
     try {
       const token = localStorage.getItem("jwt-token");
-      if (!pet.owner_id) return;
-
-      const result = await fetch(backendUrl + "/users/" + pet.owner_id, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
-      const data = await result.json();
-      if (result.ok) {
-        setOwner({ ...data.user });
-      } else {
-        Swal.fire({
-          title: "Error!",
-          text: data.msg,
-          icon: "error",
-          confirmButtonText: "Return",
+      if (pet.owner_id) {
+        const result = await fetch(backendUrl + "/users/" + pet.owner_id, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
         });
+        const data = await result.json();
+        if (result.ok) {
+          setOwner({
+            first_name: data.user.first_name,
+            last_name: data.user.last_name,
+            user_id: data.user.user_id,
+          });
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text: data.msg,
+            icon: "error",
+            confirmButtonText: "Return",
+          });
+        }
       }
     } catch (error) {
       console.error(error);
@@ -42,16 +47,17 @@ export const AdminPetCard = ({ pet }) => {
   };
 
   useEffect(() => {
-    GetOwner();
+    if (pet.owner_id) {
+      GetOwner();
+    }
   }, [pet.owner_id]);
 
   return (
     <div className="col-12 col-md-6 col-lg-4">
-      <div className="card  bg-light h-100 border-1 shadow-sm hover-card-effect rounded-4">
+      <div className="card bg-light h-100 border-1 shadow-sm hover-card-effect rounded-4">
         <div className="card-body">
           <div className="d-flex align-items-center mb-3">
             <div style={{ width: "50px", height: "50px", flexShrink: 0 }}>
-              {}
               <img
                 src={pet.image ? pet.image : placeholderImage}
                 className="w-100 h-100 rounded-circle object-fit-cover"
@@ -76,7 +82,6 @@ export const AdminPetCard = ({ pet }) => {
 
             <div className="d-flex justify-content-between mb-2">
               <span className="text-secondary">Age:</span>
-              {}
               <span className="fw-medium">{pet.age || "N/A"}</span>
             </div>
 

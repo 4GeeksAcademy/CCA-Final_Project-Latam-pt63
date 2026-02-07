@@ -1,15 +1,13 @@
-import { Outlet } from "react-router-dom/dist";
+import { Outlet } from "react-router-dom";
 import ScrollToTop from "../components/ScrollToTop";
-import { Navbar } from "../components/Navbar";
 import { NavVet } from "../components/NavVet";
 import { Footer } from "../components/Footer";
 import { AdminNavbar } from "../components/AdminNavbar";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
-// Base component that maintains the navbar and footer throughout the page and the scroll to top functionality.
 export const Layout = () => {
   const [role, setRole] = useState(localStorage.getItem("role"));
+
   useEffect(() => {
     const updateRole = () => {
       setRole(localStorage.getItem("role"));
@@ -22,7 +20,7 @@ export const Layout = () => {
     };
   }, []);
 
-  if (role == "admin") {
+  if (role === "admin") {
     return (
       <ScrollToTop>
         <AdminNavbar />
@@ -33,7 +31,6 @@ export const Layout = () => {
     return (
       <ScrollToTop>
         <NavVet />
-        {/* <Navbar /> */}
         <Outlet />
         <Footer />
       </ScrollToTop>
