@@ -10,6 +10,8 @@ export const EditProfile = () => {
     const { userId } = useParams()
     const navigate = useNavigate();
 
+    const [loading, setLoading] = useState(true);
+
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [user, setUser] = useState({
         address: "",
@@ -62,6 +64,8 @@ export const EditProfile = () => {
         } catch (error) {
             console.error(error)
 
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -103,12 +107,21 @@ export const EditProfile = () => {
         ProfileInfo()
     }, [])
 
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center min-vh-100">
+                <div className="spinner-border" style={{ color: "rgb(48, 130, 114)", width: "3rem", height: "3rem" }} role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        )
+    }
+
     return (
 
         <div className="container py-5 min-vh-100" style={{ maxWidth: "550px" }}>
             <h2 className="mb-3">Edit Profile</h2>
             
-            {}
             <form className="card p-4 border-0 shadow-sm" onSubmit={HandleSubmit}>
                 <div className="row">
                     <div className="col-md-6 mb-3">
@@ -163,7 +176,6 @@ export const EditProfile = () => {
                     />
                 </div>
 
-                {}
                 <button 
                     type="button" 
                     className="btn rounded-0 w-100 text-light mt-2" 

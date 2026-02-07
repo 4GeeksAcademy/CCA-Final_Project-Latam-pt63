@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const RegisterPet = () => {
@@ -14,6 +14,10 @@ export const RegisterPet = () => {
         "Other": ["Other", "Mix", "Unknown"] 
     };
 
+    const [clients, setClients] = useState([]);
+    const [ownerId, setOwnerId] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
+
     const [name, setName] = useState("");
     
     const [ageYears, setAgeYears] = useState(0);
@@ -21,12 +25,54 @@ export const RegisterPet = () => {
     
     const [petType, setPetType] = useState("");
     const [breed, setBreed] = useState("");
+    const [sex, setSex] = useState("");
+    const [weight, setWeight] = useState("");
     const [allergies, setAllergies] = useState("");
     const [neutered, setNeutered] = useState(null);
     const [info, setInfo] = useState("");
 
     const [selectedFile, setSelectedFile] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem("jwt-token");
+        const role = localStorage.getItem("role");
+        
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        if (role === 'admin') {
+            setIsAdmin(true);
+            fetchClients(token);
+        } else {
+            setIsAdmin(false);
+            setLoading(false);
+        }
+    }, []);
+
+    const fetchClients = async (token) => {
+        try {
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/users", {
+                method: "GET",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token 
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const usersList = Array.isArray(data) ? data : (data.users || []);
+                setClients(usersList);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleTypeChange = (e) => {
         setPetType(e.target.value);
@@ -35,7 +81,13 @@ export const RegisterPet = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        
+        if (isAdmin && !ownerId) {
+            alert("Please select an owner for the pet.");
+            return;
+        }
+
+        setUploading(true);
 
         let today = new Date();
         let birthYear = today.getFullYear() - ageYears;
@@ -59,11 +111,9 @@ export const RegisterPet = () => {
                 if (resp.ok) {
                     const data = await resp.json();
                     imageUrl = data.secure_url;
-                } else {
-                    console.error("Error al subir imagen a Cloudinary");
                 }
             } catch (error) {
-                console.error("Error de conexión con Cloudinary", error);
+                console.error(error);
             }
         }
 
@@ -72,11 +122,17 @@ export const RegisterPet = () => {
             birthdate: birthdateString,
             pet_type: petType,
             breed: breed,
+            sex: sex,
+            weight: weight,
             allergies: allergies,
             neutered: neutered,
             info: info,
             image: imageUrl
         };
+
+        if (isAdmin) {
+            petData.owner_id = ownerId;
+        }
 
         try {
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -91,34 +147,67 @@ export const RegisterPet = () => {
 
             if (response.ok) {
                 alert("Pet registered successfully!");
-                setName("");
-                setPetType("");
-                navigate("/profile");
+                if (isAdmin) {
+                    navigate("/private/pets");
+                } else {
+                    navigate("/profile");
+                }
             } else {
                 const errorData = await response.json();
                 alert("Error: " + errorData.msg);
             }
         } catch (error) {
-            console.error("Error connecting to server:", error);
-            alert("Connection error. Is the backend running?");
+            console.error(error);
+            alert("Connection error.");
         } finally {
-            setLoading(false);
+            setUploading(false);
         }
     };
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center min-vh-100">
+                <div className="spinner-border" style={{ color: "rgb(48, 130, 114)", width: "3rem", height: "3rem" }} role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="container py-5 min-vh-100" style={{ maxWidth: "550px" }}>
             <h2 className="mb-3">Register Pet</h2>
 
-            {}
             <form onSubmit={handleSubmit} className="card p-3">
+                
+                {isAdmin && (
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Owner (Client)</label>
+                        <select 
+                            className="form-select" 
+                            value={ownerId} 
+                            onChange={(e) => setOwnerId(e.target.value)} 
+                            required
+                        >
+                            <option value="">Select an Owner...</option>
+                            {clients.map((client, index) => {
+                                const id = client.id || client.user_id || client.ID; 
+                                const displayName = client.first_name 
+                                    ? `${client.first_name} ${client.last_name || ""}` 
+                                    : client.email;
+                                    
+                                return (
+                                    <option key={index} value={id}>
+                                        {displayName} ({client.email})
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    </div>
+                )}
+
                 <div className="mb-3">
                     <label className="form-label">Name</label>
-                    {}
                     <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} required />
                 </div>
 
@@ -188,6 +277,33 @@ export const RegisterPet = () => {
                 </div>
 
                 <div className="mb-3">
+                    <label className="form-label">Sex</label>
+                    <select 
+                        className="form-select" 
+                        value={sex} 
+                        onChange={(e) => setSex(e.target.value)} 
+                        required
+                    >
+                        <option value="">Select sex...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Weight (kg)</label>
+                    <input 
+                        type="number" 
+                        className="form-control" 
+                        value={weight} 
+                        onChange={(e) => setWeight(e.target.value)} 
+                        step="0.1"
+                        min="0"
+                        placeholder="0.0" 
+                    />
+                </div>
+
+                <div className="mb-3">
                     <label className="form-label">Allergies</label>
                     <input type="text" className="form-control" value={allergies} onChange={(e) => setAllergies(e.target.value)} placeholder="None, Pollen..." required />
                 </div>
@@ -220,18 +336,16 @@ export const RegisterPet = () => {
                     <small className="text-muted">Select a photo (Optional)</small>
                 </div>
 
-                {}
                 <button 
                     type="submit" 
                     className="btn rounded-0 w-100 text-light" 
                     style={{ background: "rgb(48, 130, 114)" }} 
-                    disabled={loading}
+                    disabled={uploading}
                 >
-                    {loading ? "Uploading..." : "Register"}
+                    {uploading ? "Uploading..." : "Register"}
                 </button>
 
             </form>
-
         </div>
     );
 };

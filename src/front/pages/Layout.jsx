@@ -11,6 +11,7 @@ import { useEffect } from "react"
 export const Layout = () => {
 
     const [role, setRole] = useState(localStorage.getItem("role"))
+    
     useEffect(() => {
         const updateRole = () => {
             setRole(localStorage.getItem("role"));
@@ -26,7 +27,7 @@ export const Layout = () => {
     if (role == "admin") {
         return (
             <ScrollToTop>
-                <AdminNavbar />
+            <AdminNavbar />
                 <Outlet />
             </ScrollToTop>
         )
@@ -34,11 +35,9 @@ export const Layout = () => {
         return (
             <ScrollToTop>
                 <NavVet />
-                {/* <Navbar /> */}
                 <Outlet />
                 <Footer />
             </ScrollToTop>
         )
     }
-
 }
