@@ -1,78 +1,47 @@
-export const Footer = () => (
-  <footer className="footer mt-auto py-3">
-    <div
-      className="col-12 text-white pt-5 fs-10"
-      style={{ background: "rgb(48, 130, 114)" }}
-    >
-      <div className="row text-center d-flex justify-content-center pb-3">
-        <div className="col-1 pb-3">
-          <div className="day pb-2">Monday</div>
-          <div className="hours">9:00 am - 5:00 pm</div>
-        </div>
-        <div className="vr p-0 footer-vertical-divider"></div>
-        <div className="col-1 pb-3">
-          <div className="day pb-2">Tuesday</div>
-          <div className="hours">9:00 am - 5:00 pm</div>
-        </div>
-        <div className="vr p-0 footer-vertical-divider"></div>
-        <div className="col-1 pb-3">
-          <div className="day pb-2">Wednesday</div>
-          <div className="hours">9:00 am - 5:00 pm</div>
-        </div>
-        <div className="vr p-0 footer-vertical-divider"></div>
-        <div className="col-1 pb-3">
-          <div className="day pb-2">Thursday</div>
-          <div className="hours">9:00 am - 5:00 pm</div>
-        </div>
-        <div className="vr p-0 footer-vertical-divider"></div>
-        <div className="col-1 pb-3">
-          <div className="day pb-2">Friday</div>
-          <div className="hours">9:00 am - 5:00 pm</div>
-        </div>
-        <div className="vr p-0 footer-vertical-divider"></div>
-        <div className="col-1 pb-3">
-          <div className="day pb-2">Saturday</div>
-          <div className="hours">9:00 am - 5:00 pm</div>
-        </div>
-        <div className="vr p-0 footer-vertical-divider"></div>
-        <div className="col-1 pb-3">
-          <div className="day pb-2">Sunday</div>
-          <div className="hours">Closed</div>
-        </div>
-      </div>
-      <div className="row col-12 d-flex justify-content-center pt-3 pb-3">
-        <div className="col-4 text-center">
-          <div>Address</div>
-          <div>123 Main Street</div>
-        </div>
-        <div className="col-4 text-center d-flex justify-content-center g-2">
+import React from "react";
+
+export const Footer = () => {
+  const year = new Date().getFullYear();
+
+  return (
+    <footer className="footer-a bg-vet text-white">
+      <div className="container py-4">
+        <div className="d-flex flex-column flex-lg-row gap-3 align-items-lg-center justify-content-between">
           <div>
+            <div className="fw-semibold">VetCare</div>
+            <small className="footer-a-muted">Modern, friendly veterinary care.</small>
+          </div>
+
+          <div className="d-flex gap-2">
             <a
+              className="footer-a-icon"
               href="https://www.facebook.com/"
-              class="fa-brands fa-facebook-f fs-3 pe-2"
-              style={{ color: "white", textDecoration: "none" }}
-            ></a>
-          </div>
-          <div>
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook"
+            >
+              <i className="fa-brands fa-facebook-f"></i>
+            </a>
+
             <a
+              className="footer-a-icon"
               href="https://www.instagram.com/"
-              class="fa-brands fa-instagram fs-3 ps-2 pe-2"
-              style={{ color: "white", textDecoration: "none" }}
-            ></a>
-          </div>
-          <div>
-            <a
-              href="https://www.yelp.com/"
-              class="fa-brands fa-yelp fs-3 ps-2"
-              style={{ color: "white", textDecoration: "none" }}
-            ></a>
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+            >
+              <i className="fa-brands fa-instagram"></i>
+            </a>
           </div>
         </div>
-        <div className="col-4 text-center">
-          <div>Phone number</div>
-          <div>800-123-4567</div>
+
+        <div className="footer-a-divider my-3"></div>
+
+        <div className="d-flex flex-column flex-md-row gap-2 justify-content-between">
+          <small className="footer-a-muted">© {year} VetCare</small>
+          <small className="footer-a-muted">Made with care.</small>
         </div>
       </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
