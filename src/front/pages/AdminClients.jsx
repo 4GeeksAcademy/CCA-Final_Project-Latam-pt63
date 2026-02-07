@@ -33,7 +33,7 @@ export const AdminClients = () => {
       if (!result.ok) {
         Swal.fire({
           title: "Error!",
-          text: data.msg,
+          text: "You must be logged in to access this page",
           icon: "error",
           confirmButtonText: "Return",
         });

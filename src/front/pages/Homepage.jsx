@@ -1,17 +1,75 @@
-import React, { useEffect, } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { TransitionHome } from "./TransitionHome.jsx";
 import Animals from "../assets/img/animals-homepage.jpg";
 import Animals2 from "../assets/img/animals-homepage2.jpg";
-
+import Swal from "sweetalert2";
 export const Homepage = () => {
-
   window.dispatchEvent(new Event("storageUpdate"));
 
-  const Navbar = localStorage.getItem("role")
+  const Navbar = localStorage.getItem("role");
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  useEffect(() => {
-  }, [Navbar])
+  useEffect(() => { }, [Navbar]);
+
+  const [email, setEmail] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const sendEmail = async () => {
+    if (
+      email.name.trim() == "" ||
+      email.email.trim() == "" ||
+      email.message.trim() == ""
+    ) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please complete all fields",
+        icon: "warning",
+        confirmButtonText: "Ok",
+      });
+      return;
+    }
+    const mail = email;
+    const response = await fetch(backendUrl + "/send-contact-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(mail),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      Swal.fire({
+        title: "Success",
+        text: "Thank you for your message,  we'll contact you as soon as possible",
+        icon: "success",
+        confirmButtonText: "Ok",
+      });
+      setEmail({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } else {
+      Swal.fire({
+        title: "Error!",
+        text: data.msg,
+        icon: "warning",
+        confirmButtonText: "Ok",
+      });
+      return;
+    }
+  };
+
+  const handleChange = (e) => {
+    setEmail({
+      ...email,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <div className="no-radius">
@@ -35,12 +93,30 @@ export const Homepage = () => {
           </div>
           <div className="row g-4 mt-4">
             {[
-              { t: "Checkups & Consultations", d: "Routine visits, diagnosis, and personalized treatment plans." },
-              { t: "Vaccinations", d: "Core vaccines and tailored prevention schedules for every stage of life." },
-              { t: "Surgery", d: "Soft-tissue procedures with pre-op testing and post-op follow-up." },
-              { t: "In-House Lab", d: "Fast bloodwork and basic testing to speed up answers." },
-              { t: "Grooming", d: "Baths, nail trims, ear cleaning, and coat care for comfort and hygiene." },
-              { t: "Urgent Care", d: "Same-day care for vomiting, injuries, allergic reactions, and more." },
+              {
+                t: "Checkups & Consultations",
+                d: "Routine visits, diagnosis, and personalized treatment plans.",
+              },
+              {
+                t: "Vaccinations",
+                d: "Core vaccines and tailored prevention schedules for every stage of life.",
+              },
+              {
+                t: "Surgery",
+                d: "Soft-tissue procedures with pre-op testing and post-op follow-up.",
+              },
+              {
+                t: "In-House Lab",
+                d: "Fast bloodwork and basic testing to speed up answers.",
+              },
+              {
+                t: "Grooming",
+                d: "Baths, nail trims, ear cleaning, and coat care for comfort and hygiene.",
+              },
+              {
+                t: "Urgent Care",
+                d: "Same-day care for vomiting, injuries, allergic reactions, and more.",
+              },
             ].map((x) => (
               <div className="col-sm-6 col-lg-4" key={x.t}>
                 <div className="p-4 border h-100 service-card">
@@ -54,7 +130,6 @@ export const Homepage = () => {
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
@@ -74,8 +149,9 @@ export const Homepage = () => {
             <div className="col-lg-6">
               <h2 className="fw-bold">About Us</h2>
               <p className="text-muted mb-3">
-                VetCare is a small neighborhood clinic focused on warm, honest care. We explain everything in plain
-                language, offer transparent pricing, and follow up after every visit.
+                VetCare is a small neighborhood clinic focused on warm, honest
+                care. We explain everything in plain language, offer transparent
+                pricing, and follow up after every visit.
               </p>
               <ul className="mb-0">
                 <li>Friendly, personalized attention</li>
@@ -85,7 +161,8 @@ export const Homepage = () => {
 
               <div className="mt-4">
                 <p className="mb-2">
-                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA (reference location)
+                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA
+                  (reference location)
                 </p>
                 <p className="mb-0">
                   <strong>Phone:</strong> (805) 555-0137
@@ -115,12 +192,25 @@ export const Homepage = () => {
               <form className="row g-3">
                 <div className="col-md-6">
                   <label className="form-label">Full Name</label>
-                  <input className="form-control" placeholder="Jane Doe" />
+                  <input
+                    className="form-control"
+                    name="name"
+                    placeholder="Jane Doe"
+                    value={email.name}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div className="col-md-6">
                   <label className="form-label">Email</label>
-                  <input type="email" className="form-control" placeholder="jane@email.com" />
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="jane@email.com"
+                    name="email"
+                    value={email.email}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="col-12">
                   <label className="form-label">Message</label>
@@ -128,10 +218,13 @@ export const Homepage = () => {
                     className="form-control"
                     rows="4"
                     placeholder="Tell us your pet’s name, symptoms, and preferred day/time."
+                    name="message"
+                    value={email.message}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="col-12">
-                  <button className="btn btn-vet btn-lg" type="button">
+                  <button className="btn btn-vet btn-lg" type="button" on onClick={() => { sendEmail() }}>
                     Send
                   </button>
                 </div>
@@ -142,7 +235,8 @@ export const Homepage = () => {
               <div className="p-4 border h-100">
                 <h5 className="mb-3">Clinic Info</h5>
                 <p className="mb-2">
-                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA (reference location)
+                  <strong>Address:</strong> 1187 W Main St, Santa Maria, CA
+                  (reference location)
                 </p>
                 <p className="mb-2">
                   <strong>WhatsApp:</strong> +1 (805) 555-0199
@@ -151,16 +245,15 @@ export const Homepage = () => {
                   <strong>Email:</strong> services@vetcare.com
                 </p>
 
-
                 <div className="mt-3 small text-muted">
-                  For emergencies outside business hours, please visit your nearest 24/7 animal hospital.
+                  For emergencies outside business hours, please visit your
+                  nearest 24/7 animal hospital.
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
     </div>
   );
 };
