@@ -3,11 +3,10 @@ import { ModalEditClient } from "./ModalEditClient";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
-export const ClientsTable = ({ user = [], setClients}) => {
+export const ClientsTable = ({ user = [], setClients }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
 
   const handleEditClient = async (client) => {
     try {
@@ -24,8 +23,8 @@ export const ClientsTable = ({ user = [], setClients}) => {
       if (result.ok) {
         setClients((prevClients) =>
           prevClients.map((c) =>
-            c.user_id === client.user_id ? { ...c, ...client } : c
-          )
+            c.user_id === client.user_id ? { ...c, ...client } : c,
+          ),
         );
         Swal.fire({
           title: "Success",
@@ -33,7 +32,6 @@ export const ClientsTable = ({ user = [], setClients}) => {
           icon: "success",
           confirmButtonText: "Ok",
         });
-        
       } else {
         Swal.fire({
           title: "Error!",
@@ -46,7 +44,6 @@ export const ClientsTable = ({ user = [], setClients}) => {
       console.error(error);
     }
   };
-
   return (
     <div className="container my-4 min-vh-100 ms-5 ps-5">
       <div className="card shadow-sm border-0 rounded-4 overflow-hidden border-top">
