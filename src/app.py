@@ -10,6 +10,7 @@ from api.models import db, Users, Pets, Doctors, Appointments, Vaccines, Passwor
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+import requests
 
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -21,6 +22,8 @@ from flask_jwt_extended import JWTManager
 
 import uuid
 from datetime import datetime, timedelta, timezone
+
+import requests
 
 import os
 from sendgrid import SendGridAPIClient
@@ -446,9 +449,9 @@ def modify_user(user_id):
         if update_user is None:
             return jsonify({'msg': 'User not found'}), 404
         if 'first_name' in body:
-            user_info.first_name = body['first_name']
+            update_user.first_name = body['first_name']
         if 'last_name' in body:
-            user_info.last_name = body['last_name']
+            update_user.last_name = body['last_name']
         if 'phonenumber' in body:
             update_user.phonenumber = body['phonenumber']
         if 'address' in body:
@@ -718,7 +721,7 @@ def send_recovery_link():
         return jsonify({'msg': 'You must include an email'}), 400
     valid_user = Users.query.filter_by(email=body['email']).first()
     if valid_user is None:
-        return jsonify({'msg': 'User not found'}), 404
+        return jsonify({'msg': 'No user found with that email'}), 404
     new_uuid = uuid.uuid4()
     current_time = datetime.now()
     time_limit = current_time + timedelta(minutes=30)
@@ -734,7 +737,7 @@ def send_recovery_link():
         from_email='petcareproject47@gmail.com',
         to_emails=valid_user.email,
         subject='Password Reset',
-        html_content=f"<strong>Here is your recovery <a href=https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/reset-password/{new_uuid}>link</a></strong>")
+        html_content=f"<strong>Here is your recovery <a href=https://bug-free-space-engine-7v4x69vxrq6qc7j-3000.app.github.dev/reset-password/{new_uuid}>link</a></strong>")
     try:
         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
     # sg.set_sendgrid_data_residency("eu")
@@ -809,6 +812,7 @@ def get_all_appointments():
 
     return jsonify(results), 200
 
+
 @app.route('/send-contact-email', methods=['POST'])
 def send_contact_email():
     body = request.get_json(silent=True)
@@ -817,15 +821,15 @@ def send_contact_email():
     if 'message' not in body:
         return jsonify({'msg': 'You must include an email'}), 400
     if 'name' not in body:
-        return jsonify({'msg': "You must include a name"})
-    if 'phone' not in body:
-        return jsonify({'msg': 'You must include a phone number'})
+        return jsonify({'msg': "You must include a name"}),400
+    if 'email' not in body:
+        return jsonify({'msg': 'You must include a email'}),400
 
     message = Mail(
         from_email='petcareproject47@gmail.com',
         to_emails='petcareproject47@gmail.com',
         subject='Contact mail',
-        html_content=f"Name: {body['name']}, Message:{body['message']}, Phone:{body['phone']}")
+        html_content=f"Name: {body['name']}, Message: {body['message']}, Email: {body['email']}")
     try:
         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
     # sg.set_sendgrid_data_residency("eu")
@@ -837,7 +841,35 @@ def send_contact_email():
     except Exception as e:
         print(e.message)
 
-    return jsonify({'msg': 'New Message created successfully, Please check your email',}), 200
+    return jsonify({'msg': 'New Message created successfully, Please check your email', }), 200
+
+
+@app.route('/send-message', methods=['POST'])
+def send_test_message():
+    body = request.get_json(silent=True)
+    key = os.getenv("WHAPI_API_KEY")
+    url = "https://gate.whapi.cloud/messages/text"
+
+    if 'phone' not in body:
+        return jsonify({'msg':'No phonenumber in the body'}),400
+    if 'name' not in body:
+        return jsonify ({'msg' "No client name in the body"}),400
+    if 'pet_name' not in body:
+        return jsonify({'msg':'No pet name in the body'}),400
+
+    payload = {
+        "to": body['phone'],
+        "body": f"Hello {body['name']} this is VetCare Clinic, this is just a reminder that you have an appointment for {body['pet_name']}"
+    }
+    headers = {
+    "accept": "application/json",
+    "content-type": "application/json",
+    "authorization": "Bearer " + key
+}
+    response = requests.post(url, json=payload, headers=headers)
+
+    return jsonify({'msg': "Message sent",})
+
 
 
 # this only runs if `$ python src/main.py` is executed

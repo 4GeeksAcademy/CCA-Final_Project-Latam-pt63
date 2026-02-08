@@ -143,7 +143,9 @@ export const Services = () => {
                   {active === s.id ? "Hide details" : "Learn more →"}
                 </button>
 
-                <div className={`services-details ${active === s.id ? "open" : ""}`}>
+                <div
+                  className={`services-details ${active === s.id ? "open" : ""}`}
+                >
                   <p className="mb-0">{s.details}</p>
                 </div>
               </div>
@@ -159,7 +161,11 @@ export const Services = () => {
                 Tell us what’s going on and we’ll guide you to the right option.
               </p>
             </div>
-            <button type="button" onClick={goContact} className="btn btn-outline-vet px-4 py-2">
+            <button
+              type="button"
+              onClick={goContact}
+              className="btn btn-outline-vet px-4 py-2"
+            >
               Ask a question
             </button>
           </div>

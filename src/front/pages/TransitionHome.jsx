@@ -27,12 +27,14 @@ export const TransitionHome = ({
       return;
     }
 
-
     go();
   };
 
   return (
-    <section className="banner-home" style={{ backgroundImage: `url(${image})` }}>
+    <section
+      className="banner-home"
+      style={{ backgroundImage: `url(${image})` }}
+    >
       <div className="container banner-home-content py-5">
         <h1 className="text-white fw-bold mb-3">{title}</h1>
         <p className="text-white-50 fs-5 mb-4">{subtitle}</p>

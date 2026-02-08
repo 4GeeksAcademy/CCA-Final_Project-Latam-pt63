@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { PetCard } from "../components/PetCard";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 export const Profile = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const navigate = useNavigate();
+    
+    const [loading, setLoading] = useState(true);
+    const [pets, setPets] = useState([]);
     const [user, setUser] = useState({
         address: "",
         email: "",
         first_name: "",
         last_name: "",
         phonenumber: "",
-        user_id: ""
+        user_id: "",
     });
-
-    const [loading, setLoading] = useState(true);
 
     const Logout = () => {
         localStorage.removeItem("jwt-token");
@@ -23,34 +24,50 @@ export const Profile = () => {
         localStorage.removeItem("role");
     };
 
-    const [pets, setPets] = useState([]);
-
-    const navigate = useNavigate();
-
     const calculateAge = (birthdate) => {
         if (!birthdate) return "N/A";
-
         const birthDate = new Date(birthdate);
         const today = new Date();
 
         let years = today.getFullYear() - birthDate.getFullYear();
-        let months = today.getMonth() - birthDate.getMonth();
+        const m = today.getMonth() - birthDate.getMonth();
 
-        if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
             years--;
-            months += 12;
         }
 
-        if (years > 0) {
-            return years + " years";
-        } else {
-            return months + " months";
+        if (years === 0) {
+            let months = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
+            if (months < 0) months = 0;
+            return months === 1 ? "1 month" : months + " months";
         }
+
+        return years === 1 ? "1 year" : years + " years";
+    };
+
+    const getNextAppointment = (appointments = []) => {
+        if (!appointments || appointments.length === 0) return null;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const upcoming = appointments.filter(appt => {
+            const apptDate = new Date(appt.date.replace(/-/g, '/'));
+            return apptDate >= today && appt.status !== 'Completed' && appt.status !== 'Cancelled';
+        });
+
+        upcoming.sort((a, b) => new Date(a.date) - new Date(b.date));
+        return upcoming.length > 0 ? upcoming[0].date : null;
     };
 
     const Verify = async () => {
         try {
-            const token = localStorage.getItem('jwt-token')
+            const token = localStorage.getItem('jwt-token');
+            if (!token) {
+                navigate("/");
+                return;
+            }
+
             const result = await fetch(backendUrl + "/users", {
                 method: "GET",
                 headers: {
@@ -58,47 +75,67 @@ export const Profile = () => {
                     Authorization: "Bearer " + token,
                 }
             });
-            const data = await result.json()
+
+            const data = await result.json();
+
             if (!result.ok) {
                 Swal.fire({
                     title: 'Error!',
                     text: 'You must be logged in to access this page',
                     icon: 'error',
                     confirmButtonText: 'Return'
-                })
-                Logout()
-                navigate("/")
-            }
-            else if (result.ok) {
-                setUser({ ...data.user })
-                const pet = await fetch(backendUrl + "/pet", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token,
-                    }
                 });
-                const petData = await pet.json()
-                if (pet.ok) {
-                    const petsWithAge = petData.pets.map((p) => {
-                        return {
-                            ...p,
-                            age: calculateAge(p.birthdate)
-                        };
-                    });
-                    setPets(petsWithAge)
+                Logout();
+                navigate("/");
+                return;
+            }
+
+            setUser({ ...data.user });
+
+            const petResponse = await fetch(backendUrl + "/pet", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
                 }
+            });
+
+            const petData = await petResponse.json();
+
+            if (petResponse.ok) {
+                const petsWithDetails = await Promise.all(petData.pets.map(async (p) => {
+                    let upcomingAppointment = null;
+                    try {
+                        const historyResponse = await fetch(`${backendUrl}/history/${p.pet_id}`, {
+                            headers: { Authorization: "Bearer " + token }
+                        });
+                        if (historyResponse.ok) {
+                            const historyData = await historyResponse.json();
+                            upcomingAppointment = getNextAppointment(historyData.history);
+                        }
+                    } catch (err) {
+                        console.error("Error fetching history for pet:", p.pet_id, err);
+                    }
+
+                    return {
+                        ...p,
+                        age: calculateAge(p.birthdate),
+                        next_appointment: upcomingAppointment
+                    };
+                }));
+
+                setPets(petsWithDetails);
             }
         } catch (error) {
-            console.error(error)
+            console.error("Verification error:", error);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        Verify()
-    }, [])
+        Verify();
+    }, []);
 
     if (loading) {
         return (
@@ -107,17 +144,15 @@ export const Profile = () => {
                     <span className="visually-hidden">Loading...</span>
                 </div>
             </div>
-        )
+        );
     }
 
     return (
         <div className="container py-5 min-vh-100">
-            { }
             <div className="row justify-content-center mb-5">
                 <div className="col-12 col-md-8">
-                    <h2 className="mb-4">My Profile</h2>
+                    <h2 className="mb-4 text-capitalize">My Profile</h2>
 
-                    { }
                     <div className="card p-4 border-0 shadow-sm">
                         <div className="card-body">
                             <div className="d-flex justify-content-between align-items-start mb-3">
@@ -130,7 +165,7 @@ export const Profile = () => {
 
                             <div className="row mb-2">
                                 <div className="col-sm-3 fw-bold text-secondary">Name:</div>
-                                <div className="col-sm-9">{user.first_name} {user.last_name}</div>
+                                <div className="col-sm-9 text-capitalize">{user.first_name} {user.last_name}</div>
                             </div>
                             <div className="row mb-2">
                                 <div className="col-sm-3 fw-bold text-secondary">Address:</div>
@@ -149,13 +184,11 @@ export const Profile = () => {
                 </div>
             </div>
 
-            { }
             <div className="row justify-content-center">
                 <div className="col-12 col-md-8">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h2>My Pets</h2>
                         <Link to={'/register-pet'}>
-                            { }
                             <button
                                 type="button"
                                 className="btn rounded-0 text-light px-4 py-2"
@@ -187,5 +220,5 @@ export const Profile = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};

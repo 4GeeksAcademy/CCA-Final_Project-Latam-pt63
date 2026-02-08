@@ -615,3 +615,7 @@ textarea.form-control:focus {
   overflow-clip-margin: unset;
   overflow: visible;
 }
+
+.pointer:hover{
+  cursor: pointer;
+}

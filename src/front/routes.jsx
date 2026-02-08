@@ -25,13 +25,12 @@ import { ClientDetails } from "./pages/ClientDetails.jsx";
 import { AdminAgenda } from "./pages/AdminAgenda.jsx";
 import { AdminPetHistory } from "./pages/AdminPetHistory.jsx";
 import { AppointmentDetails } from "./pages/AppointmentDetails";
-
+import { EditAppointment } from "./pages/EditAppointment.jsx";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
-
-      { }
+    <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>}>
+      {}
       <Route path="/" element={<Homepage />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
@@ -40,7 +39,7 @@ export const router = createBrowserRouter(
       <Route path="/services" element={<Services />} />
       <Route path="/about" element={<About />} />
 
-      { }
+      {}
       <Route path="/profile" element={<Profile />} />
       <Route path="/editprofile/:userId" element={<EditProfile />} />
       <Route path="/register-pet" element={<RegisterPet />} />
@@ -49,16 +48,19 @@ export const router = createBrowserRouter(
       <Route path="/reset-password/:Uuid" element={<PasswordReset />} />
       <Route path="/request-reset" element={<RequestReset />} />
 
-      { }
+      {}
       <Route path="/private/clients" element={<AdminClients />} />
       <Route path="/private/pets" element={<AdminPets />} />
       <Route path="/private/clients/:clientId" element={<ClientDetails />} />
       <Route path="/private/agenda" element={<AdminAgenda />} />
-      <Route path="/private/pets/history/:petId" element={<AdminPetHistory />} />
+      <Route
+        path="/private/pets/history/:petId"
+        element={<AdminPetHistory />}
+      />
 
       { }
       <Route path="/private/agenda/details/:appointmentId" element={<AppointmentDetails />} />
-
+      <Route path="/private/edit-appointment/:appointmentId" element={<EditAppointment />} />
     </Route>
   )
 );
