@@ -25,7 +25,7 @@ export const About = () => {
         const e = entries[0];
         if (e && e.isIntersecting) setShowIt(true);
       },
-      { threshold: 0.12 },
+      { threshold: 0.12 }
     );
 
     io.observe(node);
@@ -174,14 +174,15 @@ export const About = () => {
 
               <div className="d-flex gap-2 mt-4 flex-wrap">
                 <button
-                  className="btn btn-vet px-4 py-2"
+                  className="btn btn-vet px-4 py-2 square"
                   type="button"
                   onClick={goServices}
                 >
                   View services
                 </button>
+
                 <button
-                  className="btn btn-outline-vet px-4 py-2"
+                  className="btn btn-vet-outline px-4 py-2 square"
                   type="button"
                   onClick={goContact}
                 >
@@ -194,19 +195,19 @@ export const About = () => {
           <div className="col-12 col-lg-5">
             <div className="about-imageWrap">
               <div className="about-imageCard">
-                {}
                 {!imgReady && <div className="about-skeleton" />}
 
                 <img
                   src={AnimalsAbout}
                   alt="Veterinary care"
-                  className={`img-fluid about-image ${imgReady ? "loaded" : "loading"}`}
+                  className={`img-fluid about-image ${
+                    imgReady ? "loaded" : "loading"
+                  }`}
                   loading="eager"
                   decoding="async"
                   onLoad={() => setImgReady(true)}
                   onError={() => setImgReady(true)}
                 />
-                {}
               </div>
 
               <div className="about-badge">
@@ -237,7 +238,7 @@ export const About = () => {
                   <img
                     src={Doctor2}
                     alt="Dr. Sofia Pereira"
-                    className=" team-doctor-img"
+                    className="team-doctor-img"
                     loading="lazy"
                   />
                   <div className="card-body p-4">
@@ -305,7 +306,7 @@ export const About = () => {
                     </small>
 
                     <p className="mb-3 text-muted">
-                      From routine procedures to more complex interventions, He
+                      From routine procedures to more complex interventions, he
                       follows strict safety protocols and prioritizes comfort
                       and pain control.
                     </p>
@@ -321,11 +322,11 @@ export const About = () => {
             </div>
 
             <div className="text-center mt-4">
-              <p className="text-muted text-about mb-0 ">
+              <p className="text-muted text-about mb-0">
                 Want to talk with a vet? We’ll help you find the best time and
                 service for your pet,{" "}
                 <a
-                  className=" text-about-link"
+                  className="text-about-link"
                   style={{ cursor: "pointer" }}
                   onClick={goContact}
                 >
@@ -339,3 +340,4 @@ export const About = () => {
     </section>
   );
 };
+

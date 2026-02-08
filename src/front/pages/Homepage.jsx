@@ -77,7 +77,7 @@ export const Homepage = () => {
         image={Animals}
         title="Welcome to VetCare"
         subtitle="Compassionate veterinary care for dogs, cats and a variety of pets, with modern medicine and a friendly team."
-        primaryText="Our Services"
+        primaryText="Our Services "
         primaryHref="#services"
         secondaryText="Book an Appointment"
         secondaryHref="#contact"
@@ -87,7 +87,7 @@ export const Homepage = () => {
         <div className="container">
           <div className="d-flex align-items-end justify-content-between gap-3 flex-wrap mb-4">
             <h2 className="fw-bold m-0">Services</h2>
-            <a className="btn btn-vet-outline btn-lg" href="#contact">
+            <a className="btn btn-vet-outline btn-lg square" href="#contact">
               Ask a question
             </a>
           </div>
@@ -199,7 +199,7 @@ export const Homepage = () => {
                 <div className="col-md-6">
                   <label className="form-label">Full Name</label>
                   <input
-                    className="form-control"
+                    className="form-control square"
                     name="name"
                     placeholder="Jane Doe"
                     value={email.name}
@@ -211,7 +211,7 @@ export const Homepage = () => {
                   <label className="form-label">Email</label>
                   <input
                     type="email"
-                    className="form-control"
+                    className="form-control square"
                     placeholder="jane@email.com"
                     name="email"
                     value={email.email}
@@ -221,7 +221,7 @@ export const Homepage = () => {
                 <div className="col-12">
                   <label className="form-label">Message</label>
                   <textarea
-                    className="form-control"
+                    className="form-control square"
                     rows="4"
                     placeholder="Tell us your pet’s name, symptoms, and preferred day/time."
                     name="message"
@@ -230,14 +230,14 @@ export const Homepage = () => {
                   />
                 </div>
                 <div className="col-12">
-                  <button className="btn btn-vet btn-lg" type="button" on onClick={() => { sendEmail() }}>
+                  <button className="btn btn-vet btn-lg square" type="button" on onClick={() => { sendEmail() }}>
                     Send
                   </button>
                 </div>
               </form>
             </div>
 
-            <div className="col-lg-6">
+            <div className="col-lg-6 ">
               <div className="p-4 border h-100">
                 <h5 className="mb-3">Clinic Info</h5>
                 <p className="mb-2">

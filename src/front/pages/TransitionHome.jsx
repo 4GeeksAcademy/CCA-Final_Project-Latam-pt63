@@ -40,7 +40,7 @@ export const TransitionHome = ({
         <p className="text-white-50 fs-5 mb-4">{subtitle}</p>
 
         <div className="d-flex gap-2 flex-wrap">
-          <a className="btn btn-vet btn-lg" href={primaryHref}>
+          <a className="btn btn-vet btn-lg square" href={primaryHref}>
             {primaryText}
           </a>
 

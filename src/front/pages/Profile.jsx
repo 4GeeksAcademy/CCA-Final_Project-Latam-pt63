@@ -199,19 +199,24 @@ export const Profile = () => {
                         </Link>
                     </div>
 
-                    <div className="row g-4">
+                    { }
+                    <div className="row row-cols-1 row-cols-md-2 g-4">
                         {pets.length > 0 ? (
                             pets.map((pet) => (
-                                <div className="col-12" key={pet.pet_id}>
+                                <div className="col" key={pet.pet_id}>
                                     <PetCard pet={pet} />
                                 </div>
                             ))
                         ) : (
-                            <div className="alert alert-light text-center shadow-sm">
-                                You haven't registered any pets yet.
+                            <div className="col-12">
+                                <div className="alert alert-light text-center shadow-sm">
+                                    You haven't registered any pets yet.
+                                </div>
                             </div>
                         )}
                     </div>
+
+
                 </div>
             </div>
         </div>
