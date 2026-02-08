@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import Swal from "sweetalert2";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { ClientsTable } from "../components/ClientsTable";
 import { ModalNewClient } from "../components/ModalNewClient";
