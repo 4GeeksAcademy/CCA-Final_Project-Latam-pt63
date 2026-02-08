@@ -11,7 +11,7 @@ export const PetCard = ({ pet }) => {
             <img
               src={pet?.image ? pet.image : petPlaceholder}
               alt={pet?.name || "pet"}
-              className="w-100 h-100"
+              className="w-100 h-100 pet-avatar-img"
               style={{ objectFit: "cover" }}
               onError={(e) => {
                 e.currentTarget.onerror = null;

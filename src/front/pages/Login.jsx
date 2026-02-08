@@ -59,15 +59,15 @@ export const Login = () => {
   return (
     <div>
       <div className="container py-5 min-vh-100" style={{ maxWidth: 450 }}>
-        <h2 className="mb-3">Login</h2>
+        <h2 className="mb-3 d-flex ">Login</h2>
 
         {feedback !== "" && <div className="alert alert-danger">{feedback}</div>}
 
-        <form onSubmit={handleSubmit} className="card p-3">
+        <form onSubmit={handleSubmit} className="card p-3 square">
           <div className="mb-3">
             <label className="form-label">Email</label>
             <input
-              className="form-control"
+              className="form-control square"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -76,9 +76,9 @@ export const Login = () => {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Password</label>
+            <label className="form-label ">Password</label>
             <input
-              className="form-control"
+              className="form-control square"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -86,7 +86,7 @@ export const Login = () => {
             />
           </div>
 
-          <button className="btn rounded-0 w-100 text-light" style={{ background: "rgb(48, 130, 114)" }} disabled={isLoading}>
+          <button className="btn  w-100 text-light square" style={{ background: "rgb(48, 130, 114)" }} disabled={isLoading}>
             {isLoading ? "Loading..." : "Sign in"}
           </button>
 

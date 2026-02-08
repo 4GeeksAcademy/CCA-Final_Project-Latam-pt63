@@ -72,12 +72,12 @@ export const Signup = () => {
 
             {feedback !== "" && <div className="alert alert-danger">{feedback}</div>}
 
-            <form onSubmit={handleSubmit} className="card p-3">
+            <form onSubmit={handleSubmit} className="card p-3 square">
                 <div className="row">
                     <div className="col-md-6 mb-3">
                         <label className="form-label">First name</label>
                         <input
-                            className="form-control"
+                            className="form-control square"
                             name="first_name"
                             value={form.first_name}
                             onChange={handleChange}
@@ -87,7 +87,7 @@ export const Signup = () => {
                     <div className="col-md-6 mb-3">
                         <label className="form-label">Last name</label>
                         <input
-                            className="form-control"
+                            className="form-control square"
                             name="last_name"
                             value={form.last_name}
                             onChange={handleChange}
@@ -98,7 +98,7 @@ export const Signup = () => {
                 <div className="mb-3">
                     <label className="form-label">Email</label>
                     <input
-                        className="form-control"
+                        className="form-control square"
                         type="email"
                         name="email"
                         value={form.email}
@@ -110,7 +110,7 @@ export const Signup = () => {
                 <div className="mb-3">
                     <label className="form-label">Phone number</label>
                     <input
-                        className="form-control"
+                        className="form-control square"
                         name="phonenumber"
                         value={form.phonenumber}
                         onChange={handleChange}
@@ -121,7 +121,7 @@ export const Signup = () => {
                 <div className="mb-3">
                     <label className="form-label">Address</label>
                     <input
-                        className="form-control"
+                        className="form-control square"
                         name="address"
                         value={form.address}
                         onChange={handleChange}
@@ -132,7 +132,7 @@ export const Signup = () => {
                 <div className="mb-3">
                     <label className="form-label">Password</label>
                     <input
-                        className="form-control"
+                        className="form-control square"
                         type="password"
                         name="password"
                         value={form.password}
@@ -140,7 +140,7 @@ export const Signup = () => {
                     />
                 </div>
 
-                <button className="btn rounded-0 w-100 text-light" disabled={isLoading} style={{ background: "rgb(48, 130, 114)" }}>
+                <button className="btn square w-100 text-light" disabled={isLoading} style={{ background: "rgb(48, 130, 114)" }}>
                     {isLoading ? "Loading..." : "Create account"}
                 </button>
 

@@ -120,10 +120,10 @@ export const About = () => {
               </p>
 
               <div className="d-flex gap-2 mt-4 flex-wrap">
-                <button className="btn btn-vet px-4 py-2" type="button" onClick={goServices}>
+                <button className="btn btn-vet px-4 py-2 square" type="button" onClick={goServices}>
                   View services
                 </button>
-                <button className="btn btn-outline-vet px-4 py-2" type="button" onClick={goContact}>
+                <button className="bbtn btn-vet-outline btn-lg square px-4 py-2 square" type="button" onClick={goContact}>
                   Contact
                 </button>
               </div>
