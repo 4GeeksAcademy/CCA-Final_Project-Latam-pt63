@@ -23,6 +23,8 @@ from flask_jwt_extended import JWTManager
 import uuid
 from datetime import datetime, timedelta, timezone
 
+import requests
+
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -867,6 +869,33 @@ def send_test_message():
     response = requests.post(url, json=payload, headers=headers)
 
     return jsonify({'msg': "Message sent",})
+
+
+@app.route('/send-message', methods=['POST'])
+def send_test_message():
+    body = request.get_json(silent=True)
+    key = os.getenv("WHAPI_API_KEY")
+    url = "https://gate.whapi.cloud/messages/text"
+
+    if 'phone' not in body:
+        return jsonify({'msg':'No phonenumber in the body'}),400
+    if 'name' not in body:
+        return jsonify ({'msg' "No client name in the body"}),400
+    if 'pet_name' not in body:
+        return jsonify({'msg':'No pet name in the body'}),400
+
+    payload = {
+        "to": body['phone'],
+        "body": f"Hello {body['name']} this is VetCare Clinic, this is just a reminder that you have an appointment for {body['pet_name']}"
+    }
+    headers = {
+    "accept": "application/json",
+    "content-type": "application/json",
+    "authorization": "Bearer " + key
+}
+    response = requests.post(url, json=payload, headers=headers)
+
+    return jsonify({'msg': "Message sent",}),200
 
 
 # this only runs if `$ python src/main.py` is executed

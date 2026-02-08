@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { ClientsTable } from "../components/ClientsTable";
 import { ModalNewClient } from "../components/ModalNewClient";
-import { ModalEditClient } from "../components/ModalEditClient";
 
 export const AdminClients = () => {
   const [showModal, setShowModal] = useState(false);
+  
 
   const [clients, setClients] = useState([]);
+  
 
   const Logout = () => {
     localStorage.removeItem("jwt-token");
@@ -19,44 +21,6 @@ export const AdminClients = () => {
   const navigate = useNavigate();
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-  const VerifyAdmin = async () => {
-    try {
-      const token = localStorage.getItem("jwt-token");
-      const result = await fetch(backendUrl + "/private", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
-      const data = await result.json();
-      if (!result.ok) {
-        Swal.fire({
-          title: "Error!",
-          text: "You must be logged in to access this page",
-          icon: "error",
-          confirmButtonText: "Return",
-        });
-        Logout();
-        navigate("/");
-      } else {
-        const users = await fetch(backendUrl + "/users", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-        });
-        const clients = await users.json();
-        if (users.ok) {
-          setClients(clients.users);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleAddClient = async (client) => {
     try {
@@ -89,7 +53,47 @@ export const AdminClients = () => {
     }
   };
 
+  const VerifyAdmin = async () => {
+    try {
+      const token = localStorage.getItem("jwt-token");
+      const result = await fetch(backendUrl + "/private", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      const data = await result.json();
+      if (!result.ok) {
+        Swal.fire({
+          title: "Error!",
+          text: data.msg,
+          icon: "error",
+          confirmButtonText: "Return",
+        });
+        Logout();
+        navigate("/");
+      } else {
+        const users = await fetch(backendUrl + "/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        });
+        const clients = await users.json();
+        if (users.ok) {
+          setClients(clients.users);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
+    VerifyAdmin();
+  }, []);
   useEffect(() => {
     VerifyAdmin();
   }, []);
@@ -112,11 +116,11 @@ export const AdminClients = () => {
                 setShowModal(true);
               }}
             >
-              + New Client
+              +New Client
             </button>
           </div>
         </div>
-        <ClientsTable user={clients} setClients={setClients}/>
+        <ClientsTable user={clients} setClients={setClients} />
       </div>
       <ModalNewClient
         show={showModal}

@@ -25,6 +25,7 @@ import { ClientDetails } from "./pages/ClientDetails.jsx";
 import { AdminAgenda } from "./pages/AdminAgenda.jsx";
 import { AdminPetHistory } from "./pages/AdminPetHistory.jsx";
 import { AppointmentDetails } from "./pages/AppointmentDetails";
+import { EditAppointment } from "./pages/EditAppointment.jsx";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -57,11 +58,9 @@ export const router = createBrowserRouter(
         element={<AdminPetHistory />}
       />
 
-      {}
-      <Route
-        path="/private/agenda/details/:appointmentId"
-        element={<AppointmentDetails />}
-      />
-    </Route>,
-  ),
+      { }
+      <Route path="/private/agenda/details/:appointmentId" element={<AppointmentDetails />} />
+      <Route path="/private/edit-appointment/:appointmentId" element={<EditAppointment />} />
+    </Route>
+  )
 );
