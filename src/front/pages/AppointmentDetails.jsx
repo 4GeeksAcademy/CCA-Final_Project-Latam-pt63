@@ -12,6 +12,12 @@ export const AppointmentDetails = () => {
   const [details, setDetails] = useState(null);
   const [history, setHistory] = useState([]);
   const [showConsultation, setShowConsultation] = useState(false);
+  const [message, setMessage] = useState({
+    name: "",
+    pet_name: "",
+    phone: "",
+    
+  })
 
   useEffect(() => {
     getDetails();
@@ -51,6 +57,11 @@ export const AppointmentDetails = () => {
       if (response.ok) {
         const data = await response.json();
         setDetails(data);
+        setMessage({
+          name: data.owner_data.first_name,
+          pet_name: data.pet_data.name,
+          phone: data.owner_data.phonenumber
+        })
         console.log(data);
         if (data.pet_id) {
           getHistory(data.pet_id);
@@ -133,14 +144,31 @@ export const AppointmentDetails = () => {
     }
   };
 
-  const handleSendReminder = async () => {
+  const handleSendReminder = async (info) => {
+try {
+  const token = localStorage.getItem('jwt-token')
+  const result = await fetch (backendUrl + "/send-message", {
+    method: "POST",
+    body: JSON.stringify(info),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    }
+  });
+  const data = await result.json()
+  if (result.ok){
     Swal.fire({
-      title: "Simulation",
-      text: `Reminder sent to ${details.owner_data.email}`,
-      icon: "info",
-    });
-  };
+          title: "Success!",
+          text: data.msg,
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
 
+  }
+} catch (error) {
+  console.error(error)
+}
+  }
   const handleCancelAppointment = async () => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -498,7 +526,7 @@ export const AppointmentDetails = () => {
 
                 <button
                   className="btn btn-primary px-4 py-2 rounded-pill shadow-sm"
-                  onClick={handleSendReminder}
+                  onClick={()=>{handleSendReminder(message)}}
                 >
                   <i className="fa-regular fa-paper-plane me-2"></i>Send
                   Reminder
