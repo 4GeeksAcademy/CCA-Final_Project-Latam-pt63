@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AdminPetCard } from "../components/AdminPetCard";
 import Swal from "sweetalert2";
 import { ModalNewPet } from "../components/ModalNewPet";
+import { ModalEditPet } from "../components/ModalEditPet";
 
 export const AdminPets = () => {
   const navigate = useNavigate();
@@ -170,7 +171,7 @@ export const AdminPets = () => {
 
           <div className="row g-3">
             {pets.map((pet) => {
-              return <AdminPetCard key={pet.pet_id} pet={pet} />;
+              return <AdminPetCard key={pet.pet_id} pet={pet} setPets={setPets}/>;
             })}
           </div>
         </div>
