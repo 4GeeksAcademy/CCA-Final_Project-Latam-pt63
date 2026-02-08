@@ -845,7 +845,12 @@ def send_contact_email():
 
 
 @app.route('/send-message', methods=['POST'])
+@jwt_required()
 def send_test_message():
+    user = get_jwt_identity()
+    admin  = Doctors.query.filter_by(email=user).first()
+    if admin is None:
+        return jsonify({"msg": "You cant send a message"})
     body = request.get_json(silent=True)
     key = os.getenv("WHAPI_API_KEY")
     url = "https://gate.whapi.cloud/messages/text"

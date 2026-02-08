@@ -174,9 +174,9 @@ export const AdminAgenda = () => {
 
   return (
     <div
-      className="container-fluid p-4 bg-light min-vh-100"
-      style={{ marginTop: "80px" }}
+      className="container bg-light min-vh-100"
     >
+      <div className="ms-5 ps-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h2 className="fw-bold text-dark">Agenda</h2>
@@ -369,6 +369,7 @@ export const AdminAgenda = () => {
         onClose={() => setShowModal(false)}
         onSave={handleAddAppointment}
       />
+      </div>
     </div>
   );
 };
