@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { ModalEditPet } from "./ModalEditPet";
 
-export const AdminPetCard = ({ pet }) => {
+export const AdminPetCard = ({ pet, setPets }) => {
   const placeholderImage =
     "https://w7.pngwing.com/pngs/573/926/png-transparent-paw-dog-paw-prints-animals-photography-paw.png";
 
@@ -13,6 +14,39 @@ export const AdminPetCard = ({ pet }) => {
   });
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPet, setSelectedPet]= useState(null)
+
+  const handleEditPet = async(editedpet) =>{
+    try {
+      const token = localStorage.getItem('jwt-token')
+      const result = await fetch (backendUrl + "/pet/" + pet.pet_id,{
+        method: "PUT",
+        body: JSON.stringify(editedpet),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        }
+      });
+      const data = await result.json()
+      if (result.ok){
+        setPets((prevPets) =>
+          prevPets.map((p) =>
+            p.pet_id === editedpet.pet_id ? { ...p, ...editedpet } : p,
+          ),
+        );
+        Swal.fire({
+            title: "Success",
+            text: data.msg,
+            icon: "success",
+            confirmButtonText: "Ok",
+          });
+
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const GetOwner = async () => {
     try {
@@ -103,12 +137,19 @@ export const AdminPetCard = ({ pet }) => {
             >
               History
             </Link>
-            <button className="btn btn-sm w-50 btn-outline-secondary rounded">
+            <button className="btn btn-sm w-50 btn-outline-secondary rounded" onClick={()=>{setShowModal(true), setSelectedPet(pet)}}>
               Edit
             </button>
+            
           </div>
         </div>
       </div>
+      <ModalEditPet
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          selectedpet={selectedPet}
+          onSave={handleEditPet}
+        />
     </div>
   );
 };
