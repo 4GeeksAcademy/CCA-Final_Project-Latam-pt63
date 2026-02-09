@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const ClientInfoPetCard = ({ info }) => {
   return (
     <>
-      <div className="col-6">
+      <div className="col-12">
         <div class="card border-1 bg-white p-2 rounded-4 shadow-sm hover-shadow-transition border-start  mt-3 hover-card-effect">
           <div class="card-body">
             <div className="d-flex">

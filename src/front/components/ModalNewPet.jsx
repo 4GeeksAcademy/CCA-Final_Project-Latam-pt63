@@ -83,7 +83,6 @@ export const ModalNewPet = ({ show, onClose, onSave }) => {
       newPet.name.trim() == "" ||
       newPet.breed.trim() == "" ||
       newPet.pet_type.trim() == "" ||
-      newPet.birthdate.trim() == "" ||
       newPet.allergies.trim() == "" ||
       newPet.neutered == null
     ) {
