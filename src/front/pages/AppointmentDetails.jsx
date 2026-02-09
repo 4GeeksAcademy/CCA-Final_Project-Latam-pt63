@@ -231,7 +231,6 @@ try {
   return (
     <div
       className="container p-4 bg-light min-vh-100"
-      style={{ marginTop: "80px" }}
     >
       <div className="ms-5">
         <div className="d-flex justify-content-between align-items-center mb-4">

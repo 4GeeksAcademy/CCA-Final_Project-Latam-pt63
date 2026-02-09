@@ -1,9 +1,16 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const ClientInfoCard = ({ info }) => {
   return (
     <>
       <div className="mt-3 ms-5 ps-5">
+        <Link
+          to="/private/clients"
+          className="text-decoration-none text-muted mb-2 d-inline-block"
+        >
+          <i className="fa-solid fa-arrow-left me-2"></i> Back to Clients
+        </Link>
         <h1>Client Info</h1>
         <div class="card mt-3 rounded-4 border-top-0">
           <h4 class="card-header custom-green-background d-flex align-items-center rounded-top-4">

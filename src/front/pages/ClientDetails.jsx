@@ -5,6 +5,7 @@ import { ClientInfoCard } from "../components/ClientInfoCard";
 import { ClientInfoPetCard } from "../components/ClientInfoPetCard";
 import { AdminClientHistoryCard } from "../components/AdminClientHistoryCard";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 export const ClientDetails = () => {
   const [clientInfo, setClientInfo] = useState({});
@@ -121,6 +122,7 @@ export const ClientDetails = () => {
   return (
     <>
       <div className="container min-vh-100 text-capitalize">
+       
         <ClientInfoCard info={clientInfo} />
 
         <div className="mt-3 ms-5 ps-5">

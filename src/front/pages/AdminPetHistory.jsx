@@ -4,6 +4,7 @@ import { AdminPetsAppointmentCard } from "../components/AdminPetsAppointmentCard
 import Swal from "sweetalert2";
 import { set } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const AdminPetHistory = () => {
   const [pet, setPet] = useState({});
@@ -86,6 +87,12 @@ export const AdminPetHistory = () => {
         <div className="ms-5">
           <div className="ms-5">
             <div className="ms-5">
+              <Link
+                to="/private/pets"
+                className="text-decoration-none text-muted mb-2 d-inline-block"
+              >
+                <i className="fa-solid fa-arrow-left me-2"></i> Back to Pets
+              </Link>
               <h1>Medical History - {pet.name}</h1>
             </div>
             <div className="banner d-flex bg-vet p-4 rounded-4 ms-5">

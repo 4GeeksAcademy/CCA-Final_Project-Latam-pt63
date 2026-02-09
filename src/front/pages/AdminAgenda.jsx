@@ -10,6 +10,7 @@ import {
   subWeeks,
 } from "date-fns";
 import { enUS } from "date-fns/locale";
+import Swal from "sweetalert2";
 
 export const AdminAgenda = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
