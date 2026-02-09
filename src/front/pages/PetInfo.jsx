@@ -176,18 +176,11 @@ export const PetInfo = () => {
               <i className="fa-solid fa-arrow-left me-2"></i>
               Back
             </button>
-
-            <button className="btn btn-vet square" type="button" onClick={VerifyUser}>
-              <i className="fa-solid fa-rotate me-2"></i>
-              Refresh
-            </button>
           </div>
         </div>
 
-        {/* CARD PRINCIPAL (layout de Chris) */}
         <div className="card mb-3 mt-3 pet-info-card pet-info-layout w-100">
           <div className="row g-0 align-items-center">
-            {/* IZQUIERDA */}
             <div className="col-12 col-lg-3 pet-left-col d-flex justify-content-center justify-content-lg-start p-3">
               <div className="pet-avatar">
                 <img
@@ -202,7 +195,6 @@ export const PetInfo = () => {
               </div>
             </div>
 
-            {/* DERECHA */}
             <div className="col-12 col-lg-9">
               <div className="card-body pet-right-col">
                 <div className="d-flex align-items-start justify-content-between flex-wrap gap-2">
@@ -292,11 +284,9 @@ export const PetInfo = () => {
                 </div>
               </div>
             </div>
-            {/* fin row */}
           </div>
         </div>
 
-        {/* HISTORIAL */}
         <div className="mt-4">
           <h2 className="mb-4">
             <i className="fa-solid fa-file-medical me-2 text-vet"></i>
@@ -314,7 +304,6 @@ export const PetInfo = () => {
           )}
         </div>
 
-        {/* VACUNAS */}
         <div className="mt-4">
           <h2 className="mb-4">
             <i className="fa-solid fa-syringe me-2 text-vet"></i>
