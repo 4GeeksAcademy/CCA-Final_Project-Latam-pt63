@@ -140,6 +140,8 @@ def create_pet():
         breed = (body.get("breed") or "")
         allergies = (body.get("allergies") or "")
         neutered = body.get("neutered")
+        sex = body.get("sex")
+        weight = body.get("weight")
 
     else:
         body = request.get_json(silent=True) or {}
@@ -155,6 +157,8 @@ def create_pet():
         breed = (body.get("breed") or "")
         allergies = (body.get("allergies") or "")
         neutered = body.get("neutered")
+        sex = body.get("sex")
+        weight = body.get("weight")
 
     if owner_id == "":
         return jsonify({"msg": "owner_id is required"}), 400
@@ -183,6 +187,8 @@ def create_pet():
     new_pet.breed = breed
     new_pet.allergies = allergies
     new_pet.neutered = neutered
+    new_pet.sex = sex
+    new_pet.weight = weight
     new_pet.info = body.get("info")
     new_pet.image = body.get("image")
 

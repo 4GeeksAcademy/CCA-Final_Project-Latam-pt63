@@ -40,6 +40,8 @@ export const ModalNewPet = ({ show, onClose, onSave }) => {
     birthdate: "",
     breed: "",
     allergies: "",
+    sex: "",
+    weight: "",
     neutered: null,
   });
 
@@ -106,6 +108,8 @@ export const ModalNewPet = ({ show, onClose, onSave }) => {
       birthdate: "",
       breed: "",
       allergies: "",
+      sex: "",
+      weight: "",
       neutered: null,
     });
     setAgeMonths(0);
@@ -273,6 +277,35 @@ export const ModalNewPet = ({ show, onClose, onSave }) => {
                     No
                   </label>
                 </div>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Sex</label>
+                <select
+                  className="form-select"
+                  value={newPet.sex}
+                  name="sex"
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select sex...</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Weight (kg)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="weight"
+                  value={newPet.weight}
+                  onChange={handleChange}
+                  step="0.1"
+                  min="0"
+                  placeholder="0.0"
+                />
               </div>
 
               <div className="mb-3">

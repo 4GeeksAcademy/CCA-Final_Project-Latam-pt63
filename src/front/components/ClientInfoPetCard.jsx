@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 
 export const ClientInfoPetCard = ({ info }) => {
   return (
@@ -12,8 +13,8 @@ export const ClientInfoPetCard = ({ info }) => {
                 className="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center"
                 style={{ width: 60, height: 60 }}
               >
-                <div className="text-center fs-2 ms-3">
-                  <i className="fa-solid fa-paw me-3"></i>
+                <div className="text-center fs-2 ">
+                  <img src={info.image || petPlaceholder} style={{ width: 60, height: 60 , aspectRatio: "1/1", borderRadius: "50%"}} className="object-fit-cover"/>
                 </div>
               </div>
               <div className="ms-3">

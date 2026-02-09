@@ -16,7 +16,7 @@ class UserModelView(ModelView):
 class PetsModelView(ModelView):
     column_auto_select_related = True
     column_list = ['pet_id', 'owner_id', 'owner', 'name', 'pet_type',
-                   'birthdate', 'breed', 'allergies', 'neutered', 'info', 'image', 'vaccines']
+                   'birthdate', 'breed', 'allergies', 'neutered', 'info', 'image', 'vaccines','sex','weight']
 
 
 class DoctorsModelView(ModelView):
