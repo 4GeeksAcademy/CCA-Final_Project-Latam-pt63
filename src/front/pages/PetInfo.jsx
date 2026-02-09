@@ -94,6 +94,7 @@ export const PetInfo = () => {
 
       if (petRes.ok) {
         const petData = await petRes.json();
+        console.log(petData)
         setPet({ ...petData });
       }
 

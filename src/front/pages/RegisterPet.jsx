@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 export const RegisterPet = () => {
@@ -81,7 +82,12 @@ export const RegisterPet = () => {
         e.preventDefault();
         
         if (isAdmin && !ownerId) {
-            alert("Please select an owner for the pet.");
+            Swal.fire({
+                      title: "Error!",
+                      text: "Please select an owner for the pet.",
+                      icon: "error",
+                      confirmButtonText: "Return",
+                    });
             return;
         }
 
@@ -143,7 +149,13 @@ export const RegisterPet = () => {
             });
 
             if (response.ok) {
-                alert("Pet registered successfully!");
+                Swal.fire({
+                      title: "Success",
+                      text: "Pet registered successfully!",
+                      icon: "success",
+                      confirmButtonText: "Return",
+                    });
+                alert();
                 if (isAdmin) {
                     navigate("/private/pets"); 
                 } else {
@@ -155,7 +167,13 @@ export const RegisterPet = () => {
             }
         } catch (error) {
             console.error(error);
-            alert("Connection error.");
+            Swal.fire({
+                      title: "Error!",
+                      text: "Connection error.",
+                      icon: "error",
+                      confirmButtonText: "Return",
+                    });
+            alert();
         } finally {
             setUploading(false);
         }
@@ -278,6 +296,7 @@ export const RegisterPet = () => {
                     <select 
                         className="form-select" 
                         value={sex} 
+                        name="sex"
                         onChange={(e) => setSex(e.target.value)} 
                         required
                     >
