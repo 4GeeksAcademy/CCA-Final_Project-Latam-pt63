@@ -673,7 +673,7 @@ def update_appointment(appointment_id):
     if 'status' in body:
         appointment.status = body['status']
     if 'medication' in body:
-        appointment.medication = body['medication']      
+        appointment.medication = body['medication']
     if 'procedures' in body:
         appointment.procedures = body['procedures']
     if 'observations' in body:
@@ -756,11 +756,27 @@ def send_recovery_link():
     db.session.add(new_password)
     db.session.commit()
 
+    html_email = f"""
+    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px; text-align: center;">
+        <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #333;">Password Reset</h2>
+            <p style="color: #666; font-size: 16px;">We received a request to reset your password. Click the button below to choose a new one:</p>
+            <a href="https://automatic-zebra-697pqg9pr6w4fr76r-3000.app.github.dev/reset-password/{new_uuid}" 
+            style="display: inline-block; padding: 12px 24px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">
+            Reset My Password
+            </a>
+            <p style="color: #999; font-size: 12px;">If you didn't request this, you can safely ignore this email.</p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+            <p style="color: #bbb; font-size: 11px;">&copy; 2026 PetCare Project</p>
+        </div>
+    </div>
+"""
+
     message = Mail(
         from_email='petcareproject47@gmail.com',
         to_emails=valid_user.email,
         subject='Password Reset',
-        html_content=f"<strong>Here is your recovery <a href=https://bug-free-space-engine-7v4x69vxrq6qc7j-3000.app.github.dev/reset-password/{new_uuid}>link</a></strong>")
+        html_content=html_email)
     try:
         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
     # sg.set_sendgrid_data_residency("eu")
@@ -772,8 +788,7 @@ def send_recovery_link():
     except Exception as e:
         print(e.message)
 
-    return jsonify({'msg': 'New password request generated successfully, Please check your email',
-                    'link': f"https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/reset-password/{new_uuid}"}), 200
+    return jsonify({'msg': 'New password request generated successfully, Please check your email'}), 200
 
 
 @app.route('/api/reset-password/<string:user_uuid>', methods=['PUT'])
@@ -796,6 +811,7 @@ def reset_password(user_uuid):
     user = Users.query.get(valid_request.user_id)
     pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
     user.password = pw_hash
+    db.session.delete(valid_request)
     db.session.commit()
     return jsonify({'msg': 'Password changed successfully'}), 200
 
@@ -841,9 +857,9 @@ def get_all_appointments():
 def check_all_appointments():
     user = get_jwt_identity()
     valid = Users.query.filter_by(email=user).first()
-   
+
     appointments = Appointments.query.all()
-    
+
     results = []
     for appt in appointments:
         data = appt.serialize()
@@ -867,9 +883,9 @@ def send_contact_email():
     if 'message' not in body:
         return jsonify({'msg': 'You must include an email'}), 400
     if 'name' not in body:
-        return jsonify({'msg': "You must include a name"}),400
+        return jsonify({'msg': "You must include a name"}), 400
     if 'email' not in body:
-        return jsonify({'msg': 'You must include a email'}),400
+        return jsonify({'msg': 'You must include a email'}), 400
 
     message = Mail(
         from_email='petcareproject47@gmail.com',
@@ -894,7 +910,7 @@ def send_contact_email():
 @jwt_required()
 def send_test_message():
     user = get_jwt_identity()
-    admin  = Doctors.query.filter_by(email=user).first()
+    admin = Doctors.query.filter_by(email=user).first()
     if admin is None:
         return jsonify({"msg": "You cant send a message"})
     body = request.get_json(silent=True)
@@ -902,25 +918,24 @@ def send_test_message():
     url = "https://gate.whapi.cloud/messages/text"
 
     if 'phone' not in body:
-        return jsonify({'msg':'No phonenumber in the body'}),400
+        return jsonify({'msg': 'No phonenumber in the body'}), 400
     if 'name' not in body:
-        return jsonify ({'msg' "No client name in the body"}),400
+        return jsonify({'msg' "No client name in the body"}), 400
     if 'pet_name' not in body:
-        return jsonify({'msg':'No pet name in the body'}),400
+        return jsonify({'msg': 'No pet name in the body'}), 400
 
     payload = {
         "to": body['phone'],
         "body": f"Hello {body['name']} this is VetCare Clinic, this is just a reminder that you have an appointment for {body['pet_name']}"
     }
     headers = {
-    "accept": "application/json",
-    "content-type": "application/json",
-    "authorization": "Bearer " + key
-}
+        "accept": "application/json",
+        "content-type": "application/json",
+        "authorization": "Bearer " + key
+    }
     response = requests.post(url, json=payload, headers=headers)
 
-    return jsonify({'msg': "Message sent",})
-
+    return jsonify({'msg': "Message sent", })
 
 
 # this only runs if `$ python src/main.py` is executed
