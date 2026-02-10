@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 
 
 export const RegisterPet = () => {
@@ -99,7 +100,7 @@ export const RegisterPet = () => {
         let calculatedDate = new Date(birthYear, birthMonth, 1);
         let birthdateString = calculatedDate.toISOString().split('T')[0];
 
-        let imageUrl = "https://unsplash.com/photos/yellow-labrador-retriever-biting-yellow-tulip-flower-Sg3XwuEpybU"; 
+        let imageUrl = petPlaceholder; 
 
         if (selectedFile) {
             const formData = new FormData();
@@ -154,8 +155,7 @@ export const RegisterPet = () => {
                       text: "Pet registered successfully!",
                       icon: "success",
                       confirmButtonText: "Return",
-                    });
-                alert();
+                    });              
                 if (isAdmin) {
                     navigate("/private/pets"); 
                 } else {

@@ -15,16 +15,16 @@ export const AdminPetsAppointmentCard = ({ info }) => {
             </div>
             <div className="d-flex  mb-2">
               <span className="text-secondary col-1">Diagnostic:</span>
-              <span className="fw-medium col-4">{info.doctor_name}</span>
+              <span className="fw-medium col-4">{info.anamnesis}</span>
               <div className="d-flex mb-2 ms-5">
                 <span className="text-secondary">Treatment:</span>
                 <span className="fw-medium ms-2">{info.procedures}</span>
               </div>
             </div>
             <hr className="my-3 text-muted opacity-25"></hr>
-            <div className="d-flex justify-content-between mb-2">
+            <div className="d-flex mb-2">
               <span className="text-secondary">Observations:</span>
-              <span className="fw-medium"></span>
+              <span className="fw-medium ms-4">{info.observations}</span>
             </div>
           </div>
         </div>

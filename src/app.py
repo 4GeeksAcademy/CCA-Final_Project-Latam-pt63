@@ -93,8 +93,8 @@ def serve_any_other_file(path):
     return response
 
 
-@app.route("/pet", methods=["GET"])
-@app.route("/pet/<int:pet_id>", methods=["GET"])
+@app.route("/api/pet", methods=["GET"])
+@app.route("/api/pet/<int:pet_id>", methods=["GET"])
 @jwt_required()
 def get_pet(pet_id=None):
     user = get_jwt_identity()
@@ -121,7 +121,7 @@ def get_pet(pet_id=None):
     return jsonify(pet.serialize()), 200
 
 
-@app.route("/pet", methods=["POST"])
+@app.route("/api/pet", methods=["POST"])
 @jwt_required()
 def create_pet():
     user = get_jwt_identity()
@@ -198,7 +198,7 @@ def create_pet():
     return jsonify({"msg": "Pet created successfully", "pet": new_pet.serialize()}), 201
 
 
-@app.route("/pet/<int:pet_id>", methods=["PUT"])
+@app.route("/api/pet/<int:pet_id>", methods=["PUT"])
 @jwt_required()
 def update_pet(pet_id):
     user = get_jwt_identity()
@@ -243,7 +243,8 @@ def update_pet(pet_id):
         pet.breed = (body.get("breed") or "")
     if "allergies" in body:
         pet.allergies = (body.get("allergies") or "")
-
+    if 'weight' in body:
+        pet.weight = (body.get("weight") or "")
     if "neutered" in body:
         neutered = body.get("neutered")
         if neutered is None:
@@ -276,7 +277,7 @@ def update_pet(pet_id):
     return jsonify({"msg": "Pet updated successfully", "pet": pet.serialize()}), 200
 
 
-@app.route('/signup', methods=['POST'])
+@app.route('/api/signup', methods=['POST'])
 def signup():
     body = request.get_json(silent=True)
     if body is None:
@@ -310,7 +311,7 @@ def signup():
     return jsonify({'msg': 'New user added successfully'}), 201
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     body = request.get_json(silent=True)
     if body is None:
@@ -344,7 +345,7 @@ def login():
                         'role': 'user'}), 200
 
 
-@app.route('/doctors', methods=['POST'])
+@app.route('/api/doctors', methods=['POST'])
 def create_doctor():
     body = request.get_json(silent=True)
     if body is None:
@@ -380,7 +381,7 @@ def create_doctor():
     return jsonify({'msg': 'Doctor created successfully'}), 201
 
 
-@app.route('/doctors', methods=['GET'])
+@app.route('/api/doctors', methods=['GET'])
 @jwt_required()
 def get_doctor_info():
     user = get_jwt_identity()
@@ -396,7 +397,7 @@ def get_doctor_info():
         return jsonify({'msg': 'user not found'}), 404
 
 
-@app.route('/users', methods=['GET'])
+@app.route('/api/users', methods=['GET'])
 @jwt_required()
 def get_users():
     user = get_jwt_identity()
@@ -426,7 +427,7 @@ def get_users():
         return jsonify({'users': users_serialized}), 200
 
 
-@app.route('/users/<int:user_id>', methods=['PUT'])
+@app.route('/api/users/<int:user_id>', methods=['PUT'])
 @jwt_required()
 def modify_user(user_id):
     user = get_jwt_identity()
@@ -467,7 +468,7 @@ def modify_user(user_id):
                         'user': update_user.serialize()}), 200
 
 
-@app.route('/users/<int:user_id>', methods=['GET'])
+@app.route('/api/users/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_single_user(user_id):
     user = get_jwt_identity()
@@ -497,7 +498,7 @@ def get_single_user(user_id):
         return jsonify({'user': userdict}), 200
 
 
-@app.route('/private', methods=['GET'])
+@app.route('/api/private', methods=['GET'])
 @jwt_required()
 def verify_admin():
     user = get_jwt_identity()
@@ -508,7 +509,7 @@ def verify_admin():
         return jsonify({'msg': 'Access granted'}), 200
 
 
-@app.route('/appointments', methods=['POST'])
+@app.route('/api/appointments', methods=['POST'])
 @jwt_required()
 def create_appointment():
     user = get_jwt_identity()
@@ -593,7 +594,7 @@ def create_appointment():
         return jsonify({'msg': 'Appointment created successfully'})
 
 
-@app.route('/vaccine', methods=['POST'])
+@app.route('/api/vaccine', methods=['POST'])
 def create_vaccine():
     body = request.get_json()
     if 'vaccine_name' not in body or 'pet_id' not in body or 'vaccination_date' not in body or 'expiry_date' not in body:
@@ -609,7 +610,7 @@ def create_vaccine():
     return jsonify(new_vaccine.serialize()), 201
 
 
-@app.route('/vaccine/<int:pet_id>', methods=['GET'])
+@app.route('/api/vaccine/<int:pet_id>', methods=['GET'])
 @jwt_required()
 def get_vaccines(pet_id):
     user = get_jwt_identity()
@@ -636,7 +637,7 @@ def get_vaccines(pet_id):
         return jsonify({'vaccines': vaccines_serialized})
 
 
-@app.route('/appointment/<int:appointment_id>', methods=['GET'])
+@app.route('/api/appointment/<int:appointment_id>', methods=['GET'])
 @jwt_required()
 def get_single_appointment(appointment_id):
     user = get_jwt_identity()
@@ -646,7 +647,7 @@ def get_single_appointment(appointment_id):
     return jsonify(appointment.serialize()), 200
 
 
-@app.route('/appointment/<int:appointment_id>', methods=['PUT'])
+@app.route('/api/appointment/<int:appointment_id>', methods=['PUT'])
 @jwt_required()
 def update_appointment(appointment_id):
     user_email = get_jwt_identity()
@@ -671,12 +672,28 @@ def update_appointment(appointment_id):
         appointment.motive = body['motive']
     if 'status' in body:
         appointment.status = body['status']
-
+    if 'medication' in body:
+        appointment.medication = body['medication']      
+    if 'procedures' in body:
+        appointment.procedures = body['procedures']
+    if 'observations' in body:
+        appointment.observations = body['observations']
+    if 'anamnesis' in body:
+        appointment.anamnesis = body['anamnesis']
+    new_vaccine = Vaccines()
+    if 'vaccine_name' in body:
+        new_vaccine.vaccine_name = body['vaccine_name']
+    if 'vaccination_date' in body:
+        new_vaccine.vaccination_date = body['vaccination_date']
+    if 'expiry_date' in body:
+        new_vaccine.expiry_date = body['expiry_date']
+    new_vaccine.pet_id = appointment.pet_id
+    db.session.add(new_vaccine)
     db.session.commit()
     return jsonify({'msg': 'Appointment updated successfully'}), 200
 
 
-@app.route('/appointment/<int:appointment_id>', methods=['DELETE'])
+@app.route('/api/appointment/<int:appointment_id>', methods=['DELETE'])
 @jwt_required()
 def delete_appointment(appointment_id):
     user = get_jwt_identity()
@@ -692,7 +709,7 @@ def delete_appointment(appointment_id):
         return jsonify({'msg': 'Appointment deleted successfully'})
 
 
-@app.route('/history/<int:pet_id>', methods=['GET'])
+@app.route('/api/history/<int:pet_id>', methods=['GET'])
 @jwt_required()
 def get_pet_history(pet_id):
     user = get_jwt_identity()
@@ -718,7 +735,7 @@ def get_pet_history(pet_id):
         return jsonify({'history': history_serialized}), 200
 
 
-@app.route('/send-recovery-link', methods=['POST'])
+@app.route('/api/send-recovery-link', methods=['POST'])
 def send_recovery_link():
     body = request.get_json(silent=True)
     if body is None:
@@ -759,7 +776,7 @@ def send_recovery_link():
                     'link': f"https://super-duper-computing-machine-pjq64rj6gxgx26ww-3000.app.github.dev/reset-password/{new_uuid}"}), 200
 
 
-@app.route('/reset-password/<string:user_uuid>', methods=['PUT'])
+@app.route('/api/reset-password/<string:user_uuid>', methods=['PUT'])
 def reset_password(user_uuid):
     valid_request = PasswordReset.query.filter_by(uuid=user_uuid).first()
     if valid_request is None:
@@ -783,7 +800,7 @@ def reset_password(user_uuid):
     return jsonify({'msg': 'Password changed successfully'}), 200
 
 
-@app.route('/appointments', methods=['GET'])
+@app.route('/api/appointments', methods=['GET'])
 @jwt_required()
 def get_all_appointments():
     user = get_jwt_identity()
@@ -819,7 +836,30 @@ def get_all_appointments():
     return jsonify(results), 200
 
 
-@app.route('/send-contact-email', methods=['POST'])
+@app.route('/api/appointments/check', methods=['GET'])
+@jwt_required()
+def check_all_appointments():
+    user = get_jwt_identity()
+    valid = Users.query.filter_by(email=user).first()
+   
+    appointments = Appointments.query.all()
+    
+    results = []
+    for appt in appointments:
+        data = appt.serialize()
+
+        pet = Pets.query.get(appt.pet_id)
+        if pet:
+            data['pet_name'] = pet.name
+        else:
+            data['pet_name'] = "Unknown Pet"
+
+        results.append(data)
+
+    return jsonify(results), 200
+
+
+@app.route('/api/send-contact-email', methods=['POST'])
 def send_contact_email():
     body = request.get_json(silent=True)
     if body is None:
@@ -850,7 +890,7 @@ def send_contact_email():
     return jsonify({'msg': 'New Message created successfully, Please check your email', }), 200
 
 
-@app.route('/send-message', methods=['POST'])
+@app.route('/api/send-message', methods=['POST'])
 @jwt_required()
 def send_test_message():
     user = get_jwt_identity()
