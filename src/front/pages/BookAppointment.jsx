@@ -72,7 +72,7 @@ export const BookAppointment = () => {
         const checkAvailability = async () => {
             if (!date) return;
             const token = localStorage.getItem("jwt-token");
-            
+
             try {
                 const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/appointments", {
                     method: "GET",
@@ -81,7 +81,7 @@ export const BookAppointment = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    
+
                     if (Array.isArray(data)) {
                         const bookedTimes = data
                             .filter(appt => {
@@ -89,9 +89,9 @@ export const BookAppointment = () => {
                             })
                             .map(appt => {
                                 const timeStr = String(appt.time);
-                                return timeStr.substring(0, 5); 
+                                return timeStr.substring(0, 5);
                             });
-                        
+
                         setTakenSlots(bookedTimes);
                     }
                 }
@@ -104,7 +104,7 @@ export const BookAppointment = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (selectedPet === "") {
             Swal.fire({
                 icon: "warning",
@@ -116,13 +116,13 @@ export const BookAppointment = () => {
         }
 
         if (takenSlots.includes(time)) {
-             Swal.fire({
+            Swal.fire({
                 icon: "error",
                 title: "Unavailable",
                 text: "This time slot is already taken. Please choose another.",
                 confirmButtonColor: "#308272"
             });
-             return;
+            return;
         }
 
         const token = localStorage.getItem("jwt-token");
@@ -137,7 +137,7 @@ export const BookAppointment = () => {
             time: time,
             motive: motive,
             info: info,
-            doctor_id: 1, 
+            doctor_id: 1,
         };
 
         try {
@@ -157,7 +157,7 @@ export const BookAppointment = () => {
                     text: "Appointment created successfully!",
                     confirmButtonColor: "#308272"
                 });
-                // Reset Form
+
                 setDate("");
                 setTime("");
                 setMotive("");
@@ -227,7 +227,7 @@ export const BookAppointment = () => {
                         min={new Date().toISOString().split("T")[0]}
                         onChange={(e) => {
                             setDate(e.target.value);
-                            setTime(""); 
+                            setTime("");
                         }}
                     />
                 </div>
@@ -247,9 +247,9 @@ export const BookAppointment = () => {
                         {timeSlots.map((slot) => {
                             const isTaken = takenSlots.includes(slot.value);
                             return (
-                                <option 
-                                    key={slot.value} 
-                                    value={slot.value} 
+                                <option
+                                    key={slot.value}
+                                    value={slot.value}
                                     disabled={isTaken}
                                     style={isTaken ? { backgroundColor: "#e0e0e0", color: "#a0a0a0" } : {}}
                                 >
