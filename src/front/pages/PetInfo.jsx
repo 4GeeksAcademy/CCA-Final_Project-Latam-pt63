@@ -305,7 +305,7 @@ export const PetInfo = () => {
           )}
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 mb-4">
           <h2 className="mb-4">
             <i className="fa-solid fa-syringe me-2 text-vet"></i>
             Vaccines

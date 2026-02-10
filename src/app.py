@@ -243,7 +243,8 @@ def update_pet(pet_id):
         pet.breed = (body.get("breed") or "")
     if "allergies" in body:
         pet.allergies = (body.get("allergies") or "")
-
+    if 'weight' in body:
+        pet.weight = (body.get("weight") or "")
     if "neutered" in body:
         neutered = body.get("neutered")
         if neutered is None:
@@ -679,7 +680,15 @@ def update_appointment(appointment_id):
         appointment.observations = body['observations']
     if 'anamnesis' in body:
         appointment.anamnesis = body['anamnesis']
-
+    new_vaccine = Vaccines()
+    if 'vaccine_name' in body:
+        new_vaccine.vaccine_name = body['vaccine_name']
+    if 'vaccination_date' in body:
+        new_vaccine.vaccination_date = body['vaccination_date']
+    if 'expiry_date' in body:
+        new_vaccine.expiry_date = body['expiry_date']
+    new_vaccine.pet_id = appointment.pet_id
+    db.session.add(new_vaccine)
     db.session.commit()
     return jsonify({'msg': 'Appointment updated successfully'}), 200
 
