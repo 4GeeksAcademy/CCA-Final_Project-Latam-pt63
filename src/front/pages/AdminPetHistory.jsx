@@ -147,9 +147,15 @@ export const AdminPetHistory = () => {
                 <i class="fa-regular fa-file-lines me-3"></i>Appointment History
               </h5>
               <div>
-                {history.map((item) => {
-                  return <AdminPetsAppointmentCard info={item} />;
-                })}
+                {history.length > 0 ? (
+                  history.map((item) => {
+                    return <AdminPetsAppointmentCard info={item} />;
+                  })
+                ) : (
+                  <div className="alert alert-light text-center rounded-4 text-muted mt-2 mb-2 ms-2 me-2">
+                    No Appointments registered.
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -159,27 +165,35 @@ export const AdminPetHistory = () => {
                 <i className="fa-solid fa-syringe me-3"></i>Vaccines
               </h5>
               <div className="row ps-3 pe-3 pb-3">
-                {vaccines.map((vaccine) => {
-                  return (
-                    <div className="col-6 mt-3">
-                      <div className="card rounded-4">
-                        <div className="card-header">
-                          {vaccine.vaccine_name}
-                        </div>
-                        <div className="card-body pb-0">
-                          <div className="d-flex">
-                            <p className="card-text col-3">
-                              Applied : {vaccine.vaccination_date}
-                            </p>
-                            <p className="card-text col-3">
-                              Expires : {vaccine.expiry_date}
-                            </p>
+                {vaccines.length > 0 ? (
+                  vaccines.map((vaccine) => {
+                    return (
+                      <div className="col-6 mt-3">
+                        <div className="card rounded-4">
+                          <div className="card-header">
+                            {vaccine.vaccine_name}
+                          </div>
+                          <div className="card-body pb-0">
+                            <div className="d-flex">
+                              <p className="card-text col-3">
+                                Applied : {vaccine.vaccination_date}
+                              </p>
+                              <p className="card-text col-3">
+                                Expires : {vaccine.expiry_date}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  
+                    <div className="alert alert-light rounded-4 text-center text-muted mt-3 mb-0">
+                      No vaccines registered.
+                    
+                  </div>
+                )}
               </div>
             </div>
           </div>
