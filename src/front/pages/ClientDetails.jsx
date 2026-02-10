@@ -169,7 +169,7 @@ export const ClientDetails = () => {
                 <div className="text-center fs-6">{history.length}</div>
               </div>
             </h5>
-            <div className="card-body p-0">
+            <div className="card-body p-3">
               {history.length > 0 ? (
                 history.map((record, index) => (
                   <AdminClientHistoryCard key={index} record={record} />

@@ -11,7 +11,8 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
     neutered: "",
     info: "",
     owner_name: "",
-    pet_id: ""
+    pet_id: "",
+    weight: ""
   });
 
   const handleChange = (e) => {
@@ -32,7 +33,8 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
         neutered: selectedpet.neutered,
         info: selectedpet.info,
         owner_name: selectedpet.owner_name,
-        pet_id: selectedpet.pet_id
+        pet_id: selectedpet.pet_id,
+        weight: selectedpet.weight
       });
     }
   }, [show]);
@@ -65,7 +67,8 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
       allergies: "",
       neutered: "",
       info: "",
-      pet_id: ""
+      pet_id: "",
+      weight: ""
     });
     onClose();
   };
@@ -137,6 +140,20 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
                   onChange={handleChange}
                 />
               </div>
+
+              <div className="mb-3">
+                    <label className="form-label">Weight (kg)</label>
+                    <input 
+                        type="number" 
+                        className="form-control"
+                        name="weight"
+                        value={pet.weight} 
+                        onChange={handleChange} 
+                        step="0.1"
+                        min="0"
+                        placeholder="0.0" 
+                    />
+                </div>
 
               <div className="mb-3">
                 <label className="form-label">Allergies</label>

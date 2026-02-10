@@ -22,9 +22,9 @@ export const AdminPetsAppointmentCard = ({ info }) => {
               </div>
             </div>
             <hr className="my-3 text-muted opacity-25"></hr>
-            <div className="d-flex justify-content-between mb-2">
+            <div className="d-flex mb-2">
               <span className="text-secondary">Observations:</span>
-              <span className="fw-medium">{info.observations}</span>
+              <span className="fw-medium ms-4">{info.observations}</span>
             </div>
           </div>
         </div>

@@ -134,7 +134,7 @@ export const AdminPetHistory = () => {
                   }}
                 />
               </div>
-              <div className="ms-4">
+              <div className="ms-4 me-3">
                 <div style={{ fontSize: "14px" }}>Type:</div>
                 <div className="mt-1" style={{ fontSize: "14px" }}>
                   Breed:
@@ -147,6 +147,17 @@ export const AdminPetHistory = () => {
                 <div>{pet.pet_type}</div>
                 <div>{pet.breed}</div>
                 <div>{calculateAge(pet.birthdate || pet.birth_date)}</div>
+              </div>
+              <div className="ms-5 ps-5">
+                <div style={{ fontSize: "14px" }}>Sex:</div>
+                <div className="mt-1" style={{ fontSize: "14px" }}>
+                  Weight:
+                </div>
+              </div>
+              <div className="ms-3">
+                <div>{pet.sex || "N/A"}</div>
+                <div>{pet.weight || "N/A"} kgs.</div>
+                
               </div>
               <div className="ms-auto mt-3">
                 <div className="text-center" style={{ fontSize: "14px" }}>
@@ -175,7 +186,10 @@ export const AdminPetHistory = () => {
               <div>
                 {history.length > 0 ? (
                   history.map((item) => {
-                    return <AdminPetsAppointmentCard info={item} />;
+                    return (
+                  <Link to={`/private/agenda/details/${item.appointment_id}`} className="text-decoration-none">
+                    <AdminPetsAppointmentCard info={item} />
+                  </Link>)
                   })
                 ) : (
                   <div className="alert alert-light text-center rounded-4 text-muted mt-2 mb-2 ms-2 me-2">
