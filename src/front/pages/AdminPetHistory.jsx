@@ -134,7 +134,7 @@ export const AdminPetHistory = () => {
                   }}
                 />
               </div>
-              <div className="ms-4">
+              <div className="ms-4 me-3">
                 <div style={{ fontSize: "14px" }}>Type:</div>
                 <div className="mt-1" style={{ fontSize: "14px" }}>
                   Breed:
@@ -147,6 +147,17 @@ export const AdminPetHistory = () => {
                 <div>{pet.pet_type}</div>
                 <div>{pet.breed}</div>
                 <div>{calculateAge(pet.birthdate || pet.birth_date)}</div>
+              </div>
+              <div className="ms-5 ps-5">
+                <div style={{ fontSize: "14px" }}>Sex:</div>
+                <div className="mt-1" style={{ fontSize: "14px" }}>
+                  Weight:
+                </div>
+              </div>
+              <div className="ms-3">
+                <div>{pet.sex || "N/A"}</div>
+                <div>{pet.weight || "N/A"} kgs.</div>
+                
               </div>
               <div className="ms-auto mt-3">
                 <div className="text-center" style={{ fontSize: "14px" }}>
@@ -173,9 +184,18 @@ export const AdminPetHistory = () => {
                 <i className="fa-regular fa-file-lines me-3"></i>Appointment History
               </h5>
               <div>
-                {history.map((item, index) => {
-                  return <AdminPetsAppointmentCard key={index} info={item} />;
-                })}
+                {history.length > 0 ? (
+                  history.map((item) => {
+                    return (
+                  <Link to={`/private/agenda/details/${item.appointment_id}`} className="text-decoration-none">
+                    <AdminPetsAppointmentCard info={item} />
+                  </Link>)
+                  })
+                ) : (
+                  <div className="alert alert-light text-center rounded-4 text-muted mt-2 mb-2 ms-2 me-2">
+                    No Appointments registered.
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -185,27 +205,35 @@ export const AdminPetHistory = () => {
                 <i className="fa-solid fa-syringe me-3"></i>Vaccines
               </h5>
               <div className="row ps-3 pe-3 pb-3">
-                {vaccines.map((vaccine, index) => {
-                  return (
-                    <div className="col-6 mt-3" key={index}>
-                      <div className="card rounded-4">
-                        <div className="card-header">
-                          {vaccine.vaccine_name}
-                        </div>
-                        <div className="card-body pb-0">
-                          <div className="d-flex">
-                            <p className="card-text col-3">
-                              Applied : {vaccine.vaccination_date}
-                            </p>
-                            <p className="card-text col-3">
-                              Expires : {vaccine.expiry_date}
-                            </p>
+                {vaccines.length > 0 ? (
+                  vaccines.map((vaccine) => {
+                    return (
+                      <div className="col-6 mt-3">
+                        <div className="card rounded-4">
+                          <div className="card-header">
+                            {vaccine.vaccine_name}
+                          </div>
+                          <div className="card-body pb-0">
+                            <div className="d-flex">
+                              <p className="card-text col-3">
+                                Applied : {vaccine.vaccination_date}
+                              </p>
+                              <p className="card-text col-3">
+                                Expires : {vaccine.expiry_date}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  
+                    <div className="alert alert-light rounded-4 text-center text-muted mt-3 mb-0">
+                      No vaccines registered.
+                    
+                  </div>
+                )}
               </div>
             </div>
           </div>

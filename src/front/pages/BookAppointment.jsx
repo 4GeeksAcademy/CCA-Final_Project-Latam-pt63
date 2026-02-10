@@ -12,6 +12,7 @@ export const BookAppointment = () => {
     const [time, setTime] = useState("");
     const [motive, setMotive] = useState("");
     const [info, setInfo] = useState("");
+
     const [takenSlots, setTakenSlots] = useState([]);
 
     const timeSlots = [
@@ -39,9 +40,9 @@ export const BookAppointment = () => {
             const token = localStorage.getItem("jwt-token");
             if (!token) {
                 Swal.fire({
-                    title: "Error!",
+                    title: "Oops",
                     text: "You must be logged in to book an appointment",
-                    icon: "error",
+                    icon: "warning",
                     confirmButtonText: "Return",
                 });
                 navigate("/login");
@@ -74,7 +75,7 @@ export const BookAppointment = () => {
             const token = localStorage.getItem("jwt-token");
 
             try {
-                const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/appointments", {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/appointments/check", {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }
                 });
@@ -85,9 +86,14 @@ export const BookAppointment = () => {
                     if (Array.isArray(data)) {
                         const bookedTimes = data
                             .filter(appt => {
-                                return String(appt.date).includes(date) && appt.status !== "Cancelled";
+                                const isSameDate = String(appt.date).includes(date);
+                                const isActive = appt.status !== "Cancelled";
+                                ;
+                                
+                                return isSameDate && isActive ;
                             })
                             .map(appt => {
+                                
                                 const timeStr = String(appt.time);
                                 return timeStr.substring(0, 5);
                             });
@@ -100,7 +106,7 @@ export const BookAppointment = () => {
             }
         };
         checkAvailability();
-    }, [date]);
+    }, [date,]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -116,8 +122,8 @@ export const BookAppointment = () => {
         }
 
         if (takenSlots.includes(time)) {
-            Swal.fire({
-                icon: "error",
+             Swal.fire({
+                icon: "warning",
                 title: "Unavailable",
                 text: "This time slot is already taken. Please choose another.",
                 confirmButtonColor: "#308272"
