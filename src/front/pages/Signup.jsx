@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Animals2 from "../assets/img/animals-homepage2.jpg";
+import Swal from "sweetalert2";
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -40,6 +41,15 @@ export const Signup = () => {
       setFeedback("All fields are required.");
       return;
     }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(form.password)) {
+        setFeedback('Password must be at least 8 characters, with 1 uppercase, 1 lowercase, 1 number, and 1 special character.')
+        setForm({...form,
+          password: ""
+        });
+        return;
+    }
+    
 
     setIsLoading(true);
 
@@ -56,6 +66,12 @@ export const Signup = () => {
         setFeedback(data.msg || "Signup failed.");
         return;
       }
+      Swal.fire({
+        title: "Success",
+        text: "Registration successfull",
+        icon: "success",
+        confirmButtonText: "Ok",
+      });
 
       navigate("/login");
     } catch (err) {
@@ -76,7 +92,8 @@ export const Signup = () => {
             <div className="auth-left-content">
               <h1 className="auth-brand">VetCare</h1>
               <p className="auth-tagline">
-                Create your account to manage your info, your pets, and your appointments in minutes.
+                Create your account to manage your info, your pets, and your
+                appointments in minutes.
               </p>
 
               <div className="auth-badge">
@@ -88,7 +105,9 @@ export const Signup = () => {
 
           <div className="auth-right">
             <h2 className="auth-title">Sign up</h2>
-            <p className="auth-subtitle">Fill in your details to create an account.</p>
+            <p className="auth-subtitle">
+              Fill in your details to create an account.
+            </p>
 
             {feedback !== "" && (
               <div className="alert alert-danger mb-3">{feedback}</div>

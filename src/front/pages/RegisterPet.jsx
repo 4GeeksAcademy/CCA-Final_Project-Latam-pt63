@@ -163,7 +163,12 @@ export const RegisterPet = () => {
                 }
             } else {
                 const errorData = await response.json();
-                alert("Error: " + errorData.msg);
+                Swal.fire({
+                      title: "Error!",
+                      text: errorData.msg,
+                      icon: "error",
+                      confirmButtonText: "Return",
+                    });
             }
         } catch (error) {
             console.error(error);
@@ -173,7 +178,6 @@ export const RegisterPet = () => {
                       icon: "error",
                       confirmButtonText: "Return",
                     });
-            alert();
         } finally {
             setUploading(false);
         }
