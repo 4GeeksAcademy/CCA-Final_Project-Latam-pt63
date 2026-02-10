@@ -5,7 +5,10 @@ import Animals2 from "../assets/img/animals-homepage2.jpg";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  const rawBase = import.meta.env.VITE_BACKEND_URL || "";
+  const base = rawBase.replace(/\/$/, "");
+  const apiBase = base.endsWith("/api") ? base : `${base}/api`;
 
   const { dispatch } = useGlobalReducer();
 
@@ -19,7 +22,9 @@ export const Login = () => {
     e.preventDefault();
     setFeedback("");
 
-    if (email === "" || password === "") {
+    const safeEmail = email.trim();
+
+    if (safeEmail === "" || password === "") {
       setFeedback("Email and password are required.");
       return;
     }
@@ -27,10 +32,10 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      const resp = await fetch(`${backendUrl}/login`, {
+      const resp = await fetch(`${apiBase}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: safeEmail, password }),
       });
 
       const data = await resp.json().catch(() => ({}));
@@ -42,10 +47,10 @@ export const Login = () => {
 
       localStorage.setItem("jwt-token", data.token);
       localStorage.setItem("role", data.role);
-      localStorage.setItem("login-status", true);
+      localStorage.setItem("login-status", "true");
       dispatch({ type: "LoggedIn" });
 
-      if (localStorage.getItem("role") === "admin") {
+      if (data.role === "admin") {
         navigate("/private/clients");
       } else {
         navigate("/");
@@ -68,7 +73,8 @@ export const Login = () => {
             <div className="auth-left-content">
               <h1 className="auth-brand">VetCare</h1>
               <p className="auth-tagline">
-                Keep everything in one place — your profile, your pets, and your appointments.
+                We care for the ones you love most. Manage your profile, your pets,
+                and your appointments—all in one place.
               </p>
 
               <div className="auth-badge">

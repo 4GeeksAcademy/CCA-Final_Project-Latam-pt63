@@ -4,7 +4,10 @@ import Animals2 from "../assets/img/animals-homepage2.jpg";
 
 export const Signup = () => {
   const navigate = useNavigate();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  const rawBase = import.meta.env.VITE_BACKEND_URL || "";
+  const base = rawBase.replace(/\/$/, "");
+  const apiBase = base.endsWith("/api") ? base : `${base}/api`;
 
   const [form, setForm] = useState({
     first_name: "",
@@ -29,13 +32,22 @@ export const Signup = () => {
     e.preventDefault();
     setFeedback("");
 
+    const safeForm = {
+      ...form,
+      email: form.email.trim(),
+      first_name: form.first_name.trim(),
+      last_name: form.last_name.trim(),
+      address: form.address.trim(),
+      phonenumber: form.phonenumber.trim(),
+    };
+
     if (
-      !form.first_name ||
-      !form.last_name ||
-      !form.email ||
-      !form.phonenumber ||
-      !form.address ||
-      !form.password
+      !safeForm.first_name ||
+      !safeForm.last_name ||
+      !safeForm.email ||
+      !safeForm.phonenumber ||
+      !safeForm.address ||
+      !safeForm.password
     ) {
       setFeedback("All fields are required.");
       return;
@@ -44,10 +56,10 @@ export const Signup = () => {
     setIsLoading(true);
 
     try {
-      const resp = await fetch(`${backendUrl}/signup`, {
+      const resp = await fetch(`${apiBase}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(safeForm),
       });
 
       const data = await resp.json().catch(() => ({}));
@@ -76,7 +88,7 @@ export const Signup = () => {
             <div className="auth-left-content">
               <h1 className="auth-brand">VetCare</h1>
               <p className="auth-tagline">
-                Create your account to manage your info, your pets, and your appointments in minutes.
+                Create your account to manage your profile, your pets, and your appointments in minutes.
               </p>
 
               <div className="auth-badge">
