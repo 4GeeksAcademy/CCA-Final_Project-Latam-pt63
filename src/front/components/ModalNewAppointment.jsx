@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 export const ModalNewAppointment = ({ show, onClose, onSave }) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [clientsDB, setClientsDB] = useState([]);
   const [allPetsDB, setAllPetsDB] = useState([]);
+  const [appointmentsDB, setAppointmentsDB] = useState([]);
 
   const [selectedClientId, setSelectedClientId] = useState("");
   const [selectedPet, setSelectedPet] = useState("");
@@ -14,9 +16,6 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
 
   const [availablePets, setAvailablePets] = useState([]);
 
-
-  
-  // Horarios
   const timeSlots = [
     "09:00 AM",
     "09:30 AM",
@@ -57,7 +56,7 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
       if (resUsers.ok) {
         const dataUsers = await resUsers.json();
         setClientsDB(
-          Array.isArray(dataUsers) ? dataUsers : dataUsers.users || [],
+          Array.isArray(dataUsers) ? dataUsers : dataUsers.users || []
         );
       }
 
@@ -68,16 +67,28 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
       if (resPets.ok) {
         const dataPets = await resPets.json();
         setAllPetsDB(dataPets.pets || []);
-      } else {
-        Swal.fire({
-                  title: "Error!",
-                  text: dataUsers.msg,
-                  icon: "error",
-                  confirmButtonText: "Return",
-                });
       }
+
+      const resAppts = await fetch(backendUrl + "/appointments", {
+        method: "GET",
+        headers,
+      });
+      if (resAppts.ok) {
+        const dataAppts = await resAppts.json();
+        let finalAppts = [];
+        if (Array.isArray(dataAppts)) {
+            finalAppts = dataAppts;
+        } else if (dataAppts.appointments && Array.isArray(dataAppts.appointments)) {
+            finalAppts = dataAppts.appointments;
+        } else if (dataAppts.results && Array.isArray(dataAppts.results)) {
+            finalAppts = dataAppts.results;
+        }
+        setAppointmentsDB(finalAppts);
+      }
+
     } catch (error) {
       console.error(error);
+      Swal.fire("Error", "Error loading data", "error");
     }
   };
 
@@ -90,14 +101,13 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
   };
 
   const handleSubmit = () => {
-    if (!selectedClientId || !selectedPet || !time || !reason) {
-      alert("Please complete all fields.");
+    if (!selectedClientId || !selectedPet || !date || !time || !reason) {
+      Swal.fire("Warning", "Please complete all fields.", "warning");
       return;
     }
 
-    // 1. Buscamos el objeto completo del CLIENTE para sacar su nombre
     const clientObj = clientsDB.find(
-      (c) => (c.id || c.ID || c.user_id) == selectedClientId,
+      (c) => (c.id || c.ID || c.user_id) == selectedClientId
     );
     let ownerName = "Unknown";
     if (clientObj) {
@@ -108,12 +118,10 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
           : clientObj.email);
     }
 
-    // 2. Buscamos el objeto completo de la MASCOTA para sacar su ID
     const petObj = availablePets.find((p) => p.name === selectedPet);
 
-    // Enviamos todo al padre (incluyendo el ID oculto)
     onSave({
-      pet_id: petObj?.pet_id, // ¡ESTO ES LO IMPORTANTE PARA EL BACKEND!
+      pet_id: petObj?.pet_id || petObj?.id,
       ownerName: ownerName,
       petName: selectedPet,
       date: date,
@@ -134,12 +142,30 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
     onClose();
   };
 
+  const isSlotBooked = (slotTime) => {
+    if (!date || appointmentsDB.length === 0) return false;
+
+    const normalize = (str) => str ? str.toString().toLowerCase().replace(/\s/g, "").replace(/^0/, "") : "";
+    
+    const targetTime = normalize(slotTime);
+    const targetDate = date; 
+
+    return appointmentsDB.some((appt) => {
+      if (appt.status === "Cancelled") return false;
+
+      const apptDateStr = appt.date ? String(appt.date).split("T")[0] : "";
+      const apptTime = normalize(appt.time);
+
+      return apptDateStr === targetDate && apptTime === targetTime;
+    });
+  };
+
   if (!show) return null;
 
   return (
     <div
       className="modal d-block"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1050 }}
       tabIndex="-1"
     >
       <div className="modal-dialog modal-dialog-centered">
@@ -165,8 +191,7 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
                 >
                   <option value="">Select Owner...</option>
                   {clientsDB.map((client, index) => {
-                    const realID =
-                      client.id || client.ID || client.user_id || client._id;
+                    const realID = client.id || client.ID || client.user_id || client._id;
                     const displayName =
                       client.name ||
                       (client.first_name
@@ -208,7 +233,10 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
                   type="date"
                   className="form-control"
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => {
+                      setDate(e.target.value);
+                      setTime(""); 
+                  }}
                 />
               </div>
 
@@ -218,13 +246,22 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
                   className="form-select"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
+                  disabled={!date}
                 >
                   <option value="">Select a time</option>
-                  {timeSlots.map((slot, index) => (
-                    <option key={index} value={slot}>
-                      {slot}
-                    </option>
-                  ))}
+                  {timeSlots.map((slot, index) => {
+                    const booked = isSlotBooked(slot);
+                    return (
+                      <option 
+                        key={index} 
+                        value={slot} 
+                        disabled={booked} 
+                        style={booked ? {color: "#999", backgroundColor: "#e9ecef"} : {}}
+                      >
+                        {slot} {booked ? "(Booked)" : ""}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
@@ -236,9 +273,7 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
                   onChange={(e) => setReason(e.target.value)}
                 >
                   <option value="">Select a service</option>
-                  <option value="General Consultation">
-                    General Consultation
-                  </option>
+                  <option value="General Consultation">General Consultation</option>
                   <option value="Vaccination">Vaccination</option>
                   <option value="Surgery">Surgery</option>
                   <option value="Microchipping">Microchipping</option>
@@ -252,6 +287,7 @@ export const ModalNewAppointment = ({ show, onClose, onSave }) => {
                   type="button"
                   className="btn btn-vet text-white py-2 rounded-3"
                   onClick={handleSubmit}
+                  style={{ backgroundColor: "rgb(48, 130, 114)" }}
                 >
                   Schedule Appointment
                 </button>

@@ -101,10 +101,8 @@ export const ClientDetails = () => {
       setClientInfo({ ...userData.user });
 
       if (userData.user.pets) {
-        // Formatear las edades de las mascotas
         const petsWithAge = userData.user.pets.map((pet) => ({
           ...pet,
-          // Guardamos la fecha original si se necesita, pero creamos un campo 'age'
           age: calculateAge(pet.birthdate),
         }));
         setClientPets(petsWithAge);
