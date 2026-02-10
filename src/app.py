@@ -671,6 +671,14 @@ def update_appointment(appointment_id):
         appointment.motive = body['motive']
     if 'status' in body:
         appointment.status = body['status']
+    if 'medication' in body:
+        appointment.medication = body['medication']      
+    if 'procedures' in body:
+        appointment.procedures = body['procedures']
+    if 'observations' in body:
+        appointment.observations = body['observations']
+    if 'anamnesis' in body:
+        appointment.anamnesis = body['anamnesis']
 
     db.session.commit()
     return jsonify({'msg': 'Appointment updated successfully'}), 200
