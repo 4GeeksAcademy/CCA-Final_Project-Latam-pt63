@@ -12,6 +12,7 @@ export const BookAppointment = () => {
     const [time, setTime] = useState("");
     const [motive, setMotive] = useState("");
     const [info, setInfo] = useState("");
+
     const [takenSlots, setTakenSlots] = useState([]);
 
     const timeSlots = [
@@ -74,7 +75,7 @@ export const BookAppointment = () => {
             const token = localStorage.getItem("jwt-token");
             
             try {
-                const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/appointments", {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/appointments/check", {
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }
                 });
@@ -85,10 +86,16 @@ export const BookAppointment = () => {
                     if (Array.isArray(data)) {
                         const bookedTimes = data
                             .filter(appt => {
-                                return String(appt.date).includes(date) && appt.status !== "Cancelled";
+                                const isSameDate = String(appt.date).includes(date);
+                                const isActive = appt.status !== "Cancelled";
+                                ;
+                                
+                                return isSameDate && isActive ;
                             })
                             .map(appt => {
+                                
                                 const timeStr = String(appt.time);
+                                console.log(appt)
                                 return timeStr.substring(0, 5); 
                             });
                         
@@ -100,7 +107,7 @@ export const BookAppointment = () => {
             }
         };
         checkAvailability();
-    }, [date]);
+    }, [date,]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -241,22 +248,20 @@ export const BookAppointment = () => {
                         onChange={(e) => setTime(e.target.value)}
                         disabled={!date}
                     >
-                        <option value="">
-                            {!date ? "Select a date first" : "Select a time"}
-                        </option>
-                        {timeSlots.map((slot) => {
-                            const isTaken = takenSlots.includes(slot.value);
-                            return (
-                                <option 
-                                    key={slot.value} 
-                                    value={slot.value} 
-                                    disabled={isTaken}
-                                    style={isTaken ? { backgroundColor: "#e0e0e0", color: "#a0a0a0" } : {}}
-                                >
-                                    {slot.label} {isTaken ? "(Booked)" : ""}
-                                </option>
-                            );
-                        })}
+                        <option value="">Select a time</option>
+                                {timeSlots.map((slot) => {
+                                    const isTaken = takenSlots.includes(slot.value);
+                                    return (
+                                        <option 
+                                            key={slot.value} 
+                                            value={slot.value} 
+                                            disabled={isTaken}
+                                            style={isTaken ? { backgroundColor: "#e0e0e0", color: "#a0a0a0", textDecoration: "line-through" } : {}}
+                                        >
+                                            {slot.label} {isTaken ? "(Booked)" : ""}
+                                        </option>
+                                    );
+                                })}
                     </select>
                 </div>
 

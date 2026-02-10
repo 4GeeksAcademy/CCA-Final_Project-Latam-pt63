@@ -827,6 +827,29 @@ def get_all_appointments():
     return jsonify(results), 200
 
 
+@app.route('/appointments/check', methods=['GET'])
+@jwt_required()
+def check_all_appointments():
+    user = get_jwt_identity()
+    valid = Users.query.filter_by(email=user).first()
+   
+    appointments = Appointments.query.all()
+    
+    results = []
+    for appt in appointments:
+        data = appt.serialize()
+
+        pet = Pets.query.get(appt.pet_id)
+        if pet:
+            data['pet_name'] = pet.name
+        else:
+            data['pet_name'] = "Unknown Pet"
+
+        results.append(data)
+
+    return jsonify(results), 200
+
+
 @app.route('/send-contact-email', methods=['POST'])
 def send_contact_email():
     body = request.get_json(silent=True)

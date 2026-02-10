@@ -154,8 +154,7 @@ export const RegisterPet = () => {
                       text: "Pet registered successfully!",
                       icon: "success",
                       confirmButtonText: "Return",
-                    });
-                alert();
+                    });              
                 if (isAdmin) {
                     navigate("/private/pets"); 
                 } else {
