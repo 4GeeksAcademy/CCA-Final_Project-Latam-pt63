@@ -40,9 +40,9 @@ export const BookAppointment = () => {
             const token = localStorage.getItem("jwt-token");
             if (!token) {
                 Swal.fire({
-                    title: "Error!",
+                    title: "Oops",
                     text: "You must be logged in to book an appointment",
-                    icon: "error",
+                    icon: "warning",
                     confirmButtonText: "Return",
                 });
                 navigate("/login");
@@ -124,7 +124,7 @@ export const BookAppointment = () => {
 
         if (takenSlots.includes(time)) {
              Swal.fire({
-                icon: "error",
+                icon: "warning",
                 title: "Unavailable",
                 text: "This time slot is already taken. Please choose another.",
                 confirmButtonColor: "#308272"
