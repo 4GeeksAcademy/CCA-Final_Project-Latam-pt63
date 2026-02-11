@@ -115,7 +115,7 @@ export const AdminClients = () => {
                 setShowModal(true);
               }}
             >
-              +New Client
+              + New Client
             </button>
           </div>
         </div>
