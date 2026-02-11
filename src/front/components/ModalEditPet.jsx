@@ -12,7 +12,8 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
     info: "",
     owner_name: "",
     pet_id: "",
-    weight: ""
+    weight: "",
+    sex: ""
   });
 
   const handleChange = (e) => {
@@ -34,7 +35,8 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
         info: selectedpet.info,
         owner_name: selectedpet.owner_name,
         pet_id: selectedpet.pet_id,
-        weight: selectedpet.weight
+        weight: selectedpet.weight,
+        sex: selectedpet.sex
       });
     }
   }, [show]);
@@ -44,7 +46,8 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
       pet.name.trim() == "" ||
       pet.pet_type.trim() == "" ||
       pet.breed.trim() == "" ||
-      pet.allergies.trim() == ""
+      pet.allergies.trim() == "" ||
+      pet.sex.trim() == ""
     ) {
       Swal.fire({
         title: "Error!",
@@ -68,7 +71,8 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
       neutered: "",
       info: "",
       pet_id: "",
-      weight: ""
+      weight: "",
+      sex: ""
     });
     onClose();
   };
@@ -139,6 +143,21 @@ export const ModalEditPet = ({ show, onClose, onSave, selectedpet }) => {
                   value={pet.breed}
                   onChange={handleChange}
                 />
+              </div>
+
+               <div className="mb-3">
+                <label className="form-label">Sex</label>
+                <select
+                  className="form-select"
+                  value={pet.sex}
+                  name="sex"
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select sex...</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
               </div>
 
               <div className="mb-3">

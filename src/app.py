@@ -245,6 +245,8 @@ def update_pet(pet_id):
         pet.allergies = (body.get("allergies") or "")
     if 'weight' in body:
         pet.weight = (body.get("weight") or "")
+    if 'sex' in body:
+        pet.sex = (body.get("sex")or "")
     if "neutered" in body:
         neutered = body.get("neutered")
         if neutered is None:
@@ -888,11 +890,39 @@ def send_contact_email():
     if 'email' not in body:
         return jsonify({'msg': 'You must include a email'}), 400
 
+    html_template = f"""
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 20px auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div style="background-color: #4A90E2; color: white; padding: 25px; text-align: center;">
+                <h2 style="margin: 0; font-weight: 500;">New Contact Message</h2>
+            </div>
+            <div style="padding: 30px; line-height: 1.6; color: #333;">
+                <p style="margin-top: 0;">You have received a new inquiry from your website:</p>
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <tr>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #eee; width: 80px; font-weight: bold; color: #666;">Name:</td>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #eee;">{body['name']}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #666;">Email:</td>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="mailto:{body['email']}" style="color: #4A90E2; text-decoration: none;">{body['email']}</a></td>
+                    </tr>
+                </table>
+                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; border-left: 4px solid #4A90E2; margin-top: 20px;">
+                    <strong style="display: block; margin-bottom: 10px; color: #666;">Message:</strong>
+                    <span style="font-style: italic; white-space: pre-wrap;">{body['message']}</span>
+                </div>
+            </div>
+            <div style="background-color: #f4f4f4; color: #999; padding: 15px; text-align: center; font-size: 12px;">
+                Sent via Pet Care Project Contact Form
+            </div>
+        </div>
+        """
+
     message = Mail(
         from_email='petcareproject47@gmail.com',
         to_emails='petcareproject47@gmail.com',
         subject='Contact mail',
-        html_content=f"Name: {body['name']}, Message: {body['message']}, Email: {body['email']}")
+        html_content=html_template)
     try:
         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
     # sg.set_sendgrid_data_residency("eu")
