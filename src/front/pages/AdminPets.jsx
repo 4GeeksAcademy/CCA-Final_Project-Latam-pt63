@@ -4,6 +4,7 @@ import { AdminPetCard } from "../components/AdminPetCard";
 import Swal from "sweetalert2";
 import { ModalNewPet } from "../components/ModalNewPet";
 import { ModalEditPet } from "../components/ModalEditPet";
+import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 
 export const AdminPets = () => {
   const navigate = useNavigate();

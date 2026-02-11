@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { ModalEditPet } from "./ModalEditPet";
+import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 
 export const AdminPetCard = ({ pet, setPets }) => {
   const placeholderImage =
@@ -93,12 +94,12 @@ export const AdminPetCard = ({ pet, setPets }) => {
           <div className="d-flex align-items-center mb-3">
             <div style={{ width: "50px", height: "50px", flexShrink: 0 }}>
               <img
-                src={pet.image ? pet.image : placeholderImage}
+                src={pet.image ? pet.image : petPlaceholder}
                 className="w-100 h-100 rounded-circle object-fit-cover"
                 alt={pet.name}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = placeholderImage;
+                  e.target.src = petPlaceholder;
                 }}
               />
             </div>
