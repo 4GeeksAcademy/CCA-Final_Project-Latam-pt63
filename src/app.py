@@ -762,7 +762,7 @@ def send_recovery_link():
         <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <h2 style="color: #333;">Password Reset</h2>
             <p style="color: #666; font-size: 16px;">We received a request to reset your password. Click the button below to choose a new one:</p>
-            <a href="https://automatic-zebra-697pqg9pr6w4fr76r-3000.app.github.dev/reset-password/{new_uuid}" 
+            <a href="https://sample-service-name-382b.onrender.com/reset-password/{new_uuid}" 
             style="display: inline-block; padding: 12px 24px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">
             Reset My Password
             </a>
