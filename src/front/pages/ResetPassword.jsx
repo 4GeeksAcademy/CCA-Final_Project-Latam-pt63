@@ -10,7 +10,6 @@ export const PasswordReset = () => {
   const [feedback, setFeedback] = useState("");
 
   const [info, setInfo] = useState({
-    email: "",
     password: "",
     confirmpassword: "",
   });
@@ -25,7 +24,7 @@ export const PasswordReset = () => {
   const HandleSubmit = (e) => {
     e.preventDefault();
     setFeedback("");
-    if (!info.email || !info.password || !info.confirmpassword) {
+    if ( !info.password || !info.confirmpassword) {
       setFeedback("All fields are required.");
       return;
     }
@@ -105,16 +104,6 @@ export const PasswordReset = () => {
         )}
         <div className="d-flex justify-content-center">
           <form className="card col-6 p-3 mt-3" onSubmit={HandleSubmit}>
-            <div className="col-md-12 mb-3">
-              <label className="form-label">Email</label>
-              <input
-                className="form-control"
-                name="email"
-                value={info.email}
-                placeholder="valid@email.com"
-                onChange={HandleChange}
-              />
-            </div>
             <div className="col-md-12 mb-3">
               <label className="form-label">New Password</label>
               <input

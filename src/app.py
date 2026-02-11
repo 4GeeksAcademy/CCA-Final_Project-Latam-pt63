@@ -764,7 +764,7 @@ def send_recovery_link():
         <div style="max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <h2 style="color: #333;">Password Reset</h2>
             <p style="color: #666; font-size: 16px;">We received a request to reset your password. Click the button below to choose a new one:</p>
-            <a href="https://automatic-zebra-697pqg9pr6w4fr76r-3000.app.github.dev/reset-password/{new_uuid}" 
+            <a href="https://special-space-carnival-x5q47w5494qj2xwr-3000.app.github.dev/reset-password/{new_uuid}" 
             style="display: inline-block; padding: 12px 24px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;">
             Reset My Password
             </a>
@@ -804,9 +804,7 @@ def reset_password(user_uuid):
     body = request.get_json(silent=True)
     if body is None:
         return jsonify({'msg': 'You must include information in the body'}), 400
-    if 'email' not in body:
-        return jsonify({'msg': 'You must include an email'})
-    valid_user = Users.query.filter_by(email=body['email']).first()
+    valid_user = Users.query.filter_by(user_id=valid_request.user_id).first()
     if valid_user.user_id != valid_request.user_id:
         return jsonify({'msg': 'You cant update the password of this user'}), 400
     if 'password' not in body:
