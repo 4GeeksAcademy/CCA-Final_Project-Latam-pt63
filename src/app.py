@@ -688,7 +688,8 @@ def update_appointment(appointment_id):
     if 'expiry_date' in body:
         new_vaccine.expiry_date = body['expiry_date']
     new_vaccine.pet_id = appointment.pet_id
-    db.session.add(new_vaccine)
+    if new_vaccine.vaccine_name is not None:
+        db.session.add(new_vaccine)
     db.session.commit()
     return jsonify({'msg': 'Appointment updated successfully'}), 200
 

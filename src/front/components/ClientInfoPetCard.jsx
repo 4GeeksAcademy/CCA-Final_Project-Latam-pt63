@@ -46,7 +46,7 @@ export const ClientInfoPetCard = ({ info }) => {
                     src={info.image || petPlaceholder}
                     style={{ width: 60, height: 60, aspectRatio: "1/1", borderRadius: "50%" }}
                     className="object-fit-cover"
-                    alt={info.name}
+                    
                   />
                 </div>
               </div>

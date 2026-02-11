@@ -319,7 +319,7 @@ export const AdminAgenda = () => {
                   <div className="col-md-4 d-flex justify-content-end align-items-center gap-2">
                     {cita.status !== "Confirmed" && (
                       <button
-                        onClick={() => markAsConfirmed(cita.id)}
+                        onClick={() => markAsConfirmed(cita.appointment_id)}
                         className="btn btn-outline-success btn-sm rounded-circle shadow-sm"
                         title="Mark as Confirmed"
                         style={{ width: "32px", height: "32px" }}

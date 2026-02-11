@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { set } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 
 export const AdminPetHistory = () => {
   const [pet, setPet] = useState({});
@@ -125,12 +126,12 @@ export const AdminPetHistory = () => {
             <div className="banner d-flex bg-vet p-4 rounded-4 ms-5">
               <div style={{ width: "70px", height: "70px", flexShrink: 0 }}>
                 <img
-                  src={pet.image ? pet.image : placeholderImage}
+                  src={pet.image ? pet.image : petPlaceholder}
                   className="w-100 h-100 rounded-circle object-fit-cover"
                   alt={pet.name}
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = placeholderImage;
+                    e.target.src = petPlaceholder;
                   }}
                 />
               </div>
