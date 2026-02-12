@@ -275,7 +275,7 @@ export const BookAppointment = () => {
                         onChange={(e) => setMotive(e.target.value)}
                     >
                         <option value="">Select a service</option>
-                        <option value="Wellness Care">General Consultation</option>
+                        <option value="General Consultation">General Consultation</option>
                         <option value="Vaccination">Vaccination</option>
                         <option value="Surgery">Surgery</option>
                         <option value="Microchipping">Microchipping</option>
