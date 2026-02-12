@@ -312,7 +312,7 @@ textarea.form-control:focus {
 @media (min-width: 992px) {
   .about-imageWrap {
     position: sticky;
-    top: 90px; /* queda linda mientras scrolleás */
+    top: 90px; 
   }
 }
 .about-imageCard {
@@ -783,3 +783,59 @@ textarea.form-control:focus {
   margin: 16px 0 12px;
 }
 
+.admin-pet-title {
+  line-height: 1.1;
+}
+
+.admin-pet-type {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.admin-pet-top {
+  margin-top: 6px;
+}
+
+.admin-pet-thumb {
+  width: 96px;
+  height: 96px;
+  flex: 0 0 96px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f3f4f6;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.admin-pet-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-pet-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.admin-pet-label {
+  color: #6c757d;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.admin-pet-value {
+  font-weight: 600;
+  color: #212529;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.admin-pet-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
