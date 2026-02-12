@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 
 export const AdminPetHistory = () => {
-  const [pet, setPet] = useState({});
+  const [pet, setPet] = useState(null);
   const [history, setHistory] = useState([]);
   const [vaccines, setVaccines] = useState([]);
 
@@ -30,28 +30,28 @@ export const AdminPetHistory = () => {
 
   const calculateAge = (dob) => {
     if (!dob) return "Unknown";
-    
+
     const birthDate = new Date(dob);
     if (isNaN(birthDate.getTime())) return "Unknown";
 
     const today = new Date();
-    
+
     let years = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
-    
+
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        years--;
+      years--;
     }
-    
+
     if (years === 0) {
-        let months = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
-        if (today.getDate() < birthDate.getDate()) {
-            months--;
-        }
-        if (months <= 0) return "Newborn"; 
-        return months === 1 ? "1 month" : `${months} months`;
+      let months = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
+      if (today.getDate() < birthDate.getDate()) {
+        months--;
+      }
+      if (months <= 0) return "Newborn";
+      return months === 1 ? "1 month" : `${months} months`;
     }
-    
+
     return years === 1 ? "1 year" : `${years} years`;
   };
 
@@ -109,6 +109,16 @@ export const AdminPetHistory = () => {
     VerifyAdmin();
   }, []);
 
+  if (!pet) {
+    return (
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="container">
@@ -158,7 +168,7 @@ export const AdminPetHistory = () => {
               <div className="ms-3">
                 <div>{pet.sex || "N/A"}</div>
                 <div>{pet.weight || "N/A"} kgs.</div>
-                
+
               </div>
               <div className="ms-auto mt-3">
                 <div className="text-center" style={{ fontSize: "14px" }}>
@@ -188,9 +198,9 @@ export const AdminPetHistory = () => {
                 {history.length > 0 ? (
                   history.map((item) => {
                     return (
-                  <Link to={`/private/agenda/details/${item.appointment_id}`} className="text-decoration-none">
-                    <AdminPetsAppointmentCard info={item} />
-                  </Link>)
+                      <Link to={`/private/agenda/details/${item.appointment_id}`} className="text-decoration-none">
+                        <AdminPetsAppointmentCard info={item} />
+                      </Link>)
                   })
                 ) : (
                   <div className="alert alert-light text-center rounded-4 text-muted mt-2 mb-2 ms-2 me-2">
@@ -229,10 +239,10 @@ export const AdminPetHistory = () => {
                     );
                   })
                 ) : (
-                  
-                    <div className="alert alert-light rounded-4 text-center text-muted mt-3 mb-0">
-                      No vaccines registered.
-                    
+
+                  <div className="alert alert-light rounded-4 text-center text-muted mt-3 mb-0">
+                    No vaccines registered.
+
                   </div>
                 )}
               </div>
