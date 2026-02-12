@@ -7,11 +7,7 @@ import { ModalNewClient } from "../components/ModalNewClient";
 
 export const AdminClients = () => {
   const [showModal, setShowModal] = useState(false);
-  
-
-  const [clients, setClients] = useState([]);
-  
-
+  const [clients, setClients] = useState(null);
   const Logout = () => {
     localStorage.removeItem("jwt-token");
     localStorage.removeItem("login-status");
@@ -80,22 +76,32 @@ export const AdminClients = () => {
             Authorization: "Bearer " + token,
           },
         });
-        const clients = await users.json();
+        const clientsData = await users.json();
         if (users.ok) {
-          setClients(clients.users);
+          setClients(clientsData.users);
+        } else {
+          setClients([]);
         }
       }
     } catch (error) {
       console.error(error);
+      setClients([]);
     }
   };
 
   useEffect(() => {
     VerifyAdmin();
   }, []);
-  useEffect(() => {
-    VerifyAdmin();
-  }, []);
+
+  if (!clients) {
+    return (
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

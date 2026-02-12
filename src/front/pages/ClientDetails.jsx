@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
 export const ClientDetails = () => {
-  const [clientInfo, setClientInfo] = useState({});
+  const [clientInfo, setClientInfo] = useState(null);
   const [clientPets, setClientPets] = useState([]);
   const [history, setHistory] = useState([]);
 
@@ -116,6 +116,16 @@ export const ClientDetails = () => {
   useEffect(() => {
     VerifyAdmin();
   }, []);
+
+  if (!clientInfo) {
+    return (
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
