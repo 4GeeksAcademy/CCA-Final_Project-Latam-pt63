@@ -120,7 +120,7 @@ export const ClientDetails = () => {
   if (!clientInfo) {
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
-        <div className="spinner-border text-success" role="status">
+        <div className="spinner-border " role="status" style={{ color: "rgb(48, 130, 114)", width: "3rem", height: "3rem" }}>
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
