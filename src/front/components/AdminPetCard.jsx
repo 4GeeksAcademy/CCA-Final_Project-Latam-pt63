@@ -5,9 +5,6 @@ import { ModalEditPet } from "./ModalEditPet";
 import petPlaceholder from "../assets/img/pet-placeholder.jpg";
 
 export const AdminPetCard = ({ pet, setPets }) => {
-  const placeholderImage =
-    "https://w7.pngwing.com/pngs/573/926/png-transparent-paw-dog-paw-prints-animals-photography-paw.png";
-
   const [owner, setOwner] = useState({
     first_name: "",
     last_name: "",
@@ -16,38 +13,39 @@ export const AdminPetCard = ({ pet, setPets }) => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [showModal, setShowModal] = useState(false);
-  const [selectedPet, setSelectedPet]= useState(null)
+  const [selectedPet, setSelectedPet] = useState(null);
 
-  const handleEditPet = async(editedpet) =>{
+  const handleEditPet = async (editedpet) => {
     try {
-      const token = localStorage.getItem('jwt-token')
-      const result = await fetch (backendUrl + "/pet/" + pet.pet_id,{
+      const token = localStorage.getItem("jwt-token");
+      const result = await fetch(backendUrl + "/pet/" + pet.pet_id, {
         method: "PUT",
         body: JSON.stringify(editedpet),
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token
-        }
+          Authorization: "Bearer " + token,
+        },
       });
-      const data = await result.json()
-      if (result.ok){
+
+      const data = await result.json();
+      if (result.ok) {
         setPets((prevPets) =>
           prevPets.map((p) =>
-            p.pet_id === editedpet.pet_id ? { ...p, ...editedpet } : p,
-          ),
+            p.pet_id === editedpet.pet_id ? { ...p, ...editedpet } : p
+          )
         );
-        Swal.fire({
-            title: "Success",
-            text: data.msg,
-            icon: "success",
-            confirmButtonText: "Ok",
-          });
 
+        Swal.fire({
+          title: "Success",
+          text: data.msg,
+          icon: "success",
+          confirmButtonText: "Ok",
+        });
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const GetOwner = async () => {
     try {
@@ -60,6 +58,7 @@ export const AdminPetCard = ({ pet, setPets }) => {
             Authorization: "Bearer " + token,
           },
         });
+
         const data = await result.json();
         if (result.ok) {
           setOwner({
@@ -82,76 +81,87 @@ export const AdminPetCard = ({ pet, setPets }) => {
   };
 
   useEffect(() => {
-    if (pet.owner_id) {
-      GetOwner();
-    }
+    if (pet.owner_id) GetOwner();
   }, [pet.owner_id]);
+
+  const ownerName =
+    (owner.first_name || owner.last_name)
+      ? `${owner.first_name} ${owner.last_name}`.trim()
+      : "N/A";
 
   return (
     <div className="col-12 col-md-6 col-lg-4">
-      <div className="card bg-light h-100 border-1 shadow-sm hover-card-effect rounded-4">
-        <div className="card-body">
-          <div className="d-flex align-items-center mb-3">
-            <div style={{ width: "50px", height: "50px", flexShrink: 0 }}>
+      <div className="card admin-pet-card bg-white h-100 border-1 rounded-4">
+        <div className="card-body p-3">
+          <div className="d-flex justify-content-between align-items-baseline mb-2">
+            <h5 className="m-0 fw-bold text-dark admin-pet-title">
+              {pet.name}
+            </h5>
+            <span className="text-muted admin-pet-type">
+              {pet.pet_type}
+            </span>
+          </div>
+
+           <div className="d-flex gap-3 align-items-start admin-pet-top">
+            <div className="admin-pet-thumb">
               <img
                 src={pet.image ? pet.image : petPlaceholder}
-                className="w-100 h-100 rounded-circle object-fit-cover"
                 alt={pet.name}
+                className="admin-pet-thumb-img"
                 onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = petPlaceholder;
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = petPlaceholder;
                 }}
               />
             </div>
-            <div className="ms-3">
-              <h5 className="card-title mb-0 fw-bold text-dark">{pet.name}</h5>
-              <small className="text-muted">{pet.pet_type}</small>
+
+            <div className="flex-grow-1 small">
+              <div className="admin-pet-row">
+                <span className="admin-pet-label">Breed:</span>
+                <span className="admin-pet-value">{pet.breed || "N/A"}</span>
+              </div>
+
+              <div className="admin-pet-row">
+                <span className="admin-pet-label">Age:</span>
+                <span className="admin-pet-value">{pet.age || "N/A"}</span>
+              </div>
+
+              <div className="admin-pet-row">
+                <span className="admin-pet-label">Owner:</span>
+                <span className="admin-pet-value">{ownerName}</span>
+              </div>
             </div>
           </div>
 
-          <div className="small">
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">Breed:</span>
-              <span className="fw-medium">{pet.breed}</span>
-            </div>
-
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">Age:</span>
-              <span className="fw-medium">{pet.age || "N/A"}</span>
-            </div>
-
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">Owner:</span>
-              <span className="fw-medium">
-                {owner.first_name} {owner.last_name}
-              </span>
-            </div>
-          </div>
-
-          <hr className="my-3 text-muted opacity-25"></hr>
+          <hr className="my-3 text-muted opacity-25" />
 
           <div className="d-flex gap-2">
             <Link
               to={`/private/pets/history/${pet.pet_id}`}
-              className="btn btn-sm w-50 text-white rounded"
-              style={{ background: "rgb(48, 130, 114)" }}
+              className="btn btn-sm flex-fill btn-vet text-white rounded"
             >
               History
             </Link>
-            <button className="btn btn-sm w-50 btn-outline-secondary rounded" onClick={()=>{setShowModal(true), setSelectedPet(pet)}}>
+
+            <button
+              className="btn btn-sm flex-fill btn-outline-secondary rounded"
+              onClick={() => {
+                setSelectedPet(pet);
+                setShowModal(true);
+              }}
+            >
               Edit
             </button>
-            
           </div>
         </div>
       </div>
+
       <ModalEditPet
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          selectedpet={selectedPet}
-          onSave={handleEditPet}
-        />
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        selectedpet={selectedPet}
+        onSave={handleEditPet}
+      />
     </div>
   );
 };
-
