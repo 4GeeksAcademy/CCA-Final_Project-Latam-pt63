@@ -8,6 +8,11 @@ import { ModalNewClient } from "../components/ModalNewClient";
 export const AdminClients = () => {
   const [showModal, setShowModal] = useState(false);
   const [clients, setClients] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const filteredClients = clients?.filter((client) =>
+  client.first_name.toLowerCase().includes(searchTerm.toLowerCase()) || client.last_name.toLowerCase().includes(searchTerm.toLowerCase()));
+
   const Logout = () => {
     localStorage.removeItem("jwt-token");
     localStorage.removeItem("login-status");
@@ -103,6 +108,8 @@ export const AdminClients = () => {
     );
   }
 
+
+
   return (
     <>
       <div className="container min-vh-100">
@@ -124,8 +131,18 @@ export const AdminClients = () => {
               + New Client
             </button>
           </div>
+          
         </div>
-        <ClientsTable user={clients} setClients={setClients} />
+        <div className="row ms-5 ps-5 d-flex justify content-center align-content-center">
+          <div className="col-6">
+            <input className="rounded-2 test-right border-1 ps-2" type="text"
+            placeholder="search"
+            value={searchTerm}
+            onChange={(e)=>{setSearchTerm(e.target.value)}}></input>
+          </div>
+            
+          </div>
+        <ClientsTable user={filteredClients || []} setClients={setClients} />
       </div>
       <ModalNewClient
         show={showModal}
