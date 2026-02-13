@@ -10,8 +10,16 @@ export const AdminClients = () => {
   const [clients, setClients] = useState(null);
   const [searchTerm, setSearchTerm] = useState("")
 
-  const filteredClients = clients?.filter((client) =>
-  client.first_name.toLowerCase().includes(searchTerm.toLowerCase()) || client.last_name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredClients = clients?.filter((client) => {
+    const fullName = client.first_name + " " + client.last_name
+    const searchWords = searchTerm.toLowerCase().trim().split(/\s+/)
+    console.log(client.first_name.toLowerCase().includes(searchTerm.trim().toLowerCase()), searchTerm)
+    return searchWords.every(word=>
+      client.first_name.toLowerCase().trim().includes(word) ||
+      client.last_name.toLowerCase().trim().includes(word) ||
+      fullName.includes(word)
+    )
+  });
 
   const Logout = () => {
     localStorage.removeItem("jwt-token");
@@ -131,17 +139,17 @@ export const AdminClients = () => {
               + New Client
             </button>
           </div>
-          
+
         </div>
         <div className="row ms-5 ps-5 d-flex justify content-center align-content-center">
           <div className="col-6">
             <input className="rounded-2 test-right border-1 ps-2" type="text"
-            placeholder="search"
-            value={searchTerm}
-            onChange={(e)=>{setSearchTerm(e.target.value)}}></input>
+              placeholder="search"
+              value={searchTerm}
+              onChange={(e) => { setSearchTerm(e.target.value) }}></input>
           </div>
-            
-          </div>
+
+        </div>
         <ClientsTable user={filteredClients || []} setClients={setClients} />
       </div>
       <ModalNewClient
