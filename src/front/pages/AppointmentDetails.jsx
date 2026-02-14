@@ -247,7 +247,7 @@ try {
           {details.status !== "Completed" && (
             <div className="d-flex gap-2">
               <button
-                className="btn btn-danger text-white"
+                className="btn btn-secondary text-white"
                 onClick={handleCancelAppointment}
               >
                 <i className="fa-solid fa-xmark me-2"></i>Cancel
