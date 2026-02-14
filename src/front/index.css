@@ -839,3 +839,24 @@ textarea.form-control:focus {
   text-overflow: ellipsis;
   max-width: 170px;
 }
+
+
+.vet-search {
+  position: relative;
+}
+
+.vet-search-input {
+  padding-right: 2.4rem; 
+  border-radius: 0.5rem; 
+}
+
+.vet-search-icon {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.95rem;
+  opacity: 0.45;              
+  color: #111;                
+  pointer-events: none;       
+}
