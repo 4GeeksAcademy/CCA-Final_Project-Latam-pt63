@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { Link } from "react-router-dom";
 
 export const BookAppointment = () => {
     const navigate = useNavigate();
@@ -89,11 +90,11 @@ export const BookAppointment = () => {
                                 const isSameDate = String(appt.date).includes(date);
                                 const isActive = appt.status !== "Cancelled";
                                 ;
-                                
-                                return isSameDate && isActive ;
+
+                                return isSameDate && isActive;
                             })
                             .map(appt => {
-                                
+
                                 const timeStr = String(appt.time);
                                 return timeStr.substring(0, 5);
                             });
@@ -122,7 +123,7 @@ export const BookAppointment = () => {
         }
 
         if (takenSlots.includes(time)) {
-             Swal.fire({
+            Swal.fire({
                 icon: "warning",
                 title: "Unavailable",
                 text: "This time slot is already taken. Please choose another.",
@@ -201,7 +202,14 @@ export const BookAppointment = () => {
     }
 
     return (
+
         <div className="container py-5 min-vh-100" style={{ maxWidth: "550px" }}>
+            <Link
+                to="/"
+                className="text-decoration-none text-muted mb-2 d-inline-block"
+            >
+                <i className="fa-solid fa-arrow-left me-2"></i> Return
+            </Link>
             <h2 className="mb-3">Book Appointment</h2>
 
             <form onSubmit={handleSubmit} className="card p-3 shadow-sm border-0">

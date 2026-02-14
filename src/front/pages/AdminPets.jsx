@@ -46,7 +46,7 @@ export const AdminPets = () => {
     if (searchWords.length === 0) return true;
 
     const petName = norm(pet?.name);
-    const petType = norm(pet?.type);
+    const petType = norm(pet?.pet_type);
     const petBreed = norm(pet?.breed);
 
     const ownerFirst = norm(pet?.owner?.first_name ?? pet?.first_name);
